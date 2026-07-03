@@ -223,7 +223,54 @@
     text-align: center;
     max-width: 340px;
   }
+
+  .bb-utility-bar {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .icon-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    color: var(--sub);
+    font-size: 12px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    padding: 7px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .icon-btn:hover { border-color: var(--accent); color: var(--text); }
+  .icon-btn svg { display: block; }
 </style>
+
+  <div class="bb-utility-bar">
+    <button class="icon-btn" id="bb-sound-toggle" title="Toggle sound">
+      <svg id="bb-sound-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/>
+        <path d="M16 8.5a4.5 4.5 0 010 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M18.5 6a8 8 0 010 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity="0.6"/>
+      </svg>
+      <span id="bb-sound-label">Sound On</span>
+    </button>
+    <!--
+      DOWNLOAD BUTTON — update the href below once you have your
+      Play Store link, Uptodown link, or direct APK download link.
+      Until then it points to "#" (does nothing).
+    -->
+    <a class="icon-btn" id="bb-download-link" href="#" target="_blank" style="text-decoration:none;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Download App
+    </a>
+  </div>
 
   <div class="bb-header">
     <div class="bb-title">
@@ -298,6 +345,74 @@
 <script>
 (function(){
   const ROOT = document.getElementById('bb-root');
+
+  // ---------------- Sound Engine (synthesized, no audio files needed) ----------------
+  let audioCtx = null;
+  let soundOn = true;
+  function getCtx() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+  function tone(freq, startTime, duration, type = 'sine', gainPeak = 0.18) {
+    if (!soundOn) return;
+    const ctx = getCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, startTime);
+    gain.gain.setValueAtTime(0, startTime);
+    gain.gain.linearRampToValueAtTime(gainPeak, startTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(startTime);
+    osc.stop(startTime + duration + 0.02);
+  }
+  const sfx = {
+    pickup() {
+      if (!soundOn) return;
+      const t = getCtx().currentTime;
+      tone(520, t, 0.08, 'triangle', 0.12);
+    },
+    place() {
+      if (!soundOn) return;
+      const t = getCtx().currentTime;
+      tone(300, t, 0.1, 'sine', 0.16);
+    },
+    invalid() {
+      if (!soundOn) return;
+      const t = getCtx().currentTime;
+      tone(140, t, 0.15, 'sawtooth', 0.08);
+    },
+    lineClear(lines) {
+      if (!soundOn) return;
+      const t = getCtx().currentTime;
+      const notes = [523, 659, 784, 1047]; // C-E-G-C cascade chime
+      const count = Math.min(notes.length, 2 + lines);
+      for (let i = 0; i < count; i++) {
+        tone(notes[i % notes.length], t + i * 0.07, 0.22, 'sine', 0.2);
+      }
+    },
+    gameOver() {
+      if (!soundOn) return;
+      const t = getCtx().currentTime;
+      [392, 330, 262].forEach((f, i) => tone(f, t + i * 0.18, 0.3, 'triangle', 0.16));
+    }
+  };
+  function initSoundToggle() {
+    const btn = document.getElementById('bb-sound-toggle');
+    const label = document.getElementById('bb-sound-label');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      soundOn = !soundOn;
+      label.textContent = soundOn ? 'Sound On' : 'Sound Off';
+      if (soundOn) { getCtx(); sfx.pickup(); }
+    });
+  }
+  // ------------------------------------------------------------------------------
   const boardEl = document.getElementById('bb-board');
   const trayEls = [...document.querySelectorAll('.bb-slot')];
   const scoreEl = document.getElementById('bb-score');
@@ -526,6 +641,7 @@
     const piece = tray[slotIdx];
     if (!piece) return;
     e.preventDefault();
+    sfx.pickup();
 
     const boardRect = boardEl.getBoundingClientRect();
     const cellSize = boardRect.width / SIZE;
@@ -628,10 +744,12 @@
 
     if (d.lastValid) {
       placeShape(d.piece.shape, d.lastRow, d.lastCol, d.piece.colorIdx);
+      sfx.place();
       score += d.piece.shape.length;
       tray[d.slotIdx] = null;
       renderBoard();
-      clearLines();
+      const linesCleared = clearLines();
+      if (linesCleared > 0) sfx.lineClear(linesCleared);
       renderScore();
       refillTrayIfEmpty();
       renderTray();
@@ -640,6 +758,7 @@
         endGame();
       }
     } else {
+      sfx.invalid();
       renderTray();
     }
     dragging = null;
@@ -648,6 +767,7 @@
   function endGame() {
     gameOver = true;
     best = Math.max(best, score);
+    sfx.gameOver();
     finalScoreEl.textContent = 'Score: ' + score;
     overlay.classList.add('show');
   }
@@ -664,6 +784,7 @@
   }
 
   restartBtn.addEventListener('click', startGame);
+  initSoundToggle();
 
   startGame();
 })();
