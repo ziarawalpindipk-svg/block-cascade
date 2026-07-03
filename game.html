@@ -43,7 +43,7 @@
     background: radial-gradient(circle at 25% -10%, var(--bg2) 0%, var(--bg) 55%);
     color: var(--text);
     min-height: 560px;
-    padding: 20px 12px 30px;
+    padding: 14px 12px 20px;
     border-radius: 22px;
     display: flex;
     flex-direction: column;
@@ -51,7 +51,8 @@
     user-select: none;
     -webkit-user-select: none;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
   }
   #bb-root * { box-sizing: border-box; }
@@ -62,7 +63,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 14px;
+    margin-bottom: 8px;
   }
   .bb-title {
     font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
@@ -145,7 +146,7 @@
     width: min(88vw, 360px);
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 14px;
     gap: 8px;
   }
   .bb-slot {
@@ -217,7 +218,7 @@
     box-shadow: 0 6px 16px rgba(255, 107, 91, 0.35);
   }
   .bb-hint {
-    margin-top: 14px;
+    margin-top: 10px;
     font-size: 11px;
     color: var(--sub);
     text-align: center;
@@ -229,48 +230,51 @@
     max-width: 380px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-bottom: 10px;
+    gap: 6px;
+    margin-bottom: 8px;
   }
   .bb-utility-row {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    flex-wrap: nowrap;
   }
   .icon-btn {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     background: var(--panel);
     border: 1px solid var(--panel-line);
     color: var(--sub);
-    font-size: 12px;
+    font-size: 11px;
     font-family: 'Segoe UI', system-ui, sans-serif;
-    padding: 7px 12px;
-    border-radius: 20px;
+    padding: 6px 10px;
+    border-radius: 16px;
     cursor: pointer;
     transition: border-color 0.15s, color 0.15s;
+    white-space: nowrap;
   }
   .icon-btn:hover { border-color: var(--accent); color: var(--text); }
-  .icon-btn svg { display: block; }
+  .icon-btn svg { display: block; width: 13px; height: 13px; }
   .icon-btn.active { border-color: var(--good); color: var(--text); }
 
   .download-btn {
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 5px;
     background: linear-gradient(135deg, var(--accent), #ff9a3d);
     color: #2a0f0a;
     font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
     font-weight: 700;
-    font-size: 13px;
-    padding: 8px 16px;
-    border-radius: 20px;
+    font-size: 11.5px;
+    padding: 7px 13px;
+    border-radius: 16px;
     text-decoration: none;
-    box-shadow: 0 5px 14px rgba(255, 107, 91, 0.35);
+    box-shadow: 0 4px 10px rgba(255, 107, 91, 0.35);
     cursor: pointer;
     border: none;
+    white-space: nowrap;
   }
 
   .bb-volume-row {
@@ -281,10 +285,10 @@
     max-width: 380px;
     background: var(--panel);
     border: 1px solid var(--panel-line);
-    border-radius: 14px;
-    padding: 8px 14px;
+    border-radius: 12px;
+    padding: 5px 12px;
   }
-  .bb-volume-row svg { flex-shrink: 0; color: var(--sub); }
+  .bb-volume-row svg { flex-shrink: 0; color: var(--sub); width: 14px; height: 14px; }
   .bb-volume-row input[type="range"] {
     flex: 1;
     -webkit-appearance: none;
@@ -296,30 +300,30 @@
   }
   .bb-volume-row input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 16px; height: 16px;
+    width: 14px; height: 14px;
     border-radius: 50%;
     background: var(--accent);
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   }
   .bb-volume-row input[type="range"]::-moz-range-thumb {
-    width: 16px; height: 16px;
+    width: 14px; height: 14px;
     border: none;
     border-radius: 50%;
     background: var(--accent);
     cursor: pointer;
   }
   .bb-volume-label {
-    font-size: 11px;
+    font-size: 10px;
     color: var(--sub);
-    min-width: 30px;
+    min-width: 28px;
     text-align: right;
   }
 
   .bb-stats-line {
     font-size: 11px;
     color: var(--sub);
-    margin-top: 4px;
+    margin-top: 2px;
   }
   .bb-history {
     display: flex;
@@ -357,29 +361,26 @@
         </svg>
         <span id="bb-music-label">Music On</span>
       </button>
-    </div>
-
-    <div class="bb-volume-row">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/>
-        <path d="M16 8.5a4.5 4.5 0 010 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
-      <input type="range" id="bb-volume-slider" min="0" max="100" value="70">
-      <span class="bb-volume-label" id="bb-volume-label">70%</span>
-    </div>
-
-    <div class="bb-utility-row" style="justify-content:center;">
       <!--
         DOWNLOAD BUTTON — update the href below once you have your
         Play Store link, Uptodown link, or direct APK download link.
         Until then it points to "#" (does nothing when clicked).
       -->
       <a class="download-btn" id="bb-download-link" href="#" target="_blank">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Download App
+        Download
       </a>
+    </div>
+
+    <div class="bb-volume-row">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/>
+        <path d="M16 8.5a4.5 4.5 0 010 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <input type="range" id="bb-volume-slider" min="0" max="100" value="70">
+      <span class="bb-volume-label" id="bb-volume-label">70%</span>
     </div>
   </div>
 
@@ -400,8 +401,7 @@
       <div class="value" id="bb-score">0</div>
     </div>
   </div>
-  <div class="bb-best" id="bb-best">Best: 0</div>
-  <div class="bb-stats-line" id="bb-total">Total Score (all games): 0</div>
+  <div class="bb-best" id="bb-best">Best: 0 &nbsp;•&nbsp; Total: 0</div>
 
   <!--
     ============================================================
@@ -427,7 +427,7 @@
 
   <div class="bb-hint">Drag blocks onto the grid. Fill a full row or column to clear it.</div>
 
-  <div style="margin-top:16px;display:flex;gap:16px;font-size:11px;">
+  <div style="margin-top:10px;display:flex;gap:16px;font-size:11px;">
     <a href="about_us.html" style="color:#b3a0d4;text-decoration:none;">About</a>
     <a href="privacy_policy.html" style="color:#b3a0d4;text-decoration:none;">Privacy Policy</a>
   </div>
@@ -564,7 +564,7 @@
       const gain = ctx.createGain();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, startTime);
-      const peak = 0.035 * masterVolume;
+      const peak = 0.11 * masterVolume;
       gain.gain.setValueAtTime(0, startTime);
       gain.gain.linearRampToValueAtTime(peak, startTime + duration * 0.3);
       gain.gain.linearRampToValueAtTime(0, startTime + duration);
@@ -632,20 +632,28 @@
       saveSetting(LS_KEYS.volume, masterVolume);
     });
 
-    // Browsers require a user gesture before audio can play — start music
-    // on the first tap/click anywhere on the page.
+    // Browsers require a user gesture before audio can play — try starting
+    // music on the very first interaction of any kind on the page.
     const tryStartMusic = () => {
       if (musicOn) startMusic();
       window.removeEventListener('pointerdown', tryStartMusic);
+      window.removeEventListener('touchstart', tryStartMusic);
+      window.removeEventListener('click', tryStartMusic);
+      window.removeEventListener('keydown', tryStartMusic);
     };
-    window.addEventListener('pointerdown', tryStartMusic, { once: true });
+    window.addEventListener('pointerdown', tryStartMusic);
+    window.addEventListener('touchstart', tryStartMusic);
+    window.addEventListener('click', tryStartMusic);
+    window.addEventListener('keydown', tryStartMusic);
+    // Some WebView wrappers (e.g. inside an APK) allow audio without a
+    // gesture — attempt immediately too, harmlessly ignored if blocked.
+    if (musicOn) { try { startMusic(); } catch (e) {} }
   }
   // ------------------------------------------------------------------------------
   const boardEl = document.getElementById('bb-board');
   const trayEls = [...document.querySelectorAll('.bb-slot')];
   const scoreEl = document.getElementById('bb-score');
   const bestEl = document.getElementById('bb-best');
-  const totalEl = document.getElementById('bb-total');
   const overlay = document.getElementById('bb-overlay');
   const finalScoreEl = document.getElementById('bb-final-score');
   const overlayStatsEl = document.getElementById('bb-overlay-stats');
@@ -820,8 +828,7 @@
 
   function renderScore() {
     scoreEl.textContent = score;
-    bestEl.textContent = 'Best: ' + Math.max(best, score);
-    totalEl.textContent = 'Total Score (all games): ' + (totalScore + score);
+    bestEl.textContent = 'Best: ' + Math.max(best, score) + ' \u2022 Total: ' + (totalScore + score);
   }
 
   function renderHistory() {
