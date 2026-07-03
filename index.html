@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Block Cascade — Drag. Clear. Cascade.</title>
+<meta name="description" content="A relaxing block puzzle game. Drag colorful blocks, clear lines, and chase your high score. Free, no install needed.">
+
+<!-- Social share preview (Open Graph) -->
+<meta property="og:title" content="Block Cascade">
+<meta property="og:description" content="Drag. Clear. Cascade your way to a high score.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #1a1030;
+    --bg2: #2b1a4a;
+    --panel: #24163f;
+    --panel-line: rgba(255,255,255,0.08);
+    --text: #f4eefc;
+    --sub: #b3a0d4;
+    --coral: #ff6b5b;
+    --coral-dark: #c43f2e;
+    --teal: #2dd4bf;
+    --amber: #ffc145;
+    --violet: #9b7bff;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at 25% -10%, var(--bg2) 0%, var(--bg) 60%);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
+  }
+
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 40px 22px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+  }
+
+  /* ---------- Hero ---------- */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .brand-name {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+
+  /* Signature element: live animated mini board */
+  .demo-board {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 5px;
+    width: 220px;
+    height: 220px;
+    background: var(--panel);
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.45), inset 0 0 0 1px var(--panel-line);
+    margin-bottom: 28px;
+  }
+  .demo-cell {
+    background: #33224f;
+    border-radius: 5px;
+  }
+  .demo-cell.on {
+    animation: cellFill 3.2s ease-in-out infinite;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.25), inset 0 2px 0 rgba(255,255,255,0.3);
+  }
+  @keyframes cellFill {
+    0%, 8% { background: #33224f; transform: scale(1); }
+    14%, 60% { background: var(--c, var(--coral)); transform: scale(1); }
+    68% { transform: scale(1.18); box-shadow: 0 0 16px 3px rgba(255,255,255,0.5); }
+    76%, 100% { background: #33224f; transform: scale(1); }
+  }
+
+  h1 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    margin: 0 0 8px;
+    line-height: 1.15;
+  }
+  .tagline {
+    color: var(--sub);
+    font-size: 15px;
+    margin: 0 0 30px;
+    max-width: 320px;
+  }
+
+  /* ---------- CTA ---------- */
+  .play-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--coral), var(--amber));
+    color: #2a0f0a;
+    font-family: 'Baloo 2', sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    padding: 17px 42px;
+    border-radius: 40px;
+    text-decoration: none;
+    box-shadow: 0 10px 26px rgba(255, 107, 91, 0.4);
+    position: relative;
+    transition: transform 0.15s ease;
+  }
+  .play-btn:hover { transform: translateY(-2px) scale(1.02); }
+  .play-btn:active { transform: translateY(0) scale(0.98); }
+  .play-btn::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 46px;
+    border: 2px solid rgba(255, 107, 91, 0.5);
+    animation: pulseRing 2.2s ease-out infinite;
+  }
+  @keyframes pulseRing {
+    0% { transform: scale(0.96); opacity: 0.9; }
+    70% { transform: scale(1.14); opacity: 0; }
+    100% { opacity: 0; }
+  }
+  .meta-line {
+    margin-top: 16px;
+    font-size: 12.5px;
+    color: var(--sub);
+    letter-spacing: 0.2px;
+  }
+
+  /* ---------- Features ---------- */
+  .features {
+    display: flex;
+    gap: 10px;
+    margin-top: 42px;
+    width: 100%;
+  }
+  .feature {
+    flex: 1;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 14px;
+    padding: 16px 8px;
+  }
+  .feature .dot {
+    width: 10px; height: 10px;
+    border-radius: 3px;
+    margin: 0 auto 8px;
+  }
+  .feature p {
+    font-size: 12px;
+    color: var(--sub);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  /* ---------- Footer ---------- */
+  .footer {
+    margin-top: auto;
+    padding-top: 40px;
+    display: flex;
+    gap: 18px;
+    font-size: 12px;
+  }
+  .footer a { color: var(--sub); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <svg width="24" height="24" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="13" width="10" height="10" rx="2.5" fill="#ff6b5b"/>
+      <rect x="13" y="13" width="10" height="10" rx="2.5" fill="#2dd4bf"/>
+      <rect x="7" y="1" width="10" height="10" rx="2.5" fill="#ffc145"/>
+    </svg>
+    <span class="brand-name">Block Cascade</span>
+  </div>
+
+  <div class="demo-board" id="demoBoard"></div>
+
+  <h1>Drag. Clear.<br>Cascade.</h1>
+  <p class="tagline">A relaxing block puzzle. Fill the grid, clear the lines, and chase a new high score — one calm move at a time.</p>
+
+  <a href="game.html" class="play-btn">▶ Play Now</a>
+  <div class="meta-line">Free &nbsp;•&nbsp; No install needed &nbsp;•&nbsp; Play instantly</div>
+
+  <div class="features">
+    <div class="feature">
+      <div class="dot" style="background:#ff6b5b;"></div>
+      <p>Drag &amp; fit any shape</p>
+    </div>
+    <div class="feature">
+      <div class="dot" style="background:#2dd4bf;"></div>
+      <p>No timers, no pressure</p>
+    </div>
+    <div class="feature">
+      <div class="dot" style="background:#ffc145;"></div>
+      <p>Beat your best score</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="about_us.html">About</a>
+    <a href="privacy_policy.html">Privacy Policy</a>
+  </div>
+</div>
+
+<script>
+  // Build the animated signature demo board (decorative only)
+  const board = document.getElementById('demoBoard');
+  const colors = ['#ff6b5b', '#2dd4bf', '#ffc145', '#9b7bff', '#8de04d'];
+  const litPattern = [7,8,9,13,14,15,19,20,21,25,26,27]; // a pleasant scattered fill
+  for (let i = 0; i < 36; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'demo-cell';
+    if (litPattern.includes(i)) {
+      cell.classList.add('on');
+      const color = colors[i % colors.length];
+      cell.style.setProperty('--c', color);
+      cell.style.animationDelay = (i % 6) * 0.15 + 's';
+    }
+    board.appendChild(cell);
+  }
+</script>
+</body>
+</html>

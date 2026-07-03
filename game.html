@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Block Cascade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+
+<!--
+  ============================================================
+  ADSTERRA AD CODE — SOCIAL BAR (paste once, anywhere in <head>)
+  ============================================================
+  1. Log in to your Adsterra dashboard -> "Websites" -> "Add website"
+     -> add your site/app URL or domain.
+  2. Select ad format: "Social Bar".
+  3. Copy the <script> code Adsterra gives you and paste it
+     BELOW this comment (place the Social Bar code in only ONE
+     place in this file, never duplicate it).
+  Example look (your real code will come from Adsterra):
+  <script src="//pl000000.effectivecpmgate.com/00/00/00/xxxxxxxxxx.js"></script>
+  ============================================================
+-->
+
+</head>
+<body style="margin:0;background:#1a1030;">
+<div id="bb-root">
+<style>
+  #bb-root {
+    --bg: #1a1030;
+    --bg2: #2b1a4a;
+    --panel: #24163f;
+    --panel-line: rgba(255,255,255,0.07);
+    --cell-empty: #33224f;
+    --text: #f4eefc;
+    --sub: #b3a0d4;
+    --accent: #ff6b5b;
+    --accent-dark: #c43f2e;
+    --good: #2dd4bf;
+    --danger: #ff4d6a;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at 25% -10%, var(--bg2) 0%, var(--bg) 55%);
+    color: var(--text);
+    min-height: 560px;
+    padding: 20px 12px 30px;
+    border-radius: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+  }
+  #bb-root * { box-sizing: border-box; }
+
+  .bb-header {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .bb-title {
+    font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .bb-title .logo-mark {
+    width: 26px; height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bb-scorebox {
+    background: var(--panel);
+    border-radius: 14px;
+    padding: 6px 16px;
+    text-align: center;
+    min-width: 78px;
+    border: 1px solid var(--panel-line);
+  }
+  .bb-scorebox .label {
+    font-size: 10px;
+    color: var(--sub);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  .bb-scorebox .value {
+    font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .bb-best {
+    font-size: 11px;
+    color: var(--sub);
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
+  }
+
+  #bb-board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 4px;
+    width: min(88vw, 360px);
+    height: min(88vw, 360px);
+    background: var(--panel);
+    padding: 9px;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(0,0,0,0.4), inset 0 0 0 1px var(--panel-line);
+    touch-action: none;
+    position: relative;
+  }
+  .bb-cell {
+    background: var(--cell-empty);
+    border-radius: 6px;
+    transition: background 0.12s, transform 0.12s;
+  }
+  .bb-cell.filled {
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.25), inset 0 2px 0 rgba(255,255,255,0.3);
+  }
+  .bb-cell.hint-ok { background: rgba(45, 212, 191, 0.4) !important; }
+  .bb-cell.hint-bad { background: rgba(255, 77, 106, 0.4) !important; }
+  .bb-cell.clearing {
+    animation: bb-cascade 0.32s cubic-bezier(.3,1.4,.6,1) forwards;
+    z-index: 2;
+  }
+  @keyframes bb-cascade {
+    0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 rgba(255,255,255,0); }
+    30% { transform: scale(1.22); opacity: 1; box-shadow: 0 0 18px 4px rgba(255,255,255,0.55); }
+    100% { transform: scale(0.15); opacity: 0; box-shadow: 0 0 0 rgba(255,255,255,0); }
+  }
+
+  #bb-tray {
+    width: min(88vw, 360px);
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 8px;
+  }
+  .bb-slot {
+    flex: 1;
+    min-height: 80px;
+    background: var(--panel);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 1px solid var(--panel-line);
+    transition: border-color 0.15s;
+  }
+  .bb-slot.empty { opacity: 0.3; }
+  .bb-piece-grid {
+    display: grid;
+    touch-action: none;
+    cursor: grab;
+  }
+  .bb-piece-cell {
+    border-radius: 4px;
+    margin: 1px;
+  }
+  .bb-piece-grid.dragging-source { opacity: 0.25; }
+
+  #bb-ghost {
+    position: fixed;
+    display: grid;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.92;
+  }
+  .bb-ghost-cell {
+    border-radius: 6px;
+  }
+
+  #bb-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 8, 28, 0.92);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 22px;
+    z-index: 50;
+    text-align: center;
+    padding: 20px;
+  }
+  #bb-overlay.show { display: flex; }
+  #bb-overlay h2 {
+    font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+    margin: 0 0 6px;
+    font-size: 27px;
+    font-weight: 700;
+  }
+  #bb-overlay p { margin: 0 0 18px; color: var(--sub); font-size: 14px; }
+  #bb-restart {
+    background: linear-gradient(135deg, var(--accent), #ff9a3d);
+    color: #2a0f0a;
+    border: none;
+    padding: 13px 30px;
+    border-radius: 30px;
+    font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(255, 107, 91, 0.35);
+  }
+  .bb-hint {
+    margin-top: 14px;
+    font-size: 11px;
+    color: var(--sub);
+    text-align: center;
+    max-width: 340px;
+  }
+</style>
+
+  <div class="bb-header">
+    <div class="bb-title">
+      <span class="logo-mark">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="13" width="10" height="10" rx="2.5" fill="#ff6b5b"/>
+          <rect x="13" y="13" width="10" height="10" rx="2.5" fill="#2dd4bf"/>
+          <rect x="7" y="1" width="10" height="10" rx="2.5" fill="#ffc145"/>
+        </svg>
+      </span>
+      Block Cascade
+    </div>
+    <div class="bb-scorebox">
+      <div class="label">Score</div>
+      <div class="value" id="bb-score">0</div>
+    </div>
+  </div>
+  <div class="bb-best" id="bb-best">Best: 0</div>
+
+  <!--
+    ============================================================
+    ADSTERRA AD CODE — BANNER (top slot, size 320x50 recommended)
+    ============================================================
+    In Adsterra dashboard: Ad format = "Banner", size = 320x50
+    (best fit for mobile). Paste the code you receive INSIDE
+    the div below.
+    ============================================================
+  -->
+  <div id="ad-banner-top" style="width:100%;max-width:360px;min-height:50px;margin-bottom:14px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.15);border-radius:10px;font-size:11px;color:#b3a0d4;">
+    <!-- Paste Adsterra Banner (320x50) code here -->
+    Ad space (Adsterra Banner 320x50)
+  </div>
+
+  <div id="bb-board"></div>
+
+  <div id="bb-tray">
+    <div class="bb-slot" data-slot="0"></div>
+    <div class="bb-slot" data-slot="1"></div>
+    <div class="bb-slot" data-slot="2"></div>
+  </div>
+
+  <div class="bb-hint">Drag blocks onto the grid. Fill a full row or column to clear it.</div>
+
+  <div style="margin-top:16px;display:flex;gap:16px;font-size:11px;">
+    <a href="about_us.html" style="color:#b3a0d4;text-decoration:none;">About</a>
+    <a href="privacy_policy.html" style="color:#b3a0d4;text-decoration:none;">Privacy Policy</a>
+  </div>
+
+  <div id="bb-overlay">
+    <h2>Game Over</h2>
+    <p id="bb-final-score">Score: 0</p>
+
+    <!--
+      ============================================================
+      ADSTERRA AD CODE — NATIVE / BANNER (game-over slot)
+      ============================================================
+      This is the best slot for monetization — the user is
+      already paused here, so gameplay isn't disrupted. Take a
+      "Native Banner" or "Banner 300x250" code from Adsterra
+      and paste it INSIDE this div.
+      ============================================================
+    -->
+    <div id="ad-gameover" style="width:100%;max-width:300px;min-height:100px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.15);border-radius:10px;font-size:11px;color:#b3a0d4;">
+      <!-- Paste Adsterra Native/Banner code here -->
+      Ad space (Adsterra Native/Banner)
+    </div>
+
+    <button id="bb-restart">Play Again</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const ROOT = document.getElementById('bb-root');
+  const boardEl = document.getElementById('bb-board');
+  const trayEls = [...document.querySelectorAll('.bb-slot')];
+  const scoreEl = document.getElementById('bb-score');
+  const bestEl = document.getElementById('bb-best');
+  const overlay = document.getElementById('bb-overlay');
+  const finalScoreEl = document.getElementById('bb-final-score');
+  const restartBtn = document.getElementById('bb-restart');
+
+  const SIZE = 8;
+  const COLORS = [
+    ['#ff6b5b', '#c43f2e'],
+    ['#2dd4bf', '#0e7c6e'],
+    ['#ffc145', '#c98a00'],
+    ['#9b7bff', '#6247c4'],
+    ['#8de04d', '#57a626'],
+    ['#4da8ff', '#1e6fcb'],
+    ['#ff7fb0', '#d14a85']
+  ];
+
+  const SHAPES = [
+    [[0,0]],
+    [[0,0],[0,1]],
+    [[0,0],[1,0]],
+    [[0,0],[0,1],[0,2]],
+    [[0,0],[1,0],[2,0]],
+    [[0,0],[0,1],[0,2],[0,3]],
+    [[0,0],[1,0],[2,0],[3,0]],
+    [[0,0],[0,1],[1,0],[1,1]],
+    [[0,0],[1,0],[1,1]],
+    [[0,0],[0,1],[1,0]],
+    [[0,0],[0,1],[1,1]],
+    [[0,1],[1,0],[1,1]],
+    [[0,0],[0,1],[0,2],[1,1]],
+    [[0,1],[1,0],[1,1],[1,2]],
+    [[0,1],[0,2],[1,0],[1,1]],
+    [[0,0],[0,1],[1,1],[1,2]],
+    [[0,0],[1,0],[2,0],[2,1]],
+    [[0,0],[0,1],[1,0],[2,0]],
+    [[0,0],[0,1],[0,2],[1,0],[2,0]],
+    [[0,1],[1,1],[1,0],[1,2],[2,1]]
+  ];
+
+  let board = []; // SIZE x SIZE, null or colorIndex
+  let tray = [null, null, null]; // {shape, colorIdx}
+  let score = 0;
+  let best = 0;
+  let dragging = null; // {slotIdx, shape, colorIdx, cellSize, pointerId}
+  let gameOver = false;
+
+  try {
+    const stored = window.localStorage ? null : null; // localStorage disabled in artifacts sandbox intentionally
+  } catch(e) {}
+  best = 0;
+
+  function newBoard() {
+    board = Array.from({length: SIZE}, () => Array(SIZE).fill(null));
+  }
+
+  function shapeBounds(shape) {
+    let maxR = 0, maxC = 0;
+    for (const [r,c] of shape) { if (r > maxR) maxR = r; if (c > maxC) maxC = c; }
+    return { rows: maxR + 1, cols: maxC + 1 };
+  }
+
+  function randomPiece() {
+    const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+    const colorIdx = Math.floor(Math.random() * COLORS.length);
+    return { shape, colorIdx };
+  }
+
+  function refillTrayIfEmpty() {
+    if (tray.every(p => p === null)) {
+      tray = [randomPiece(), randomPiece(), randomPiece()];
+    }
+  }
+
+  function canPlace(shape, row, col) {
+    for (const [dr, dc] of shape) {
+      const r = row + dr, c = col + dc;
+      if (r < 0 || r >= SIZE || c < 0 || c >= SIZE) return false;
+      if (board[r][c] !== null) return false;
+    }
+    return true;
+  }
+
+  function anyPlacementExists(shape) {
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        if (canPlace(shape, r, c)) return true;
+      }
+    }
+    return false;
+  }
+
+  function checkGameOver() {
+    for (const p of tray) {
+      if (p && anyPlacementExists(p.shape)) return false;
+    }
+    return true;
+  }
+
+  function placeShape(shape, row, col, colorIdx) {
+    for (const [dr, dc] of shape) {
+      board[row + dr][col + dc] = colorIdx;
+    }
+  }
+
+  function clearLines() {
+    const fullRows = [];
+    const fullCols = [];
+    for (let r = 0; r < SIZE; r++) {
+      if (board[r].every(v => v !== null)) fullRows.push(r);
+    }
+    for (let c = 0; c < SIZE; c++) {
+      let full = true;
+      for (let r = 0; r < SIZE; r++) if (board[r][c] === null) { full = false; break; }
+      if (full) fullCols.push(c);
+    }
+    const cellsToClear = new Set();
+    fullRows.forEach(r => { for (let c = 0; c < SIZE; c++) cellsToClear.add(r+'_'+c); });
+    fullCols.forEach(c => { for (let r = 0; r < SIZE; r++) cellsToClear.add(r+'_'+c); });
+
+    if (cellsToClear.size > 0) {
+      cellsToClear.forEach(key => {
+        const [r, c] = key.split('_').map(Number);
+        const idx = r * SIZE + c;
+        const cellEl = boardEl.children[idx];
+        if (cellEl) cellEl.classList.add('clearing');
+      });
+      setTimeout(() => {
+        cellsToClear.forEach(key => {
+          const [r, c] = key.split('_').map(Number);
+          board[r][c] = null;
+        });
+        renderBoard();
+      }, 220);
+    }
+    const linesCleared = fullRows.length + fullCols.length;
+    if (linesCleared > 0) {
+      score += linesCleared * 10 + Math.max(0, linesCleared - 1) * 10;
+    }
+    return linesCleared;
+  }
+
+  function renderBoard() {
+    boardEl.innerHTML = '';
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'bb-cell';
+        const val = board[r][c];
+        if (val !== null) {
+          cell.classList.add('filled');
+          cell.style.background = `linear-gradient(145deg, ${COLORS[val][0]}, ${COLORS[val][1]})`;
+        }
+        boardEl.appendChild(cell);
+      }
+    }
+  }
+
+  function renderScore() {
+    scoreEl.textContent = score;
+    bestEl.textContent = 'Best: ' + Math.max(best, score);
+  }
+
+  function renderTray() {
+    trayEls.forEach((slotEl, idx) => {
+      slotEl.innerHTML = '';
+      const piece = tray[idx];
+      if (!piece) {
+        slotEl.classList.add('empty');
+        return;
+      }
+      slotEl.classList.remove('empty');
+      const { rows, cols } = shapeBounds(piece.shape);
+      const previewCell = 20;
+      const grid = document.createElement('div');
+      grid.className = 'bb-piece-grid';
+      grid.style.gridTemplateColumns = `repeat(${cols}, ${previewCell}px)`;
+      grid.style.gridTemplateRows = `repeat(${rows}, ${previewCell}px)`;
+      grid.dataset.slot = idx;
+
+      const cellSet = new Set(piece.shape.map(([r,c]) => r+'_'+c));
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cellDiv = document.createElement('div');
+          if (cellSet.has(r+'_'+c)) {
+            cellDiv.className = 'bb-piece-cell';
+            cellDiv.style.width = (previewCell - 2) + 'px';
+            cellDiv.style.height = (previewCell - 2) + 'px';
+            cellDiv.style.background = `linear-gradient(145deg, ${COLORS[piece.colorIdx][0]}, ${COLORS[piece.colorIdx][1]})`;
+          } else {
+            cellDiv.style.width = (previewCell - 2) + 'px';
+            cellDiv.style.height = (previewCell - 2) + 'px';
+          }
+          grid.appendChild(cellDiv);
+        }
+      }
+      slotEl.appendChild(grid);
+      grid.addEventListener('pointerdown', (e) => startDrag(e, idx));
+    });
+  }
+
+  function clearHints() {
+    boardEl.querySelectorAll('.bb-cell').forEach(c => {
+      c.classList.remove('hint-ok', 'hint-bad');
+    });
+  }
+
+  function showHint(shape, row, col) {
+    clearHints();
+    const valid = canPlace(shape, row, col);
+    for (const [dr, dc] of shape) {
+      const r = row + dr, c = col + dc;
+      if (r >= 0 && r < SIZE && c >= 0 && c < SIZE) {
+        const idx = r * SIZE + c;
+        const cellEl = boardEl.children[idx];
+        if (cellEl) cellEl.classList.add(valid ? 'hint-ok' : 'hint-bad');
+      }
+    }
+    return valid;
+  }
+
+  function startDrag(e, slotIdx) {
+    if (gameOver) return;
+    const piece = tray[slotIdx];
+    if (!piece) return;
+    e.preventDefault();
+
+    const boardRect = boardEl.getBoundingClientRect();
+    const cellSize = boardRect.width / SIZE;
+    const { rows, cols } = shapeBounds(piece.shape);
+
+    const ghost = document.createElement('div');
+    ghost.id = 'bb-ghost';
+    ghost.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+    ghost.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+    const cellSet = new Set(piece.shape.map(([r,c]) => r+'_'+c));
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const cellDiv = document.createElement('div');
+        cellDiv.className = 'bb-ghost-cell';
+        cellDiv.style.width = (cellSize - 4) + 'px';
+        cellDiv.style.height = (cellSize - 4) + 'px';
+        cellDiv.style.margin = '2px';
+        if (cellSet.has(r+'_'+c)) {
+          cellDiv.style.background = `linear-gradient(145deg, ${COLORS[piece.colorIdx][0]}, ${COLORS[piece.colorIdx][1]})`;
+        } else {
+          cellDiv.style.visibility = 'hidden';
+        }
+        ghost.appendChild(cellDiv);
+      }
+    }
+    document.body.appendChild(ghost);
+
+    const sourceGrid = e.currentTarget;
+    sourceGrid.classList.add('dragging-source');
+
+    dragging = {
+      slotIdx, piece, cellSize, rows, cols,
+      boardRect, ghost, pointerId: e.pointerId,
+      lift: cellSize * 1.4,
+      lastValid: false, lastRow: -1, lastCol: -1
+    };
+
+    positionGhost(e.clientX, e.clientY);
+    updateHintAndPosition(e.clientX, e.clientY);
+
+    window.addEventListener('pointermove', onDragMove);
+    window.addEventListener('pointerup', onDragEnd);
+    window.addEventListener('pointercancel', onDragEnd);
+  }
+
+  function positionGhost(clientX, clientY) {
+    const d = dragging;
+    const w = d.cols * d.cellSize;
+    const h = d.rows * d.cellSize;
+    d.ghost.style.left = (clientX - w/2) + 'px';
+    d.ghost.style.top = (clientY - h/2 - d.lift) + 'px';
+  }
+
+  function updateHintAndPosition(clientX, clientY) {
+    const d = dragging;
+    const boardRect = boardEl.getBoundingClientRect();
+    const relX = clientX - boardRect.left;
+    const relY = (clientY - d.lift) - boardRect.top;
+
+    const withinX = clientX > boardRect.left - d.cellSize && clientX < boardRect.right + d.cellSize;
+    const withinY = (clientY - d.lift) > boardRect.top - d.cellSize && (clientY - d.lift) < boardRect.bottom + d.cellSize;
+
+    clearHints();
+    if (!withinX || !withinY) {
+      d.lastValid = false;
+      d.lastRow = -1;
+      d.lastCol = -1;
+      return;
+    }
+
+    let row = Math.round(relY / d.cellSize - d.rows / 2 + 0.5);
+    let col = Math.round(relX / d.cellSize - d.cols / 2 + 0.5);
+    row = Math.max(0, Math.min(SIZE - d.rows, row));
+    col = Math.max(0, Math.min(SIZE - d.cols, col));
+
+    const valid = showHint(d.piece.shape, row, col);
+    d.lastValid = valid;
+    d.lastRow = row;
+    d.lastCol = col;
+  }
+
+  function onDragMove(e) {
+    if (!dragging || e.pointerId !== dragging.pointerId) return;
+    positionGhost(e.clientX, e.clientY);
+    updateHintAndPosition(e.clientX, e.clientY);
+  }
+
+  function onDragEnd(e) {
+    if (!dragging || e.pointerId !== dragging.pointerId) return;
+    const d = dragging;
+    clearHints();
+    d.ghost.remove();
+
+    const sourceGrids = document.querySelectorAll('.bb-piece-grid');
+    sourceGrids.forEach(g => g.classList.remove('dragging-source'));
+
+    window.removeEventListener('pointermove', onDragMove);
+    window.removeEventListener('pointerup', onDragEnd);
+    window.removeEventListener('pointercancel', onDragEnd);
+
+    if (d.lastValid) {
+      placeShape(d.piece.shape, d.lastRow, d.lastCol, d.piece.colorIdx);
+      score += d.piece.shape.length;
+      tray[d.slotIdx] = null;
+      renderBoard();
+      clearLines();
+      renderScore();
+      refillTrayIfEmpty();
+      renderTray();
+
+      if (checkGameOver()) {
+        endGame();
+      }
+    } else {
+      renderTray();
+    }
+    dragging = null;
+  }
+
+  function endGame() {
+    gameOver = true;
+    best = Math.max(best, score);
+    finalScoreEl.textContent = 'Score: ' + score;
+    overlay.classList.add('show');
+  }
+
+  function startGame() {
+    gameOver = false;
+    score = 0;
+    newBoard();
+    tray = [randomPiece(), randomPiece(), randomPiece()];
+    overlay.classList.remove('show');
+    renderBoard();
+    renderScore();
+    renderTray();
+  }
+
+  restartBtn.addEventListener('click', startGame);
+
+  startGame();
+})();
+</script>
+</body>
+</html>
