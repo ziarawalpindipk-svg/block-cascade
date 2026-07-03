@@ -228,9 +228,15 @@
     width: 100%;
     max-width: 380px;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: column;
     gap: 8px;
     margin-bottom: 10px;
+  }
+  .bb-utility-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
   }
   .icon-btn {
     display: flex;
@@ -248,31 +254,137 @@
   }
   .icon-btn:hover { border-color: var(--accent); color: var(--text); }
   .icon-btn svg { display: block; }
+  .icon-btn.active { border-color: var(--good); color: var(--text); }
+
+  .download-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: linear-gradient(135deg, var(--accent), #ff9a3d);
+    color: #2a0f0a;
+    font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    box-shadow: 0 5px 14px rgba(255, 107, 91, 0.35);
+    cursor: pointer;
+    border: none;
+  }
+
+  .bb-volume-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 380px;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 14px;
+    padding: 8px 14px;
+  }
+  .bb-volume-row svg { flex-shrink: 0; color: var(--sub); }
+  .bb-volume-row input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--cell-empty);
+    outline: none;
+  }
+  .bb-volume-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+  .bb-volume-row input[type="range"]::-moz-range-thumb {
+    width: 16px; height: 16px;
+    border: none;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+  }
+  .bb-volume-label {
+    font-size: 11px;
+    color: var(--sub);
+    min-width: 30px;
+    text-align: right;
+  }
+
+  .bb-stats-line {
+    font-size: 11px;
+    color: var(--sub);
+    margin-top: 4px;
+  }
+  .bb-history {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 14px;
+    max-width: 300px;
+  }
+  .bb-history-chip {
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: var(--sub);
+  }
 </style>
 
   <div class="bb-utility-bar">
-    <button class="icon-btn" id="bb-sound-toggle" title="Toggle sound">
-      <svg id="bb-sound-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div class="bb-utility-row">
+      <button class="icon-btn active" id="bb-sound-toggle" title="Toggle sound effects">
+        <svg id="bb-sound-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/>
+          <path d="M16 8.5a4.5 4.5 0 010 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M18.5 6a8 8 0 010 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity="0.6"/>
+        </svg>
+        <span id="bb-sound-label">Sound On</span>
+      </button>
+      <button class="icon-btn active" id="bb-music-toggle" title="Toggle background music">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 18V5l12-2v13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        <span id="bb-music-label">Music On</span>
+      </button>
+    </div>
+
+    <div class="bb-volume-row">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/>
         <path d="M16 8.5a4.5 4.5 0 010 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M18.5 6a8 8 0 010 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity="0.6"/>
       </svg>
-      <span id="bb-sound-label">Sound On</span>
-    </button>
-    <!--
-      DOWNLOAD BUTTON — update the href below once you have your
-      Play Store link, Uptodown link, or direct APK download link.
-      Until then it points to "#" (does nothing).
-    -->
-    <a class="icon-btn" id="bb-download-link" href="#" target="_blank" style="text-decoration:none;">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      Download App
-    </a>
+      <input type="range" id="bb-volume-slider" min="0" max="100" value="70">
+      <span class="bb-volume-label" id="bb-volume-label">70%</span>
+    </div>
+
+    <div class="bb-utility-row" style="justify-content:center;">
+      <!--
+        DOWNLOAD BUTTON — update the href below once you have your
+        Play Store link, Uptodown link, or direct APK download link.
+        Until then it points to "#" (does nothing when clicked).
+      -->
+      <a class="download-btn" id="bb-download-link" href="#" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Download App
+      </a>
+    </div>
   </div>
 
   <div class="bb-header">
+
     <div class="bb-title">
       <span class="logo-mark">
         <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -289,6 +401,7 @@
     </div>
   </div>
   <div class="bb-best" id="bb-best">Best: 0</div>
+  <div class="bb-stats-line" id="bb-total">Total Score (all games): 0</div>
 
   <!--
     ============================================================
@@ -322,6 +435,9 @@
   <div id="bb-overlay">
     <h2>Game Over</h2>
     <p id="bb-final-score">Score: 0</p>
+    <p id="bb-overlay-stats" style="margin-top:-10px;font-size:12.5px;color:var(--sub);">Best: 0 &nbsp;•&nbsp; Total: 0</p>
+
+    <div class="bb-history" id="bb-history"></div>
 
     <!--
       ============================================================
@@ -349,6 +465,32 @@
   // ---------------- Sound Engine (synthesized, no audio files needed) ----------------
   let audioCtx = null;
   let soundOn = true;
+  let musicOn = true;
+  let masterVolume = 0.7; // 0 to 1, controlled by slider
+
+  const LS_KEYS = {
+    best: 'blockCascade_best',
+    total: 'blockCascade_total',
+    history: 'blockCascade_history',
+    volume: 'blockCascade_volume',
+    soundOn: 'blockCascade_soundOn',
+    musicOn: 'blockCascade_musicOn'
+  };
+
+  function loadSettings() {
+    try {
+      const v = localStorage.getItem(LS_KEYS.volume);
+      if (v !== null) masterVolume = parseFloat(v);
+      const s = localStorage.getItem(LS_KEYS.soundOn);
+      if (s !== null) soundOn = s === 'true';
+      const m = localStorage.getItem(LS_KEYS.musicOn);
+      if (m !== null) musicOn = m === 'true';
+    } catch (e) { /* localStorage unavailable, use defaults */ }
+  }
+  function saveSetting(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) {}
+  }
+
   function getCtx() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -356,15 +498,16 @@
     if (audioCtx.state === 'suspended') audioCtx.resume();
     return audioCtx;
   }
-  function tone(freq, startTime, duration, type = 'sine', gainPeak = 0.18) {
-    if (!soundOn) return;
+  function tone(freq, startTime, duration, type = 'sine', gainPeak = 0.3) {
+    if (!soundOn || masterVolume <= 0) return;
     const ctx = getCtx();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = type;
     osc.frequency.setValueAtTime(freq, startTime);
+    const peak = gainPeak * masterVolume;
     gain.gain.setValueAtTime(0, startTime);
-    gain.gain.linearRampToValueAtTime(gainPeak, startTime + 0.01);
+    gain.gain.linearRampToValueAtTime(peak, startTime + 0.01);
     gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
     osc.connect(gain);
     gain.connect(ctx.destination);
@@ -375,17 +518,18 @@
     pickup() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      tone(520, t, 0.08, 'triangle', 0.12);
+      tone(520, t, 0.09, 'triangle', 0.22);
     },
     place() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      tone(300, t, 0.1, 'sine', 0.16);
+      tone(300, t, 0.12, 'sine', 0.3);
+      tone(600, t, 0.08, 'sine', 0.12);
     },
     invalid() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      tone(140, t, 0.15, 'sawtooth', 0.08);
+      tone(140, t, 0.18, 'sawtooth', 0.16);
     },
     lineClear(lines) {
       if (!soundOn) return;
@@ -393,32 +537,119 @@
       const notes = [523, 659, 784, 1047]; // C-E-G-C cascade chime
       const count = Math.min(notes.length, 2 + lines);
       for (let i = 0; i < count; i++) {
-        tone(notes[i % notes.length], t + i * 0.07, 0.22, 'sine', 0.2);
+        tone(notes[i % notes.length], t + i * 0.07, 0.26, 'sine', 0.34);
       }
     },
     gameOver() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      [392, 330, 262].forEach((f, i) => tone(f, t + i * 0.18, 0.3, 'triangle', 0.16));
+      [392, 330, 262].forEach((f, i) => tone(f, t + i * 0.18, 0.32, 'triangle', 0.26));
     }
   };
-  function initSoundToggle() {
-    const btn = document.getElementById('bb-sound-toggle');
-    const label = document.getElementById('bb-sound-label');
-    if (!btn) return;
-    btn.addEventListener('click', () => {
-      soundOn = !soundOn;
-      label.textContent = soundOn ? 'Sound On' : 'Sound Off';
-      if (soundOn) { getCtx(); sfx.pickup(); }
+
+  // ---------------- Ambient background music (soft looping pad chords) ----------------
+  let musicTimer = null;
+  const musicChords = [
+    [261.63, 329.63, 392.00],  // C major
+    [220.00, 277.18, 329.63],  // A minor
+    [174.61, 220.00, 261.63],  // F major
+    [196.00, 246.94, 293.66]   // G major
+  ];
+  let chordIndex = 0;
+
+  function playChord(chord, startTime, duration) {
+    const ctx = getCtx();
+    chord.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startTime);
+      const peak = 0.035 * masterVolume;
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(peak, startTime + duration * 0.3);
+      gain.gain.linearRampToValueAtTime(0, startTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(startTime);
+      osc.stop(startTime + duration + 0.05);
     });
+  }
+  function scheduleNextChord() {
+    if (!musicOn) return;
+    const ctx = getCtx();
+    const chordDuration = 4.2;
+    playChord(musicChords[chordIndex % musicChords.length], ctx.currentTime, chordDuration);
+    chordIndex++;
+    musicTimer = setTimeout(scheduleNextChord, chordDuration * 1000);
+  }
+  function startMusic() {
+    if (musicTimer) return; // already running
+    getCtx();
+    scheduleNextChord();
+  }
+  function stopMusic() {
+    if (musicTimer) {
+      clearTimeout(musicTimer);
+      musicTimer = null;
+    }
+  }
+
+  function initSoundControls() {
+    const soundBtn = document.getElementById('bb-sound-toggle');
+    const soundLabel = document.getElementById('bb-sound-label');
+    const musicBtn = document.getElementById('bb-music-toggle');
+    const musicLabel = document.getElementById('bb-music-label');
+    const volumeSlider = document.getElementById('bb-volume-slider');
+    const volumeLabel = document.getElementById('bb-volume-label');
+
+    // Reflect loaded settings in UI
+    soundLabel.textContent = soundOn ? 'Sound On' : 'Sound Off';
+    soundBtn.classList.toggle('active', soundOn);
+    musicLabel.textContent = musicOn ? 'Music On' : 'Music Off';
+    musicBtn.classList.toggle('active', musicOn);
+    volumeSlider.value = Math.round(masterVolume * 100);
+    volumeLabel.textContent = Math.round(masterVolume * 100) + '%';
+
+    soundBtn.addEventListener('click', () => {
+      soundOn = !soundOn;
+      soundLabel.textContent = soundOn ? 'Sound On' : 'Sound Off';
+      soundBtn.classList.toggle('active', soundOn);
+      saveSetting(LS_KEYS.soundOn, soundOn);
+      if (soundOn) sfx.pickup();
+    });
+
+    musicBtn.addEventListener('click', () => {
+      musicOn = !musicOn;
+      musicLabel.textContent = musicOn ? 'Music On' : 'Music Off';
+      musicBtn.classList.toggle('active', musicOn);
+      saveSetting(LS_KEYS.musicOn, musicOn);
+      if (musicOn) startMusic(); else stopMusic();
+    });
+
+    volumeSlider.addEventListener('input', () => {
+      masterVolume = volumeSlider.value / 100;
+      volumeLabel.textContent = volumeSlider.value + '%';
+      saveSetting(LS_KEYS.volume, masterVolume);
+    });
+
+    // Browsers require a user gesture before audio can play — start music
+    // on the first tap/click anywhere on the page.
+    const tryStartMusic = () => {
+      if (musicOn) startMusic();
+      window.removeEventListener('pointerdown', tryStartMusic);
+    };
+    window.addEventListener('pointerdown', tryStartMusic, { once: true });
   }
   // ------------------------------------------------------------------------------
   const boardEl = document.getElementById('bb-board');
   const trayEls = [...document.querySelectorAll('.bb-slot')];
   const scoreEl = document.getElementById('bb-score');
   const bestEl = document.getElementById('bb-best');
+  const totalEl = document.getElementById('bb-total');
   const overlay = document.getElementById('bb-overlay');
   const finalScoreEl = document.getElementById('bb-final-score');
+  const overlayStatsEl = document.getElementById('bb-overlay-stats');
+  const historyEl = document.getElementById('bb-history');
   const restartBtn = document.getElementById('bb-restart');
 
   const SIZE = 8;
@@ -459,13 +690,27 @@
   let tray = [null, null, null]; // {shape, colorIdx}
   let score = 0;
   let best = 0;
+  let totalScore = 0;
+  let scoreHistory = []; // array of past game scores, most recent first
   let dragging = null; // {slotIdx, shape, colorIdx, cellSize, pointerId}
   let gameOver = false;
 
-  try {
-    const stored = window.localStorage ? null : null; // localStorage disabled in artifacts sandbox intentionally
-  } catch(e) {}
-  best = 0;
+  function loadStats() {
+    try {
+      best = parseInt(localStorage.getItem(LS_KEYS.best) || '0', 10) || 0;
+      totalScore = parseInt(localStorage.getItem(LS_KEYS.total) || '0', 10) || 0;
+      scoreHistory = JSON.parse(localStorage.getItem(LS_KEYS.history) || '[]');
+    } catch (e) {
+      best = 0; totalScore = 0; scoreHistory = [];
+    }
+  }
+  function saveStats() {
+    try {
+      localStorage.setItem(LS_KEYS.best, best);
+      localStorage.setItem(LS_KEYS.total, totalScore);
+      localStorage.setItem(LS_KEYS.history, JSON.stringify(scoreHistory.slice(0, 10)));
+    } catch (e) { /* localStorage unavailable, stats won't persist */ }
+  }
 
   function newBoard() {
     board = Array.from({length: SIZE}, () => Array(SIZE).fill(null));
@@ -576,6 +821,21 @@
   function renderScore() {
     scoreEl.textContent = score;
     bestEl.textContent = 'Best: ' + Math.max(best, score);
+    totalEl.textContent = 'Total Score (all games): ' + (totalScore + score);
+  }
+
+  function renderHistory() {
+    historyEl.innerHTML = '';
+    if (scoreHistory.length === 0) {
+      historyEl.innerHTML = '<span class="bb-history-chip" style="opacity:0.5;">No previous games yet</span>';
+      return;
+    }
+    scoreHistory.slice(0, 6).forEach((s, i) => {
+      const chip = document.createElement('span');
+      chip.className = 'bb-history-chip';
+      chip.textContent = (i === 0 ? 'Last: ' : '') + s;
+      historyEl.appendChild(chip);
+    });
   }
 
   function renderTray() {
@@ -767,8 +1027,14 @@
   function endGame() {
     gameOver = true;
     best = Math.max(best, score);
+    totalScore += score;
+    scoreHistory.unshift(score);
+    scoreHistory = scoreHistory.slice(0, 10);
+    saveStats();
     sfx.gameOver();
     finalScoreEl.textContent = 'Score: ' + score;
+    overlayStatsEl.textContent = 'Best: ' + best + ' \u2022 Total: ' + totalScore;
+    renderHistory();
     overlay.classList.add('show');
   }
 
@@ -784,7 +1050,9 @@
   }
 
   restartBtn.addEventListener('click', startGame);
-  initSoundToggle();
+  loadSettings();
+  loadStats();
+  initSoundControls();
 
   startGame();
 })();
