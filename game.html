@@ -379,8 +379,19 @@
         <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/>
         <path d="M16 8.5a4.5 4.5 0 010 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
-      <input type="range" id="bb-volume-slider" min="0" max="100" value="90">
-      <span class="bb-volume-label" id="bb-volume-label">90%</span>
+      <span style="font-size:10px;color:var(--sub);min-width:38px;">Sound</span>
+      <input type="range" id="bb-sfx-volume-slider" min="0" max="100" value="100">
+      <span class="bb-volume-label" id="bb-sfx-volume-label">100%</span>
+    </div>
+    <div class="bb-volume-row">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 18V5l12-2v13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="1.8"/>
+        <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.8"/>
+      </svg>
+      <span style="font-size:10px;color:var(--sub);min-width:38px;">Music</span>
+      <input type="range" id="bb-music-volume-slider" min="0" max="100" value="70">
+      <span class="bb-volume-label" id="bb-music-volume-label">70%</span>
     </div>
   </div>
 
@@ -466,21 +477,25 @@
   let audioCtx = null;
   let soundOn = true;
   let musicOn = true;
-  let masterVolume = 0.9; // 0 to 1, controlled by slider
+  let sfxVolume = 1.0;   // controls block/game sound effects only
+  let musicVolume = 0.7; // controls background music only
 
   const LS_KEYS = {
     best: 'blockCascade_best',
     total: 'blockCascade_total',
     history: 'blockCascade_history',
-    volume: 'blockCascade_volume',
+    sfxVolume: 'blockCascade_sfxVolume',
+    musicVolume: 'blockCascade_musicVolume',
     soundOn: 'blockCascade_soundOn',
     musicOn: 'blockCascade_musicOn'
   };
 
   function loadSettings() {
     try {
-      const v = localStorage.getItem(LS_KEYS.volume);
-      if (v !== null) masterVolume = parseFloat(v);
+      const sv = localStorage.getItem(LS_KEYS.sfxVolume);
+      if (sv !== null) sfxVolume = parseFloat(sv);
+      const mv = localStorage.getItem(LS_KEYS.musicVolume);
+      if (mv !== null) musicVolume = parseFloat(mv);
       const s = localStorage.getItem(LS_KEYS.soundOn);
       if (s !== null) soundOn = s === 'true';
       const m = localStorage.getItem(LS_KEYS.musicOn);
@@ -499,13 +514,13 @@
     return audioCtx;
   }
   function tone(freq, startTime, duration, type = 'sine', gainPeak = 0.3) {
-    if (!soundOn || masterVolume <= 0) return;
+    if (!soundOn || sfxVolume <= 0) return;
     const ctx = getCtx();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = type;
     osc.frequency.setValueAtTime(freq, startTime);
-    const peak = gainPeak * masterVolume;
+    const peak = gainPeak * sfxVolume;
     gain.gain.setValueAtTime(0, startTime);
     gain.gain.linearRampToValueAtTime(peak, startTime + 0.01);
     gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
@@ -528,10 +543,10 @@
     }
     return curve;
   }
-  const loudCurve = makeLoudCurve(45);
+  const loudCurve = makeLoudCurve(60);
 
   function loudTone(freq, startTime, duration, type = 'square', gainPeak = 1.6) {
-    if (!soundOn || masterVolume <= 0) return;
+    if (!soundOn || sfxVolume <= 0) return;
     const ctx = getCtx();
     const osc = ctx.createOscillator();
     const shaper = ctx.createWaveShaper();
@@ -540,7 +555,7 @@
     shaper.oversample = '4x';
     osc.type = type;
     osc.frequency.setValueAtTime(freq, startTime);
-    const peak = gainPeak * masterVolume;
+    const peak = gainPeak * sfxVolume;
     const sustainUntil = startTime + duration * 0.55;
     gain.gain.setValueAtTime(0, startTime);
     gain.gain.linearRampToValueAtTime(peak, startTime + 0.008);
@@ -556,13 +571,13 @@
     pickup() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      loudTone(520, t, 0.13, 'square', 1.4);
+      loudTone(520, t, 0.13, 'square', 1.9);
     },
     place() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      loudTone(300, t, 0.18, 'square', 1.7);
-      loudTone(600, t, 0.13, 'triangle', 1.0);
+      loudTone(300, t, 0.18, 'square', 2.3);
+      loudTone(600, t, 0.13, 'triangle', 1.4);
     },
     invalid() {
       if (!soundOn) return;
@@ -581,7 +596,7 @@
     gameOver() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      [392, 330, 262].forEach((f, i) => loudTone(f, t + i * 0.22, 0.4, 'square', 1.5));
+      [392, 330, 262].forEach((f, i) => loudTone(f, t + i * 0.22, 0.4, 'square', 2.0));
     }
   };
 
@@ -625,14 +640,14 @@
 
   function scheduleStep(step, t) {
     const n = musicNodes;
-    const bassPeak = 0.13 * masterVolume;
+    const bassPeak = 0.13 * musicVolume;
     n.bassOsc.frequency.setValueAtTime(step.bass, t);
     n.bassGain.gain.cancelScheduledValues(t);
     n.bassGain.gain.setValueAtTime(0.0001, t);
     n.bassGain.gain.linearRampToValueAtTime(bassPeak, t + 0.01);
     n.bassGain.gain.exponentialRampToValueAtTime(0.0001, t + STEP_DURATION * 0.9);
 
-    const melPeak = 0.075 * masterVolume;
+    const melPeak = 0.075 * musicVolume;
     n.melOsc.frequency.setValueAtTime(step.mel, t);
     n.melGain.gain.cancelScheduledValues(t);
     n.melGain.gain.setValueAtTime(0.0001, t);
@@ -680,16 +695,20 @@
     const soundLabel = document.getElementById('bb-sound-label');
     const musicBtn = document.getElementById('bb-music-toggle');
     const musicLabel = document.getElementById('bb-music-label');
-    const volumeSlider = document.getElementById('bb-volume-slider');
-    const volumeLabel = document.getElementById('bb-volume-label');
+    const sfxSlider = document.getElementById('bb-sfx-volume-slider');
+    const sfxLabel = document.getElementById('bb-sfx-volume-label');
+    const musicSlider = document.getElementById('bb-music-volume-slider');
+    const musicVolLabel = document.getElementById('bb-music-volume-label');
 
     // Reflect loaded settings in UI
     soundLabel.textContent = soundOn ? 'Sound On' : 'Sound Off';
     soundBtn.classList.toggle('active', soundOn);
     musicLabel.textContent = musicOn ? 'Music On' : 'Music Off';
     musicBtn.classList.toggle('active', musicOn);
-    volumeSlider.value = Math.round(masterVolume * 100);
-    volumeLabel.textContent = Math.round(masterVolume * 100) + '%';
+    sfxSlider.value = Math.round(sfxVolume * 100);
+    sfxLabel.textContent = Math.round(sfxVolume * 100) + '%';
+    musicSlider.value = Math.round(musicVolume * 100);
+    musicVolLabel.textContent = Math.round(musicVolume * 100) + '%';
 
     soundBtn.addEventListener('click', () => {
       soundOn = !soundOn;
@@ -707,10 +726,16 @@
       if (musicOn) startMusic(); else stopMusic();
     });
 
-    volumeSlider.addEventListener('input', () => {
-      masterVolume = volumeSlider.value / 100;
-      volumeLabel.textContent = volumeSlider.value + '%';
-      saveSetting(LS_KEYS.volume, masterVolume);
+    sfxSlider.addEventListener('input', () => {
+      sfxVolume = sfxSlider.value / 100;
+      sfxLabel.textContent = sfxSlider.value + '%';
+      saveSetting(LS_KEYS.sfxVolume, sfxVolume);
+    });
+
+    musicSlider.addEventListener('input', () => {
+      musicVolume = musicSlider.value / 100;
+      musicVolLabel.textContent = musicSlider.value + '%';
+      saveSetting(LS_KEYS.musicVolume, musicVolume);
     });
 
     // Browsers require a user gesture before audio can play — try starting
