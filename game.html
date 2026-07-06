@@ -518,13 +518,13 @@
     pickup() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      tone(520, t, 0.09, 'triangle', 0.4);
+      tone(520, t, 0.09, 'triangle', 1.0);
     },
     place() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      tone(300, t, 0.13, 'sine', 0.55);
-      tone(600, t, 0.09, 'sine', 0.25);
+      tone(300, t, 0.13, 'sine', 1.0);
+      tone(600, t, 0.09, 'sine', 0.6);
     },
     invalid() {
       if (!soundOn) return;
@@ -543,7 +543,7 @@
     gameOver() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      [392, 330, 262].forEach((f, i) => tone(f, t + i * 0.18, 0.32, 'triangle', 0.45));
+      [392, 330, 262].forEach((f, i) => tone(f, t + i * 0.18, 0.32, 'triangle', 1.0));
     }
   };
 
