@@ -514,17 +514,55 @@
     osc.start(startTime);
     osc.stop(startTime + duration + 0.02);
   }
+
+  // ---- Extra-loud tone generator (used only for pickup/place/gameOver) ----
+  // Uses a distortion curve (soft clipping) plus a held peak so the sound
+  // reads as noticeably louder/punchier than a plain short blip, even
+  // though the raw gain was already close to maximum.
+  function makeLoudCurve(amount) {
+    const n = 256;
+    const curve = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      const x = (i * 2) / n - 1;
+      curve[i] = ((Math.PI + amount) * x) / (Math.PI + amount * Math.abs(x));
+    }
+    return curve;
+  }
+  const loudCurve = makeLoudCurve(45);
+
+  function loudTone(freq, startTime, duration, type = 'square', gainPeak = 1.6) {
+    if (!soundOn || masterVolume <= 0) return;
+    const ctx = getCtx();
+    const osc = ctx.createOscillator();
+    const shaper = ctx.createWaveShaper();
+    const gain = ctx.createGain();
+    shaper.curve = loudCurve;
+    shaper.oversample = '4x';
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, startTime);
+    const peak = gainPeak * masterVolume;
+    const sustainUntil = startTime + duration * 0.55;
+    gain.gain.setValueAtTime(0, startTime);
+    gain.gain.linearRampToValueAtTime(peak, startTime + 0.008);
+    gain.gain.setValueAtTime(peak, sustainUntil); // hold near-peak instead of decaying immediately
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+    osc.connect(shaper);
+    shaper.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(startTime);
+    osc.stop(startTime + duration + 0.02);
+  }
   const sfx = {
     pickup() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      tone(520, t, 0.09, 'triangle', 1.0);
+      loudTone(520, t, 0.13, 'square', 1.4);
     },
     place() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      tone(300, t, 0.13, 'sine', 1.0);
-      tone(600, t, 0.09, 'sine', 0.6);
+      loudTone(300, t, 0.18, 'square', 1.7);
+      loudTone(600, t, 0.13, 'triangle', 1.0);
     },
     invalid() {
       if (!soundOn) return;
@@ -543,7 +581,7 @@
     gameOver() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      [392, 330, 262].forEach((f, i) => tone(f, t + i * 0.18, 0.32, 'triangle', 1.0));
+      [392, 330, 262].forEach((f, i) => loudTone(f, t + i * 0.22, 0.4, 'square', 1.5));
     }
   };
 
