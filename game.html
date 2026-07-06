@@ -379,8 +379,8 @@
         <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/>
         <path d="M16 8.5a4.5 4.5 0 010 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
-      <input type="range" id="bb-volume-slider" min="0" max="100" value="70">
-      <span class="bb-volume-label" id="bb-volume-label">70%</span>
+      <input type="range" id="bb-volume-slider" min="0" max="100" value="90">
+      <span class="bb-volume-label" id="bb-volume-label">90%</span>
     </div>
   </div>
 
@@ -466,7 +466,7 @@
   let audioCtx = null;
   let soundOn = true;
   let musicOn = true;
-  let masterVolume = 0.7; // 0 to 1, controlled by slider
+  let masterVolume = 0.9; // 0 to 1, controlled by slider
 
   const LS_KEYS = {
     best: 'blockCascade_best',
@@ -518,18 +518,18 @@
     pickup() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      tone(520, t, 0.09, 'triangle', 0.22);
+      tone(520, t, 0.09, 'triangle', 0.4);
     },
     place() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      tone(300, t, 0.12, 'sine', 0.3);
-      tone(600, t, 0.08, 'sine', 0.12);
+      tone(300, t, 0.13, 'sine', 0.55);
+      tone(600, t, 0.09, 'sine', 0.25);
     },
     invalid() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      tone(140, t, 0.18, 'sawtooth', 0.16);
+      tone(140, t, 0.18, 'sawtooth', 0.32);
     },
     lineClear(lines) {
       if (!soundOn) return;
@@ -537,60 +537,103 @@
       const notes = [523, 659, 784, 1047]; // C-E-G-C cascade chime
       const count = Math.min(notes.length, 2 + lines);
       for (let i = 0; i < count; i++) {
-        tone(notes[i % notes.length], t + i * 0.07, 0.26, 'sine', 0.34);
+        tone(notes[i % notes.length], t + i * 0.07, 0.26, 'sine', 0.55);
       }
     },
     gameOver() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      [392, 330, 262].forEach((f, i) => tone(f, t + i * 0.18, 0.32, 'triangle', 0.26));
+      [392, 330, 262].forEach((f, i) => tone(f, t + i * 0.18, 0.32, 'triangle', 0.45));
     }
   };
 
-  // ---------------- Ambient background music (soft looping pad chords) ----------------
-  let musicTimer = null;
-  const musicChords = [
-    [261.63, 329.63, 392.00],  // C major
-    [220.00, 277.18, 329.63],  // A minor
-    [174.61, 220.00, 261.63],  // F major
-    [196.00, 246.94, 293.66]   // G major
+  // ---------------- Upbeat background music (efficient persistent-oscillator scheduler) ----------------
+  // A cheerful, energetic 16-step melodic loop (bass note + melody note per step)
+  const musicSequence = [
+    { bass: 196.00, mel: 392.00 }, { bass: 196.00, mel: 493.88 },
+    { bass: 220.00, mel: 440.00 }, { bass: 220.00, mel: 523.25 },
+    { bass: 246.94, mel: 493.88 }, { bass: 246.94, mel: 587.33 },
+    { bass: 220.00, mel: 440.00 }, { bass: 220.00, mel: 523.25 },
+    { bass: 196.00, mel: 392.00 }, { bass: 196.00, mel: 493.88 },
+    { bass: 174.61, mel: 349.23 }, { bass: 174.61, mel: 440.00 },
+    { bass: 196.00, mel: 392.00 }, { bass: 220.00, mel: 440.00 },
+    { bass: 246.94, mel: 493.88 }, { bass: 261.63, mel: 523.25 }
   ];
-  let chordIndex = 0;
+  const STEP_DURATION = 0.19; // fast, upbeat tempo
 
-  function playChord(chord, startTime, duration) {
+  let musicNodes = null;       // persistent oscillators/gains, created once
+  let musicSchedulerId = null; // setInterval id for the look-ahead scheduler
+  let musicStepIndex = 0;
+  let nextNoteTime = 0;
+
+  function createMusicNodes() {
     const ctx = getCtx();
-    chord.forEach((freq, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, startTime);
-      const peak = 0.11 * masterVolume;
-      gain.gain.setValueAtTime(0, startTime);
-      gain.gain.linearRampToValueAtTime(peak, startTime + duration * 0.3);
-      gain.gain.linearRampToValueAtTime(0, startTime + duration);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(startTime);
-      osc.stop(startTime + duration + 0.05);
-    });
+    const bassOsc = ctx.createOscillator();
+    const bassGain = ctx.createGain();
+    bassOsc.type = 'triangle';
+    bassGain.gain.value = 0;
+    bassOsc.connect(bassGain).connect(ctx.destination);
+    bassOsc.start();
+
+    const melOsc = ctx.createOscillator();
+    const melGain = ctx.createGain();
+    melOsc.type = 'square';
+    melGain.gain.value = 0;
+    melOsc.connect(melGain).connect(ctx.destination);
+    melOsc.start();
+
+    return { bassOsc, bassGain, melOsc, melGain };
   }
-  function scheduleNextChord() {
-    if (!musicOn) return;
+
+  function scheduleStep(step, t) {
+    const n = musicNodes;
+    const bassPeak = 0.13 * masterVolume;
+    n.bassOsc.frequency.setValueAtTime(step.bass, t);
+    n.bassGain.gain.cancelScheduledValues(t);
+    n.bassGain.gain.setValueAtTime(0.0001, t);
+    n.bassGain.gain.linearRampToValueAtTime(bassPeak, t + 0.01);
+    n.bassGain.gain.exponentialRampToValueAtTime(0.0001, t + STEP_DURATION * 0.9);
+
+    const melPeak = 0.075 * masterVolume;
+    n.melOsc.frequency.setValueAtTime(step.mel, t);
+    n.melGain.gain.cancelScheduledValues(t);
+    n.melGain.gain.setValueAtTime(0.0001, t);
+    n.melGain.gain.linearRampToValueAtTime(melPeak, t + 0.01);
+    n.melGain.gain.exponentialRampToValueAtTime(0.0001, t + STEP_DURATION * 0.75);
+  }
+
+  function musicSchedulerTick() {
+    if (!musicOn || !musicNodes) return;
     const ctx = getCtx();
-    const chordDuration = 4.2;
-    playChord(musicChords[chordIndex % musicChords.length], ctx.currentTime, chordDuration);
-    chordIndex++;
-    musicTimer = setTimeout(scheduleNextChord, chordDuration * 1000);
+    const scheduleAheadTime = 0.15;
+    while (nextNoteTime < ctx.currentTime + scheduleAheadTime) {
+      scheduleStep(musicSequence[musicStepIndex % musicSequence.length], nextNoteTime);
+      musicStepIndex++;
+      nextNoteTime += STEP_DURATION;
+    }
   }
+
   function startMusic() {
-    if (musicTimer) return; // already running
-    getCtx();
-    scheduleNextChord();
+    if (musicSchedulerId) return; // already running
+    const ctx = getCtx();
+    if (!musicNodes) musicNodes = createMusicNodes();
+    nextNoteTime = ctx.currentTime + 0.05;
+    musicStepIndex = 0;
+    musicSchedulerTick();
+    musicSchedulerId = setInterval(musicSchedulerTick, 100);
   }
   function stopMusic() {
-    if (musicTimer) {
-      clearTimeout(musicTimer);
-      musicTimer = null;
+    if (musicSchedulerId) {
+      clearInterval(musicSchedulerId);
+      musicSchedulerId = null;
+    }
+    if (musicNodes) {
+      // Silence immediately rather than destroying nodes (cheap to resume later)
+      const ctx = getCtx();
+      musicNodes.bassGain.gain.cancelScheduledValues(ctx.currentTime);
+      musicNodes.bassGain.gain.setValueAtTime(0, ctx.currentTime);
+      musicNodes.melGain.gain.cancelScheduledValues(ctx.currentTime);
+      musicNodes.melGain.gain.setValueAtTime(0, ctx.currentTime);
     }
   }
 
@@ -883,10 +926,13 @@
     });
   }
 
+  let hintedIndices = [];
   function clearHints() {
-    boardEl.querySelectorAll('.bb-cell').forEach(c => {
-      c.classList.remove('hint-ok', 'hint-bad');
-    });
+    for (const idx of hintedIndices) {
+      const cellEl = boardEl.children[idx];
+      if (cellEl) cellEl.classList.remove('hint-ok', 'hint-bad');
+    }
+    hintedIndices = [];
   }
 
   function showHint(shape, row, col) {
@@ -897,7 +943,10 @@
       if (r >= 0 && r < SIZE && c >= 0 && c < SIZE) {
         const idx = r * SIZE + c;
         const cellEl = boardEl.children[idx];
-        if (cellEl) cellEl.classList.add(valid ? 'hint-ok' : 'hint-bad');
+        if (cellEl) {
+          cellEl.classList.add(valid ? 'hint-ok' : 'hint-bad');
+          hintedIndices.push(idx);
+        }
       }
     }
     return valid;
@@ -964,7 +1013,7 @@
 
   function updateHintAndPosition(clientX, clientY) {
     const d = dragging;
-    const boardRect = boardEl.getBoundingClientRect();
+    const boardRect = d.boardRect; // cached at drag start — avoids forced layout reflow every move
     const relX = clientX - boardRect.left;
     const relY = (clientY - d.lift) - boardRect.top;
 
@@ -979,8 +1028,8 @@
       return;
     }
 
-    let row = Math.round(relY / d.cellSize - d.rows / 2 + 0.5);
-    let col = Math.round(relX / d.cellSize - d.cols / 2 + 0.5);
+    let row = Math.round(relY / d.cellSize - d.rows / 2);
+    let col = Math.round(relX / d.cellSize - d.cols / 2);
     row = Math.max(0, Math.min(SIZE - d.rows, row));
     col = Math.max(0, Math.min(SIZE - d.cols, col));
 
@@ -990,10 +1039,20 @@
     d.lastCol = col;
   }
 
+  let rafPending = false;
+  let lastPointer = { x: 0, y: 0 };
   function onDragMove(e) {
     if (!dragging || e.pointerId !== dragging.pointerId) return;
-    positionGhost(e.clientX, e.clientY);
-    updateHintAndPosition(e.clientX, e.clientY);
+    lastPointer.x = e.clientX;
+    lastPointer.y = e.clientY;
+    if (rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(() => {
+      rafPending = false;
+      if (!dragging) return;
+      positionGhost(lastPointer.x, lastPointer.y);
+      updateHintAndPosition(lastPointer.x, lastPointer.y);
+    });
   }
 
   function onDragEnd(e) {
