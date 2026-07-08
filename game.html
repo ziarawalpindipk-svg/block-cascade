@@ -42,7 +42,8 @@
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: radial-gradient(circle at 25% -10%, var(--bg2) 0%, var(--bg) 55%);
     color: var(--text);
-    min-height: 560px;
+    min-height: 100vh;
+    min-height: 100dvh;
     padding: 14px 12px 20px;
     border-radius: 22px;
     display: flex;
@@ -53,6 +54,8 @@
     box-sizing: border-box;
     overflow-y: auto;
     overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
     position: relative;
   }
   #bb-root * { box-sizing: border-box; }
@@ -113,8 +116,8 @@
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     gap: 4px;
-    width: min(88vw, 360px);
-    height: min(88vw, 360px);
+    width: min(88vw, 44vh, 360px);
+    height: min(88vw, 44vh, 360px);
     background: var(--panel);
     padding: 9px;
     border-radius: 18px;
@@ -506,9 +509,20 @@
     try { localStorage.setItem(key, value); } catch (e) {}
   }
 
+  let masterLimiter = null;
   function getCtx() {
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      // Master limiter — automatically tames overall volume so multiple
+      // loud sounds playing together (music + effects) never overload
+      // the audio output and cause the crackling/dropout "dying radio" effect.
+      masterLimiter = audioCtx.createDynamicsCompressor();
+      masterLimiter.threshold.setValueAtTime(-8, audioCtx.currentTime);
+      masterLimiter.knee.setValueAtTime(6, audioCtx.currentTime);
+      masterLimiter.ratio.setValueAtTime(16, audioCtx.currentTime);
+      masterLimiter.attack.setValueAtTime(0.002, audioCtx.currentTime);
+      masterLimiter.release.setValueAtTime(0.12, audioCtx.currentTime);
+      masterLimiter.connect(audioCtx.destination);
     }
     if (audioCtx.state === 'suspended') audioCtx.resume();
     return audioCtx;
@@ -525,7 +539,7 @@
     gain.gain.linearRampToValueAtTime(peak, startTime + 0.01);
     gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
     osc.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(masterLimiter);
     osc.start(startTime);
     osc.stop(startTime + duration + 0.02);
   }
@@ -543,7 +557,7 @@
     }
     return curve;
   }
-  const loudCurve = makeLoudCurve(80);
+  const loudCurve = makeLoudCurve(55);
 
   function loudTone(freq, startTime, duration, type = 'square', gainPeak = 1.6) {
     if (!soundOn || sfxVolume <= 0) return;
@@ -563,7 +577,7 @@
     gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
     osc.connect(shaper);
     shaper.connect(gain);
-    gain.connect(ctx.destination);
+    gain.connect(masterLimiter);
     osc.start(startTime);
     osc.stop(startTime + duration + 0.02);
   }
@@ -571,13 +585,13 @@
     pickup() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      loudTone(520, t, 0.13, 'square', 2.6);
+      loudTone(520, t, 0.13, 'square', 1.8);
     },
     place() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      loudTone(300, t, 0.18, 'square', 3.2);
-      loudTone(600, t, 0.13, 'triangle', 1.9);
+      loudTone(300, t, 0.18, 'square', 2.0);
+      loudTone(600, t, 0.13, 'triangle', 1.3);
     },
     invalid() {
       if (!soundOn) return;
@@ -596,7 +610,7 @@
     gameOver() {
       if (!soundOn) return;
       const t = getCtx().currentTime;
-      [392, 330, 262].forEach((f, i) => loudTone(f, t + i * 0.22, 0.4, 'square', 2.8));
+      [392, 330, 262].forEach((f, i) => loudTone(f, t + i * 0.22, 0.4, 'square', 1.8));
     }
   };
 
@@ -625,14 +639,14 @@
     const bassGain = ctx.createGain();
     bassOsc.type = 'triangle';
     bassGain.gain.value = 0;
-    bassOsc.connect(bassGain).connect(ctx.destination);
+    bassOsc.connect(bassGain).connect(masterLimiter);
     bassOsc.start();
 
     const melOsc = ctx.createOscillator();
     const melGain = ctx.createGain();
     melOsc.type = 'square';
     melGain.gain.value = 0;
-    melOsc.connect(melGain).connect(ctx.destination);
+    melOsc.connect(melGain).connect(masterLimiter);
     melOsc.start();
 
     return { bassOsc, bassGain, melOsc, melGain };
