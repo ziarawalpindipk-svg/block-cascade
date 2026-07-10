@@ -2,253 +2,487 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Block Cascade — Drag. Clear. Cascade.</title>
-<meta name="description" content="A relaxing block puzzle game. Drag colorful blocks, clear lines, and chase your high score. Free, no install needed.">
-
-<!-- Social share preview (Open Graph) -->
-<meta property="og:title" content="Block Cascade">
-<meta property="og:description" content="Drag. Clear. Cascade your way to a high score.">
-<meta property="og:type" content="website">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cascade Arcade — 2 Puzzle Games</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
-
 <style>
-  :root {
-    --bg: #1a1030;
-    --bg2: #2b1a4a;
-    --panel: #24163f;
-    --panel-line: rgba(255,255,255,0.08);
-    --text: #f4eefc;
-    --sub: #b3a0d4;
-    --coral: #ff6b5b;
-    --coral-dark: #c43f2e;
-    --teal: #2dd4bf;
-    --amber: #ffc145;
-    --violet: #9b7bff;
-  }
-  * { box-sizing: border-box; }
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: radial-gradient(circle at 25% -10%, var(--bg2) 0%, var(--bg) 60%);
-    color: var(--text);
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: radial-gradient(circle at 30% 0%, #1a1030, #0a0620);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    color: #f4eefc;
     min-height: 100vh;
-    overflow-x: hidden;
+    padding: 16px 14px 30px;
   }
-  @media (prefers-reduced-motion: reduce) {
-    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
-  }
-
-  .wrap {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 40px 22px 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .container { max-width: 420px; margin: 0 auto; }
+  
+  .header {
     text-align: center;
-    min-height: 100vh;
+    padding: 8px 0 10px;
   }
-
-  /* ---------- Hero ---------- */
-  .brand {
+  .brand-row {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
-    margin-bottom: 22px;
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35));
   }
-  .brand-name {
+  .header h1 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #ff6b5b, #ffc145, #2dd4bf);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+    margin: 0;
+  }
+  .header p {
+    color: #9a94c2;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  .action-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0 16px;
+  }
+
+  .ad-banner {
+    width: 100%;
+    max-width: 400px;
+    min-height: 50px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .game-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 18px 16px 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+    position: relative;
+    cursor: pointer;
+  }
+  .game-card:active {
+    transform: scale(0.97);
+    box-shadow: 0 0 30px rgba(92, 225, 255, 0.15);
+  }
+  .game-card .badge {
+    display: inline-block;
+    background: rgba(255,107,91,0.2);
+    color: #ff6b5b;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .game-card h2 {
     font-family: 'Baloo 2', sans-serif;
     font-size: 20px;
     font-weight: 700;
-    letter-spacing: 0.2px;
+    margin: 0 0 4px;
+  }
+  .game-card p {
+    color: #9a94c2;
+    font-size: 13px;
+    margin: 0 0 10px;
+  }
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
   }
 
-  /* Signature element: live animated mini board */
-  .demo-board {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    gap: 5px;
-    width: 220px;
-    height: 220px;
-    background: var(--panel);
-    padding: 10px;
-    border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.45), inset 0 0 0 1px var(--panel-line);
-    margin-bottom: 28px;
-  }
-  .demo-cell {
-    background: #33224f;
-    border-radius: 5px;
-  }
-  .demo-cell.on {
-    animation: cellFill 3.2s ease-in-out infinite;
-    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.25), inset 0 2px 0 rgba(255,255,255,0.3);
-  }
-  @keyframes cellFill {
-    0%, 8% { background: #33224f; transform: scale(1); }
-    14%, 60% { background: var(--c, var(--coral)); transform: scale(1); }
-    68% { transform: scale(1.18); box-shadow: 0 0 16px 3px rgba(255,255,255,0.5); }
-    76%, 100% { background: #33224f; transform: scale(1); }
-  }
-
-  h1 {
-    font-family: 'Baloo 2', sans-serif;
-    font-size: 30px;
-    font-weight: 800;
-    margin: 0 0 8px;
-    line-height: 1.15;
-  }
-  .tagline {
-    color: var(--sub);
-    font-size: 15px;
-    margin: 0 0 30px;
-    max-width: 320px;
-  }
-
-  /* ---------- CTA ---------- */
   .play-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #5ce1ff, #ff5cb8);
+    color: #0a0620;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 8px 22px;
+    border-radius: 30px;
+    border: none;
+    text-decoration: none;
+    animation: zoomBlink 2s ease-in-out infinite;
+    cursor: pointer;
+  }
+  @keyframes zoomBlink {
+    0% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0); }
+    50% { transform: scale(1.08); box-shadow: 0 0 20px rgba(255,255,255,0.4); }
+    100% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0); }
+  }
+  .play-btn.small { font-size: 12px; padding: 6px 16px; }
+  .game-card.g1 .play-btn { background: linear-gradient(135deg, #5ce1ff, #2dd4bf); }
+  .game-card.g2 .play-btn { background: linear-gradient(135deg, #ff5cb8, #ff6b5b); }
+
+  .download-btn {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #f4eefc;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .download-btn:hover { background: rgba(255,255,255,0.2); }
+
+  .share-btn {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    background: linear-gradient(135deg, var(--coral), var(--amber));
-    color: #2a0f0a;
-    font-family: 'Baloo 2', sans-serif;
-    font-weight: 700;
-    font-size: 19px;
-    padding: 17px 42px;
-    border-radius: 40px;
-    text-decoration: none;
-    box-shadow: 0 10px 26px rgba(255, 107, 91, 0.4);
-    position: relative;
-    animation: breathe 2.4s ease-in-out infinite;
+    gap: 6px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #f4eefc;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 20px;
+    cursor: pointer;
   }
-  .play-btn:hover { animation-play-state: paused; transform: translateY(-2px) scale(1.08); }
-  .play-btn:active { transform: translateY(0) scale(0.98); }
-  @keyframes breathe {
-    0%, 100% { transform: scale(1); box-shadow: 0 10px 26px rgba(255, 107, 91, 0.4), 0 0 0 rgba(255,193,69,0); }
-    50% { transform: scale(1.07); box-shadow: 0 14px 34px rgba(255, 107, 91, 0.55), 0 0 26px 6px rgba(255,193,69,0.45); }
+  .share-btn:hover { background: rgba(255,255,255,0.16); }
+  .share-menu {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,3,15,0.75);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 2000;
   }
-  .play-btn::before {
-    content: '';
-    position: absolute;
-    inset: -6px;
-    border-radius: 46px;
-    border: 2px solid rgba(255, 107, 91, 0.5);
-    animation: pulseRing 2.4s ease-out infinite;
-  }
-  @keyframes pulseRing {
-    0% { transform: scale(0.94); opacity: 0.9; }
-    70% { transform: scale(1.22); opacity: 0; }
-    100% { opacity: 0; }
-  }
-  .meta-line {
-    margin-top: 16px;
-    font-size: 12.5px;
-    color: var(--sub);
-    letter-spacing: 0.2px;
-  }
-
-  /* ---------- Features ---------- */
-  .features {
-    display: flex;
-    gap: 10px;
-    margin-top: 42px;
+  .share-menu.show { display: flex; }
+  .share-sheet {
+    background: #170f2c;
+    border-radius: 20px 20px 0 0;
     width: 100%;
+    max-width: 420px;
+    padding: 20px 18px 26px;
+    border: 1px solid rgba(255,255,255,0.08);
   }
-  .feature {
-    flex: 1;
-    background: var(--panel);
-    border: 1px solid var(--panel-line);
-    border-radius: 14px;
-    padding: 16px 8px;
+  .share-sheet h3 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 16px;
+    margin-bottom: 14px;
+    text-align: center;
   }
-  .feature .dot {
-    width: 10px; height: 10px;
-    border-radius: 3px;
-    margin: 0 auto 8px;
+  .share-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
   }
-  .feature p {
-    font-size: 12px;
-    color: var(--sub);
-    margin: 0;
-    line-height: 1.4;
+  .share-opt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: #f4eefc;
+    font-size: 11px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 10px 4px;
+  }
+  .share-opt .circle {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .share-close {
+    width: 100%;
+    padding: 11px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: #f4eefc;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
   }
 
-  /* ---------- Footer ---------- */
-  .footer {
-    margin-top: auto;
-    padding-top: 40px;
-    display: flex;
-    gap: 18px;
-    font-size: 12px;
+  .cta-smartlink {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: auto;
+    margin: 0;
+    background: linear-gradient(135deg, #ffc145, #ff6b5b);
+    color: #2a0f0a;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 22px;
+    border-radius: 30px;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(255,107,91,0.4);
+    animation: glowPulse 2.4s ease-in-out infinite;
+    border: none;
+    cursor: pointer;
   }
-  .footer a { color: var(--sub); text-decoration: none; }
-  .footer a:hover { text-decoration: underline; }
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 6px 18px rgba(255,107,91,0.35); transform: scale(1); }
+    50% { box-shadow: 0 8px 24px rgba(255,107,91,0.55); transform: scale(1.03); }
+  }
+
+  .footer-links {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: #6a6490;
+  }
+  .footer-links a {
+    color: #6a6490;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+  .footer-links a:hover { color: #f4eefc; }
+
+  #game-frame-wrap {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #0a0620;
+    z-index: 1000;
+    padding: 10px;
+    flex-direction: column;
+  }
+  #game-frame-wrap.active { display: flex; }
+  #game-frame-wrap .close-btn {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #f4eefc;
+    font-size: 22px;
+    padding: 6px 14px;
+    border-radius: 30px;
+    align-self: flex-end;
+    cursor: pointer;
+    margin-bottom: 6px;
+  }
+  #game-frame {
+    flex: 1;
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    background: #0a0620;
+  }
 </style>
+
 </head>
 <body>
-<div class="wrap">
 
-  <div class="brand">
-    <svg width="24" height="24" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="1" y="13" width="10" height="10" rx="2.5" fill="#ff6b5b"/>
-      <rect x="13" y="13" width="10" height="10" rx="2.5" fill="#2dd4bf"/>
-      <rect x="7" y="1" width="10" height="10" rx="2.5" fill="#ffc145"/>
-    </svg>
-    <span class="brand-name">Block Cascade</span>
+<div class="container">
+
+  <div class="header">
+    <div class="brand-row">
+      <svg width="40" height="40" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="iconBg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#3a2461"/>
+            <stop offset="100%" stop-color="#1a1030"/>
+          </linearGradient>
+          <linearGradient id="blockCoral" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ff8f7f"/>
+            <stop offset="100%" stop-color="#e0503f"/>
+          </linearGradient>
+          <linearGradient id="blockTeal" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#5eeee0"/>
+            <stop offset="100%" stop-color="#1fae9c"/>
+          </linearGradient>
+          <linearGradient id="blockAmber" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffe08a"/>
+            <stop offset="100%" stop-color="#e0a300"/>
+          </linearGradient>
+        </defs>
+        <rect x="1" y="1" width="70" height="70" rx="18" fill="url(#iconBg)"/>
+        <rect x="1" y="1" width="70" height="70" rx="18" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
+        <rect x="30" y="8" width="11" height="11" rx="2.5" fill="url(#blockTeal)" opacity="0.55"/>
+        <rect x="15" y="38" width="15" height="15" rx="3" fill="url(#blockCoral)"/>
+        <rect x="32" y="38" width="15" height="15" rx="3" fill="url(#blockAmber)"/>
+        <rect x="23.5" y="22" width="15" height="15" rx="3" fill="url(#blockTeal)"/>
+        <rect x="15" y="38" width="15" height="5" rx="2.5" fill="#ffffff" opacity="0.18"/>
+        <rect x="32" y="38" width="15" height="5" rx="2.5" fill="#ffffff" opacity="0.18"/>
+        <rect x="23.5" y="22" width="15" height="5" rx="2.5" fill="#ffffff" opacity="0.18"/>
+      </svg>
+      <h1>Cascade Arcade</h1>
+    </div>
+    <p>Two block puzzles, zero install — pick one and start playing in seconds</p>
   </div>
 
-  <div class="demo-board" id="demoBoard"></div>
+  <div class="action-row">
+    <button class="share-btn" onclick="openShare()">📤 Share</button>
+    <a href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" 
+       target="_blank" 
+       class="cta-smartlink">
+       📲 Download App
+    </a>
+  </div>
 
-  <h1>Drag. Clear.<br>Cascade.</h1>
-  <p class="tagline">A relaxing block puzzle. Fill the grid, clear the lines, and chase a new high score — one calm move at a time.</p>
-
-  <a href="game.html" class="play-btn">▶ Play Now</a>
-  <div class="meta-line">Free &nbsp;•&nbsp; No install needed &nbsp;•&nbsp; Play instantly</div>
-
-  <div class="features">
-    <div class="feature">
-      <div class="dot" style="background:#ff6b5b;"></div>
-      <p>Drag &amp; fit any shape</p>
-    </div>
-    <div class="feature">
-      <div class="dot" style="background:#2dd4bf;"></div>
-      <p>No timers, no pressure</p>
-    </div>
-    <div class="feature">
-      <div class="dot" style="background:#ffc145;"></div>
-      <p>Beat your best score</p>
+  <!-- GAME 1 -->
+  <div class="game-card g1" onclick="openGame('game1.html')">
+    <div class="badge">✦ Puzzle</div>
+    <h2>🧩 Block Cascade</h2>
+    <p>Drag colorful blocks onto the grid. Clear full rows &amp; columns. Relaxing &amp; addictive.</p>
+    <div class="card-row">
+      <span style="color:#6a6490;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <a class="download-btn" href="#" onclick="event.stopPropagation(); alert('Download feature coming soon!');">⬇ Download</a>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
     </div>
   </div>
 
-  <div class="footer">
+  <!-- ============================================================
+       🔹 ADSTERRA BANNER 320x50 (between the two game cards)
+       ============================================================ -->
+  <div class="ad-banner" id="ad-mid-cards">
+    <script>
+      atOptions = {
+        'key' : '63f9cc601bd826eb8fbdc16d61a1bf4b',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+      };
+    </script>
+    <script src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
+  </div>
+
+  <!-- GAME 2 -->
+  <div class="game-card g2" onclick="openGame('game2.html')">
+    <div class="badge">✦ Arcade</div>
+    <h2>⬇️ Gridora Drop</h2>
+    <p>Classic falling block puzzle. Rotate, slide, and drop to clear lines. Speed increases!</p>
+    <div class="card-row">
+      <span style="color:#6a6490;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <a class="download-btn" href="#" onclick="event.stopPropagation(); alert('Download feature coming soon!');">⬇ Download</a>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       🔹 ADSTERRA NATIVE AD (below the game cards)
+       ============================================================ -->
+  <div class="ad-banner" id="ad-bottom" style="min-height:100px;">
+    <script async="async" data-cfasync="false" src="https://pl30278109.effectivecpmnetwork.com/37bcd87f9b90a477e2b211daed1f289b/invoke.js"></script>
+    <div id="container-37bcd87f9b90a477e2b211daed1f289b"></div>
+  </div>
+
+  <div class="footer-links">
     <a href="about_us.html">About</a>
     <a href="privacy_policy.html">Privacy Policy</a>
+  </div>
+
+</div>
+
+<div id="game-frame-wrap">
+  <button class="close-btn" onclick="closeGame()">✕ Close</button>
+  <iframe id="game-frame" src=""></iframe>
+</div>
+
+<div class="share-menu" id="shareMenu">
+  <div class="share-sheet">
+    <h3>Share Cascade Arcade</h3>
+    <div class="share-options">
+      <a class="share-opt" href="#" onclick="shareVia('whatsapp'); return false;">
+        <span class="circle" style="background:#25D366;">💬</span> WhatsApp
+      </a>
+      <a class="share-opt" href="#" onclick="shareVia('facebook'); return false;">
+        <span class="circle" style="background:#1877F2;">📘</span> Facebook
+      </a>
+      <a class="share-opt" href="#" onclick="shareVia('twitter'); return false;">
+        <span class="circle" style="background:#000;">✕</span> Twitter/X
+      </a>
+      <a class="share-opt" href="#" onclick="shareVia('copy'); return false;">
+        <span class="circle" style="background:rgba(255,255,255,0.15);">🔗</span> Copy Link
+      </a>
+    </div>
+    <button class="share-close" onclick="closeShare()">Close</button>
   </div>
 </div>
 
 <script>
-  // Build the animated signature demo board (decorative only)
-  const board = document.getElementById('demoBoard');
-  const colors = ['#ff6b5b', '#2dd4bf', '#ffc145', '#9b7bff', '#8de04d'];
-  const litPattern = [7,8,9,13,14,15,19,20,21,25,26,27]; // a pleasant scattered fill
-  for (let i = 0; i < 36; i++) {
-    const cell = document.createElement('div');
-    cell.className = 'demo-cell';
-    if (litPattern.includes(i)) {
-      cell.classList.add('on');
-      const color = colors[i % colors.length];
-      cell.style.setProperty('--c', color);
-      cell.style.animationDelay = (i % 6) * 0.15 + 's';
+  function openGame(url) {
+    const wrap = document.getElementById('game-frame-wrap');
+    const frame = document.getElementById('game-frame');
+    frame.src = url;
+    wrap.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeGame() {
+    const wrap = document.getElementById('game-frame-wrap');
+    const frame = document.getElementById('game-frame');
+    frame.src = '';
+    wrap.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  window.addEventListener('popstate', function(e) {
+    if (document.getElementById('game-frame-wrap').classList.contains('active')) {
+      closeGame();
     }
-    board.appendChild(cell);
+  });
+
+  const SHARE_TITLE = 'Cascade Arcade';
+  const SHARE_TEXT = 'Play these 2 addictive puzzle games — free, no install needed!';
+
+  async function openShare() {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: SHARE_TITLE, text: SHARE_TEXT, url: window.location.href });
+      } catch (e) { /* user cancelled, do nothing */ }
+    } else {
+      document.getElementById('shareMenu').classList.add('show');
+    }
+  }
+  function closeShare() {
+    document.getElementById('shareMenu').classList.remove('show');
+  }
+  function shareVia(platform) {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(SHARE_TEXT);
+    let target = '';
+    if (platform === 'whatsapp') target = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+    else if (platform === 'facebook') target = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    else if (platform === 'twitter') target = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+    else if (platform === 'copy') {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('Link copied! Paste it anywhere to share.');
+      });
+      closeShare();
+      return;
+    }
+    window.open(target, '_blank');
+    closeShare();
   }
 </script>
+
 </body>
 </html>
