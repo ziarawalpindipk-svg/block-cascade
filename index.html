@@ -11,10 +11,19 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     background: radial-gradient(circle at 30% 0%, #1a1030, #0a0620);
+    background-size: 200% 200%;
+    animation: bgDrift 14s ease-in-out infinite;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
     color: #f4eefc;
     min-height: 100vh;
     padding: 16px 14px 30px;
+  }
+  @keyframes bgDrift {
+    0%, 100% { background-position: 30% 0%; }
+    50% { background-position: 70% 40%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
   }
   .container { max-width: 420px; margin: 0 auto; }
   
@@ -84,6 +93,11 @@
   }
   .game-card.g1 { border-left-color: #4d96ff; }
   .game-card.g2 { border-left-color: #4ade80; }
+  .game-card.g3 { border-left-color: #a855f7; }
+  .game-card.g4 { border-left-color: #f97316; }
+  .game-card.g5 { border-left-color: #ef4444; }
+  .game-card.g6 { border-left-color: #eab308; }
+  .game-card.g7 { border-left-color: #ec4899; }
   .game-card:active {
     transform: scale(0.97);
     box-shadow: 0 0 30px rgba(92, 225, 255, 0.15);
@@ -101,6 +115,11 @@
   }
   .game-card.g1 .badge { background: rgba(77,150,255,0.2); color: #4d96ff; }
   .game-card.g2 .badge { background: rgba(74,222,128,0.2); color: #4ade80; }
+  .game-card.g3 .badge { background: rgba(168,85,247,0.2); color: #a855f7; }
+  .game-card.g4 .badge { background: rgba(249,115,22,0.2); color: #f97316; }
+  .game-card.g5 .badge { background: rgba(239,68,68,0.2); color: #ef4444; }
+  .game-card.g6 .badge { background: rgba(234,179,8,0.2); color: #eab308; }
+  .game-card.g7 .badge { background: rgba(236,72,153,0.2); color: #ec4899; }
   .game-icon-badge {
     display: inline-flex;
     align-items: center;
@@ -114,6 +133,11 @@
   }
   .game-card.g1 .game-icon-badge { background: rgba(77,150,255,0.18); }
   .game-card.g2 .game-icon-badge { background: rgba(74,222,128,0.18); }
+  .game-card.g3 .game-icon-badge { background: rgba(168,85,247,0.18); }
+  .game-card.g4 .game-icon-badge { background: rgba(249,115,22,0.18); }
+  .game-card.g5 .game-icon-badge { background: rgba(239,68,68,0.18); }
+  .game-card.g6 .game-icon-badge { background: rgba(234,179,8,0.18); }
+  .game-card.g7 .game-icon-badge { background: rgba(236,72,153,0.18); }
   .game-card h2 {
     font-family: 'Baloo 2', sans-serif;
     font-size: 20px;
@@ -156,6 +180,11 @@
   .play-btn.small { font-size: 12px; padding: 6px 16px; }
   .game-card.g1 .play-btn { background: linear-gradient(135deg, #4d96ff, #2dd4bf); }
   .game-card.g2 .play-btn { background: linear-gradient(135deg, #4ade80, #22c55e); color: #06210f; }
+  .game-card.g3 .play-btn { background: linear-gradient(135deg, #a855f7, #ec4899); }
+  .game-card.g4 .play-btn { background: linear-gradient(135deg, #f97316, #facc15); color: #2a1602; }
+  .game-card.g5 .play-btn { background: linear-gradient(135deg, #ef4444, #fb923c); color: #2a0606; }
+  .game-card.g6 .play-btn { background: linear-gradient(135deg, #eab308, #fef08a); color: #241d02; }
+  .game-card.g7 .play-btn { background: linear-gradient(135deg, #ec4899, #38bdf8); }
 
   .download-btn {
     display: inline-block;
@@ -399,6 +428,84 @@
     <div class="badge">✦ Arcade</div>
     <h2><span class="game-icon-badge">⬇️</span>Gridora Drop</h2>
     <p>Classic falling block puzzle. Rotate, slide, and drop to clear lines. Speed increases!</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <a class="download-btn" href="#" onclick="event.stopPropagation(); alert('Download feature coming soon!');">⬇ Download</a>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 3 -->
+  <div class="game-card g3" onclick="openGame('numera_merge.html')">
+    <div class="badge">✦ Number Puzzle</div>
+    <h2><span class="game-icon-badge">🔢</span>Numera Merge</h2>
+    <p>Swipe to slide tiles and merge matching numbers. How high can you go?</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <a class="download-btn" href="#" onclick="event.stopPropagation(); alert('Download feature coming soon!');">⬇ Download</a>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 4 -->
+  <div class="game-card g4" onclick="openGame('gem_rush.html')">
+    <div class="badge">✦ Match-3</div>
+    <h2><span class="game-icon-badge">💎</span>Gem Rush</h2>
+    <p>Swap adjacent gems to match 3 or more. Simple, colorful, and addictive.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <a class="download-btn" href="#" onclick="event.stopPropagation(); alert('Download feature coming soon!');">⬇ Download</a>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       🔹 ADSTERRA NATIVE AD (mid-list, between game cards)
+       ============================================================ -->
+  <div class="ad-banner" id="ad-mid2" style="min-height:100px;">
+    <script async="async" data-cfasync="false" src="https://pl30278109.effectivecpmnetwork.com/37bcd87f9b90a477e2b211daed1f289b/invoke.js"></script>
+    <div id="container-37bcd87f9b90a477e2b211daed1f289b"></div>
+  </div>
+
+  <!-- GAME 5 -->
+  <div class="game-card g5" onclick="openGame('pop_panic.html')">
+    <div class="badge">✦ Reaction</div>
+    <h2><span class="game-icon-badge">🐹</span>Pop Panic</h2>
+    <p>Tap the moles the instant they pop up. Fast fingers win this reaction challenge!</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <a class="download-btn" href="#" onclick="event.stopPropagation(); alert('Download feature coming soon!');">⬇ Download</a>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 6 -->
+  <div class="game-card g6" onclick="openGame('memo_match.html')">
+    <div class="badge">✦ Memory</div>
+    <h2><span class="game-icon-badge">🍓</span>Memo Match</h2>
+    <p>Flip cards, find pairs, and train your memory with cute fruity icons.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <a class="download-btn" href="#" onclick="event.stopPropagation(); alert('Download feature coming soon!');">⬇ Download</a>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 7 -->
+  <div class="game-card g7" onclick="openGame('nova_blaster.html')">
+    <div class="badge">✦ Action</div>
+    <h2><span class="game-icon-badge">🚀</span>Nova Blaster</h2>
+    <p>Blast enemy drones, dodge asteroids, and grab bonuses in this fast space shooter.</p>
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>

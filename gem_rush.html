@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Gem Rush - Match-3 Puzzle Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+
+<!-- ============================================================
+     🔹 ADSTERRA SOCIAL BAR CODE
+     ============================================================ -->
+<script src="https://pl30278087.effectivecpmnetwork.com/4b/ea/3a/4bea3a1f3fa20c58d7897594c829d53d.js"></script>
+
+<style>
+  :root{
+    --bg1:#3a2008; --bg2:#180d02;
+    --panel:#2b1806; --panel-line:rgba(255,255,255,0.08);
+    --text:#fdf3e7; --sub:#d4a76a;
+    --accent:#f97316; --accent2:#fb923c;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; }
+  html,body{
+    margin:0; padding:0;
+    background: radial-gradient(circle at 30% 0%, var(--bg1), var(--bg2));
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--text);
+    min-height:100vh; min-height:100dvh;
+    overflow-x:hidden;
+  }
+  #app{
+    max-width:420px; margin:0 auto;
+    padding:12px 12px calc(20px + env(safe-area-inset-bottom,0px));
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .top-row{ width:100%; display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .back-btn{
+    background: rgba(255,255,255,0.08); border:none; border-radius:10px;
+    color: var(--text); font-size:14px; font-weight:600; padding:8px 14px;
+    text-decoration:none; cursor:pointer;
+  }
+  .title{
+    font-family:'Baloo 2',sans-serif; font-size:19px; font-weight:800;
+    background: linear-gradient(90deg, var(--accent), #facc15);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .score-box{
+    background: var(--panel); border:1px solid var(--panel-line);
+    border-radius:10px; padding:5px 12px; text-align:center; min-width:56px;
+  }
+  .score-box .label{ font-size:9px; color:var(--sub); text-transform:uppercase; }
+  .score-box .value{ font-size:16px; font-weight:700; }
+
+  #ad-banner{ width:100%; max-width:360px; min-height:50px; margin-bottom:10px; border-radius:10px; overflow:hidden; background:rgba(255,255,255,0.04); }
+
+  #board-wrap{
+    background: var(--panel);
+    border-radius:16px; padding:6px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4), inset 0 0 0 1px var(--panel-line);
+    width: min(90vw, 46vh, 340px);
+    height: min(90vw, 46vh, 340px);
+  }
+  #board{
+    display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr);
+    gap:3px; width:100%; height:100%;
+  }
+  .gem{
+    display:flex; align-items:center; justify-content:center;
+    border-radius:6px; font-size:20px; cursor:pointer;
+    background: rgba(255,255,255,0.05);
+    transition: transform 0.1s;
+  }
+  .gem.selected{ box-shadow: 0 0 0 2px #facc15 inset; transform: scale(0.9); }
+  .gem.matched{ animation: pop 0.25s ease forwards; }
+  @keyframes pop{ 0%{transform:scale(1);opacity:1;} 100%{transform:scale(0.2);opacity:0;} }
+  .hint{ margin-top:10px; font-size:11px; color:var(--sub); text-align:center; }
+
+  #overlay{
+    position:fixed; inset:0; background:rgba(15,8,3,0.9);
+    display:none; align-items:center; justify-content:center; z-index:1000;
+  }
+  #overlay.show{ display:flex; }
+  .modal{
+    background: linear-gradient(180deg, #3a2008, #150b02);
+    border-radius:18px; padding:26px 24px; text-align:center;
+    width:82%; max-width:320px; border:1px solid rgba(255,255,255,0.08);
+  }
+  .modal h2{ margin:0 0 6px; font-family:'Baloo 2',sans-serif; font-size:24px; }
+  .modal p{ color:var(--sub); margin:0 0 6px; font-size:13px; }
+  #ad-gameover{ width:100%; max-width:280px; min-height:90px; margin:10px auto; border-radius:10px; overflow:hidden; background:rgba(255,255,255,0.04); }
+  button.primary{
+    background: linear-gradient(135deg, var(--accent), #facc15);
+    border:none; color:#1a0e02; font-weight:700; font-size:15px;
+    padding:12px 20px; border-radius:14px; width:100%; margin-top:6px; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top-row">
+    <a href="index.html" class="back-btn">← Back</a>
+    <div class="title">Gem Rush</div>
+    <div class="score-box"><div class="label">Score</div><div class="value" id="score">0</div></div>
+  </div>
+
+  <!-- ============================================================
+       🔹 ADSTERRA BANNER 320x50
+       ============================================================ -->
+  <div id="ad-banner">
+    <script>
+      atOptions = { 'key':'63f9cc601bd826eb8fbdc16d61a1bf4b', 'format':'iframe', 'height':50, 'width':320, 'params':{} };
+    </script>
+    <script src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
+  </div>
+
+  <div id="board-wrap"><div id="board"></div></div>
+  <div class="hint">Tap two adjacent gems to swap and match 3 or more in a row!</div>
+</div>
+
+<div id="overlay">
+  <div class="modal">
+    <h2>Time's Up!</h2>
+    <p id="final-score">Score: 0</p>
+    <div id="ad-gameover">
+      <script async="async" data-cfasync="false" src="https://pl30278109.effectivecpmnetwork.com/37bcd87f9b90a477e2b211daed1f289b/invoke.js"></script>
+      <div id="container-37bcd87f9b90a477e2b211daed1f289b"></div>
+    </div>
+    <button class="primary" id="restartBtn">Play Again</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const SIZE = 8;
+  const GEMS = ['💎','🔷','🔶','⭐','🔺','🟢'];
+  const boardEl = document.getElementById('board');
+  const scoreEl = document.getElementById('score');
+  const overlay = document.getElementById('overlay');
+  const finalScoreEl = document.getElementById('final-score');
+
+  let grid = [];
+  let score = 0;
+  let selected = null;
+  let busy = false;
+
+  function randGem(){ return Math.floor(Math.random() * GEMS.length); }
+
+  function newGrid(){
+    grid = Array.from({length:SIZE}, () => Array(SIZE).fill(0).map(randGem));
+    // Resolve any accidental starting matches by re-rolling
+    let guard = 0;
+    while(findMatches().length > 0 && guard < 50){
+      for (const {r,c} of findMatches()) grid[r][c] = randGem();
+      guard++;
+    }
+  }
+
+  function render(){
+    boardEl.innerHTML = '';
+    for(let r=0;r<SIZE;r++){
+      for(let c=0;c<SIZE;c++){
+        const el = document.createElement('div');
+        el.className = 'gem';
+        el.textContent = GEMS[grid[r][c]];
+        el.dataset.r = r; el.dataset.c = c;
+        if(selected && selected.r === r && selected.c === c) el.classList.add('selected');
+        el.addEventListener('click', onGemClick);
+        boardEl.appendChild(el);
+      }
+    }
+    scoreEl.textContent = score;
+  }
+
+  function onGemClick(e){
+    if(busy) return;
+    const r = parseInt(e.currentTarget.dataset.r, 10);
+    const c = parseInt(e.currentTarget.dataset.c, 10);
+    if(!selected){
+      selected = {r,c};
+      render();
+      return;
+    }
+    const dr = Math.abs(selected.r - r), dc = Math.abs(selected.c - c);
+    const adjacent = (dr + dc === 1);
+    if(adjacent){
+      trySwap(selected, {r,c});
+    }
+    selected = null;
+  }
+
+  function trySwap(a, b){
+    swap(a, b);
+    const matches = findMatches();
+    if(matches.length > 0){
+      busy = true;
+      render();
+      setTimeout(() => resolveMatches(), 200);
+    } else {
+      swap(a, b); // revert, no match
+      render();
+    }
+  }
+
+  function swap(a, b){
+    const tmp = grid[a.r][a.c];
+    grid[a.r][a.c] = grid[b.r][b.c];
+    grid[b.r][b.c] = tmp;
+  }
+
+  function findMatches(){
+    const matched = [];
+    for(let r=0;r<SIZE;r++){
+      for(let c=0;c<SIZE-2;c++){
+        const v = grid[r][c];
+        if(v === grid[r][c+1] && v === grid[r][c+2]){
+          matched.push({r,c}, {r,c:c+1}, {r,c:c+2});
+        }
+      }
+    }
+    for(let c=0;c<SIZE;c++){
+      for(let r=0;r<SIZE-2;r++){
+        const v = grid[r][c];
+        if(v === grid[r+1][c] && v === grid[r+2][c]){
+          matched.push({r,c}, {r:r+1,c}, {r:r+2,c});
+        }
+      }
+    }
+    // de-duplicate
+    const seen = new Set();
+    return matched.filter(({r,c}) => {
+      const key = r+'_'+c;
+      if(seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function resolveMatches(){
+    const matches = findMatches();
+    if(matches.length === 0){
+      busy = false;
+      render();
+      if(!hasAnyMove()) endGame();
+      return;
+    }
+    score += matches.length * 10;
+    for(const {r,c} of matches) grid[r][c] = -1; // mark empty
+    // drop gems down
+    for(let c=0;c<SIZE;c++){
+      let pointer = SIZE - 1;
+      for(let r=SIZE-1;r>=0;r--){
+        if(grid[r][c] !== -1){
+          grid[pointer][c] = grid[r][c];
+          pointer--;
+        }
+      }
+      for(let r=pointer;r>=0;r--) grid[r][c] = randGem();
+    }
+    render();
+    setTimeout(() => resolveMatches(), 220);
+  }
+
+  function hasAnyMove(){
+    for(let r=0;r<SIZE;r++){
+      for(let c=0;c<SIZE;c++){
+        if(c < SIZE-1){
+          swap({r,c},{r,c:c+1});
+          const m = findMatches().length > 0;
+          swap({r,c},{r,c:c+1});
+          if(m) return true;
+        }
+        if(r < SIZE-1){
+          swap({r,c},{r:r+1,c});
+          const m = findMatches().length > 0;
+          swap({r,c},{r:r+1,c});
+          if(m) return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function endGame(){
+    finalScoreEl.textContent = 'Score: ' + score;
+    overlay.classList.add('show');
+  }
+
+  function startGame(){
+    score = 0; selected = null; busy = false;
+    overlay.classList.remove('show');
+    newGrid();
+    render();
+  }
+
+  document.getElementById('restartBtn').addEventListener('click', startGame);
+  startGame();
+})();
+</script>
+</body>
+</html>

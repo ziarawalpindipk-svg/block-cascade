@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Nova Blaster - Space Shooter Arcade Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+
+<!-- ============================================================
+     🔹 ADSTERRA SOCIAL BAR CODE
+     ============================================================ -->
+<script src="https://pl30278087.effectivecpmnetwork.com/4b/ea/3a/4bea3a1f3fa20c58d7897594c829d53d.js"></script>
+
+<style>
+  :root{
+    --bg1:#0a1030; --bg2:#020410;
+    --panel:#101836; --panel-line:rgba(255,255,255,0.08);
+    --text:#eaf0ff; --sub:#8fa3d6;
+    --accent:#ec4899; --accent2:#38bdf8;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; }
+  html,body{
+    margin:0; padding:0;
+    background: #020410;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--text);
+    height:100%; overflow:hidden;
+    touch-action:none;
+  }
+  #app{
+    max-width:460px; margin:0 auto; height:100dvh;
+    display:flex; flex-direction:column; align-items:center;
+    padding: env(safe-area-inset-top,8px) 8px calc(8px + env(safe-area-inset-bottom,0px));
+    position:relative;
+  }
+  #game-wrap{
+    position:relative; width:100%; flex:1; min-height:0;
+    border-radius:14px; overflow:hidden;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+  }
+  canvas{ display:block; width:100%; height:100%; background:#020410; }
+
+  .back-btn{
+    position:absolute; top:10px; left:10px; z-index:20;
+    background: rgba(255,255,255,0.1); border:none; border-radius:10px;
+    color: var(--text); font-size:13px; font-weight:600; padding:7px 12px;
+    text-decoration:none; cursor:pointer;
+  }
+  #pauseBtn{
+    position:absolute; top:10px; left:70px; z-index:20;
+    background: rgba(255,255,255,0.1); border:none; border-radius:10px;
+    color: var(--text); font-size:15px; padding:6px 10px; cursor:pointer;
+  }
+  #scoreDisplay{
+    position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:20;
+    font-family:'Baloo 2',sans-serif; font-size:22px; font-weight:800;
+    color:#fff; text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  }
+  #livesDisplay{
+    position:absolute; top:10px; right:10px; z-index:20;
+    font-size:16px; text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  }
+  #healthBarWrap{
+    position:absolute; top:40px; left:50%; transform:translateX(-50%); z-index:20;
+    width:140px; height:8px; background:rgba(255,255,255,0.15); border-radius:6px; overflow:hidden;
+  }
+  #healthBarFill{
+    height:100%; width:100%;
+    background: linear-gradient(90deg, #4ade80, #22c55e);
+    transition: width 0.2s;
+  }
+
+  #overlay{
+    position:absolute; inset:0; background:rgba(2,4,16,0.92);
+    display:none; align-items:center; justify-content:center; z-index:100;
+  }
+  #overlay.show{ display:flex; }
+  .modal{
+    background: linear-gradient(180deg, #101836, #050814);
+    border-radius:18px; padding:26px 24px; text-align:center;
+    width:82%; max-width:320px; border:1px solid rgba(255,255,255,0.08);
+  }
+  .modal h2{ margin:0 0 6px; font-family:'Baloo 2',sans-serif; font-size:24px; }
+  .modal p{ color:var(--sub); margin:0 0 6px; font-size:13px; }
+  #ad-gameover{ width:100%; max-width:280px; min-height:90px; margin:10px auto; border-radius:10px; overflow:hidden; background:rgba(255,255,255,0.04); }
+  button.primary{
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border:none; color:#0a0620; font-weight:700; font-size:15px;
+    padding:12px 20px; border-radius:14px; width:100%; margin-top:6px; cursor:pointer;
+  }
+  #ad-banner-nova{
+    width:100%; max-width:360px; min-height:50px; margin: 6px auto 0;
+    border-radius:10px; overflow:hidden; background:rgba(255,255,255,0.04); flex-shrink:0;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="game-wrap">
+    <canvas id="canvas"></canvas>
+    <a href="index.html" class="back-btn">← Back</a>
+    <button id="pauseBtn">⏸</button>
+    <div id="scoreDisplay">0</div>
+    <div id="healthBarWrap"><div id="healthBarFill"></div></div>
+    <div id="livesDisplay">🚀🚀🚀</div>
+
+    <div id="overlay">
+      <div class="modal">
+        <h2>Game Over</h2>
+        <p id="final-score">Score: 0</p>
+        <div id="ad-gameover">
+          <script async="async" data-cfasync="false" src="https://pl30278109.effectivecpmnetwork.com/37bcd87f9b90a477e2b211daed1f289b/invoke.js"></script>
+          <div id="container-37bcd87f9b90a477e2b211daed1f289b"></div>
+        </div>
+        <button class="primary" id="restartBtn">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       🔹 ADSTERRA BANNER 320x50
+       ============================================================ -->
+  <div id="ad-banner-nova">
+    <script>
+      atOptions = { 'key':'63f9cc601bd826eb8fbdc16d61a1bf4b', 'format':'iframe', 'height':50, 'width':320, 'params':{} };
+    </script>
+    <script src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const wrap = document.getElementById('game-wrap');
+  const scoreDisplay = document.getElementById('scoreDisplay');
+  const livesDisplay = document.getElementById('livesDisplay');
+  const healthBarFill = document.getElementById('healthBarFill');
+  const overlay = document.getElementById('overlay');
+  const finalScoreEl = document.getElementById('final-score');
+  const pauseBtn = document.getElementById('pauseBtn');
+
+  let W = 0, H = 0;
+  function resize(){
+    const rect = wrap.getBoundingClientRect();
+    W = canvas.width = rect.width;
+    H = canvas.height = rect.height;
+  }
+  window.addEventListener('resize', resize);
+
+  // ---------------- Game state ----------------
+  let player, bullets, enemies, powerups, particles, stars;
+  let score = 0, health = 100, lives = 3;
+  let running = false, paused = false;
+  let lastEnemySpawn = 0, lastBulletFire = 0, lastPowerupSpawn = 0;
+  let enemySpawnInterval = 1000;
+  let rafId = null;
+  let lastTime = 0;
+
+  function initStars(){
+    stars = [];
+    for(let i=0;i<60;i++){
+      stars.push({ x: Math.random(), y: Math.random(), r: Math.random()*1.6+0.4, phase: Math.random()*Math.PI*2 });
+    }
+  }
+
+  function initGame(){
+    player = { x: W/2, y: H - 50, w: 34, h: 34, targetX: W/2 };
+    bullets = [];
+    enemies = [];
+    powerups = [];
+    particles = [];
+    score = 0; health = 100; lives = 3;
+    enemySpawnInterval = 1000;
+    lastEnemySpawn = 0; lastBulletFire = 0; lastPowerupSpawn = 0;
+    updateUI();
+  }
+
+  function updateUI(){
+    scoreDisplay.textContent = score;
+    healthBarFill.style.width = Math.max(0, health) + '%';
+    livesDisplay.textContent = '🚀'.repeat(Math.max(0, lives));
+  }
+
+  // ---------------- Input: drag ship left/right ----------------
+  let dragging = false;
+  function pointerToLocalX(clientX){
+    const rect = canvas.getBoundingClientRect();
+    return clientX - rect.left;
+  }
+  function onPointerDown(e){
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    const y = e.touches ? e.touches[0].clientY : e.clientY;
+    const rect = canvas.getBoundingClientRect();
+    const localY = y - rect.top;
+    // Check tap on a powerup first (direct tap collection)
+    const localX = pointerToLocalX(x);
+    for(let i = powerups.length - 1; i >= 0; i--){
+      const p = powerups[i];
+      const dx = localX - p.x, dy = localY - p.y;
+      if(Math.sqrt(dx*dx + dy*dy) < p.r + 14){
+        collectPowerup(p, i);
+        return;
+      }
+    }
+    if(localY > H * 0.4){
+      dragging = true;
+      player.targetX = localX;
+    }
+  }
+  function onPointerMove(e){
+    if(!dragging) return;
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    player.targetX = pointerToLocalX(x);
+  }
+  function onPointerUp(){ dragging = false; }
+
+  canvas.addEventListener('touchstart', onPointerDown, {passive:true});
+  canvas.addEventListener('touchmove', onPointerMove, {passive:true});
+  canvas.addEventListener('touchend', onPointerUp, {passive:true});
+  canvas.addEventListener('mousedown', onPointerDown);
+  canvas.addEventListener('mousemove', onPointerMove);
+  canvas.addEventListener('mouseup', onPointerUp);
+
+  function collectPowerup(p, idx){
+    if(p.type === 'bonus'){
+      score += 30;
+      spawnFloatText(p.x, p.y, '+30', '#f97316');
+    } else if(p.type === 'life'){
+      lives = Math.min(5, lives + 1);
+      spawnFloatText(p.x, p.y, '+1 Life', '#4ade80');
+    }
+    powerups.splice(idx, 1);
+    updateUI();
+  }
+
+  function spawnFloatText(x, y, text, color){
+    particles.push({ type:'text', x, y, text, color, life: 1.0 });
+  }
+  function spawnExplosion(x, y){
+    for(let i=0;i<8;i++){
+      const angle = (Math.PI*2/8) * i;
+      particles.push({
+        type:'spark', x, y,
+        vx: Math.cos(angle)*2.2, vy: Math.sin(angle)*2.2,
+        life: 1.0
+      });
+    }
+  }
+
+  // ---------------- Spawning ----------------
+  function spawnEnemy(){
+    const types = ['👾','☄️','🛸'];
+    const type = types[Math.floor(Math.random()*types.length)];
+    enemies.push({
+      x: Math.random()*(W-30)+15,
+      y: -20,
+      r: 15,
+      speed: 1 + Math.random()*1.3 + Math.min(score/200, 2),
+      emoji: type
+    });
+  }
+  function spawnPowerup(){
+    const isBonus = Math.random() < 0.7;
+    powerups.push({
+      x: Math.random()*(W-30)+15,
+      y: -20,
+      r: 14,
+      speed: 0.9,
+      type: isBonus ? 'bonus' : 'life'
+    });
+  }
+  function fireBullet(){
+    bullets.push({ x: player.x, y: player.y - 20, r: 3, speed: 6 });
+  }
+
+  // ---------------- Update loop ----------------
+  function update(dt, now){
+    // Player follows target smoothly
+    player.x += (player.targetX - player.x) * 0.25;
+    player.x = Math.max(20, Math.min(W - 20, player.x));
+
+    // Auto-fire
+    if(now - lastBulletFire > 260){
+      fireBullet();
+      lastBulletFire = now;
+    }
+
+    // Spawn enemies (gets a bit faster over time)
+    enemySpawnInterval = Math.max(420, 1000 - score * 2);
+    if(now - lastEnemySpawn > enemySpawnInterval){
+      spawnEnemy();
+      lastEnemySpawn = now;
+    }
+
+    // Spawn powerups
+    if(now - lastPowerupSpawn > 5500){
+      spawnPowerup();
+      lastPowerupSpawn = now;
+    }
+
+    // Move bullets
+    for(let i = bullets.length-1; i>=0; i--){
+      bullets[i].y -= bullets[i].speed;
+      if(bullets[i].y < -10) bullets.splice(i,1);
+    }
+
+    // Move enemies + collision with player
+    for(let i = enemies.length-1; i>=0; i--){
+      const e = enemies[i];
+      e.y += e.speed;
+      if(e.y > H + 20){ enemies.splice(i,1); continue; }
+      const dx = e.x - player.x, dy = e.y - player.y;
+      if(Math.sqrt(dx*dx+dy*dy) < e.r + player.w/2 - 6){
+        enemies.splice(i,1);
+        spawnExplosion(e.x, e.y);
+        health -= 25;
+        updateUI();
+        if(health <= 0) handleHealthDepleted();
+        continue;
+      }
+      // bullet collision
+      for(let j = bullets.length-1; j>=0; j--){
+        const b = bullets[j];
+        const bdx = e.x - b.x, bdy = e.y - b.y;
+        if(Math.sqrt(bdx*bdx+bdy*bdy) < e.r + b.r + 4){
+          enemies.splice(i,1);
+          bullets.splice(j,1);
+          spawnExplosion(e.x, e.y);
+          score += 1;
+          updateUI();
+          break;
+        }
+      }
+    }
+
+    // Move powerups
+    for(let i = powerups.length-1; i>=0; i--){
+      powerups[i].y += powerups[i].speed;
+      if(powerups[i].y > H + 20) powerups.splice(i,1);
+    }
+
+    // Particles
+    for(let i = particles.length-1; i>=0; i--){
+      const p = particles[i];
+      p.life -= dt * 1.6;
+      if(p.type === 'spark'){ p.x += p.vx; p.y += p.vy; }
+      if(p.type === 'text'){ p.y -= 0.6; }
+      if(p.life <= 0) particles.splice(i,1);
+    }
+  }
+
+  function handleHealthDepleted(){
+    if(lives > 1){
+      lives--;
+      health = 100;
+      updateUI();
+    } else {
+      lives = 0;
+      updateUI();
+      endGame();
+    }
+  }
+
+  // ---------------- Draw ----------------
+  function draw(now){
+    ctx.clearRect(0,0,W,H);
+    // Stars
+    ctx.fillStyle = '#fff';
+    for(const s of stars){
+      const twinkle = 0.4 + 0.6 * Math.abs(Math.sin(now/700 + s.phase));
+      ctx.globalAlpha = twinkle;
+      ctx.beginPath();
+      ctx.arc(s.x*W, s.y*H, s.r, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // Bullets
+    ctx.fillStyle = '#38bdf8';
+    for(const b of bullets){
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // Enemies
+    ctx.font = '26px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for(const e of enemies){
+      ctx.fillText(e.emoji, e.x, e.y);
+    }
+
+    // Powerups
+    for(const p of powerups){
+      ctx.beginPath();
+      ctx.fillStyle = p.type === 'bonus' ? '#f97316' : '#4ade80';
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 13px sans-serif';
+      ctx.fillText(p.type === 'bonus' ? '30' : '+', p.x, p.y+1);
+    }
+
+    // Particles
+    for(const pt of particles){
+      ctx.globalAlpha = Math.max(0, pt.life);
+      if(pt.type === 'spark'){
+        ctx.fillStyle = '#facc15';
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 3, 0, Math.PI*2);
+        ctx.fill();
+      } else if(pt.type === 'text'){
+        ctx.fillStyle = pt.color;
+        ctx.font = 'bold 15px sans-serif';
+        ctx.fillText(pt.text, pt.x, pt.y);
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // Player ship
+    ctx.font = '30px sans-serif';
+    ctx.fillText('🚀', player.x, player.y);
+  }
+
+  function loop(now){
+    if(!running || paused){ rafId = requestAnimationFrame(loop); return; }
+    const dt = Math.min(0.05, (now - lastTime) / 1000 || 0.016);
+    lastTime = now;
+    update(dt, now);
+    draw(now);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function endGame(){
+    running = false;
+    finalScoreEl.textContent = 'Score: ' + score;
+    overlay.classList.add('show');
+  }
+
+  function startGame(){
+    resize();
+    initStars();
+    initGame();
+    overlay.classList.remove('show');
+    running = true;
+    paused = false;
+    lastTime = performance.now();
+    if(rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  pauseBtn.addEventListener('click', () => {
+    paused = !paused;
+    pauseBtn.textContent = paused ? '▶' : '⏸';
+  });
+  document.getElementById('restartBtn').addEventListener('click', startGame);
+
+  resize();
+  startGame();
+})();
+</script>
+</body>
+</html>
