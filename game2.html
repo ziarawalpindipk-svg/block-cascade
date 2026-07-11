@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Gridora Drop - Falling Block Puzzle</title>
 
+<!-- ============================================================
+     🔹 ADSTERRA SOCIAL BAR CODE
+     ============================================================ -->
+<script src="https://pl30278087.effectivecpmnetwork.com/4b/ea/3a/4bea3a1f3fa20c58d7897594c829d53d.js"></script>
+
 <style>
   /* ===== ORIGINAL GAME CSS ===== */
   :root{
@@ -100,12 +105,16 @@
   }
   #home-btn{
     background: rgba(255,255,255,0.08);
-    border-radius: 10px;
+    border-radius: 12px;
     color: var(--text);
-    font-size: 26px;
+    font-size: 40px;
     text-decoration: none;
-    padding: 4px 10px;
+    padding: 6px 0;
     line-height: 1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   #home-btn:active{ background: rgba(255,255,255,0.18); }
   #share-toggle{
@@ -337,21 +346,21 @@
     osc.stop(t0+dur+0.02);
     osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch(e){} };
   }
-  function sfxMove(){ beep(220, 0.05, 'square', 0.14); }
-  function sfxRotate(){ beep(440, 0.07, 'triangle', 0.16); }
-  function sfxDrop(){ beep(140, 0.09, 'sawtooth', 0.2); }
-  function sfxLock(){ beep(180, 0.08, 'square', 0.16); }
+  function sfxMove(){ beep(220, 0.05, 'square', 0.32); }
+  function sfxRotate(){ beep(440, 0.07, 'triangle', 0.36); }
+  function sfxDrop(){ beep(140, 0.09, 'sawtooth', 0.42); }
+  function sfxLock(){ beep(180, 0.08, 'square', 0.36); }
   function sfxLineClear(n){
     const notes = [523, 659, 784, 1047];
     for(let i=0;i<Math.min(n,4);i++){
-      beep(notes[i], 0.15, 'square', 0.24, i*0.06);
+      beep(notes[i], 0.15, 'square', 0.5, i*0.06);
     }
   }
   function sfxGameOver(){
-    [392,349,293,220].forEach((f,i)=>beep(f,0.3,'sawtooth',0.2,i*0.15));
+    [392,349,293,220].forEach((f,i)=>beep(f,0.3,'sawtooth',0.45,i*0.15));
   }
   function sfxLevelUp(){
-    [523,659,784,1047,1319].forEach((f,i)=>beep(f,0.12,'triangle',0.18,i*0.07));
+    [523,659,784,1047,1319].forEach((f,i)=>beep(f,0.12,'triangle',0.4,i*0.07));
   }
 
   // ---- Background music: persistent oscillators + look-ahead scheduler ----

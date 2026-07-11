@@ -27,7 +27,7 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.35));
+    filter: drop-shadow(0 4px 16px rgba(255, 107, 91, 0.45));
   }
   .header h1 {
     font-family: 'Baloo 2', sans-serif;
@@ -70,6 +70,7 @@
   .game-card {
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.08);
+    border-left: 3px solid transparent;
     border-radius: 18px;
     padding: 18px 16px 16px;
     margin-bottom: 16px;
@@ -81,6 +82,8 @@
     position: relative;
     cursor: pointer;
   }
+  .game-card.g1 { border-left-color: #4d96ff; }
+  .game-card.g2 { border-left-color: #4ade80; }
   .game-card:active {
     transform: scale(0.97);
     box-shadow: 0 0 30px rgba(92, 225, 255, 0.15);
@@ -96,11 +99,28 @@
     letter-spacing: 0.5px;
     margin-bottom: 6px;
   }
+  .game-card.g1 .badge { background: rgba(77,150,255,0.2); color: #4d96ff; }
+  .game-card.g2 .badge { background: rgba(74,222,128,0.2); color: #4ade80; }
+  .game-icon-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .game-card.g1 .game-icon-badge { background: rgba(77,150,255,0.18); }
+  .game-card.g2 .game-icon-badge { background: rgba(74,222,128,0.18); }
   .game-card h2 {
     font-family: 'Baloo 2', sans-serif;
     font-size: 20px;
     font-weight: 700;
     margin: 0 0 4px;
+    display: flex;
+    align-items: center;
   }
   .game-card p {
     color: #9a94c2;
@@ -134,8 +154,8 @@
     100% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0); }
   }
   .play-btn.small { font-size: 12px; padding: 6px 16px; }
-  .game-card.g1 .play-btn { background: linear-gradient(135deg, #5ce1ff, #2dd4bf); }
-  .game-card.g2 .play-btn { background: linear-gradient(135deg, #ff5cb8, #ff6b5b); }
+  .game-card.g1 .play-btn { background: linear-gradient(135deg, #4d96ff, #2dd4bf); }
+  .game-card.g2 .play-btn { background: linear-gradient(135deg, #4ade80, #22c55e); color: #06210f; }
 
   .download-btn {
     display: inline-block;
@@ -304,8 +324,8 @@
       <svg width="40" height="40" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <linearGradient id="iconBg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#3a2461"/>
-            <stop offset="100%" stop-color="#1a1030"/>
+            <stop offset="0%" stop-color="#6a48b0"/>
+            <stop offset="100%" stop-color="#3a2461"/>
           </linearGradient>
           <linearGradient id="blockCoral" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stop-color="#ff8f7f"/>
@@ -321,14 +341,14 @@
           </linearGradient>
         </defs>
         <rect x="1" y="1" width="70" height="70" rx="18" fill="url(#iconBg)"/>
-        <rect x="1" y="1" width="70" height="70" rx="18" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/>
-        <rect x="30" y="8" width="11" height="11" rx="2.5" fill="url(#blockTeal)" opacity="0.55"/>
+        <rect x="1" y="1" width="70" height="70" rx="18" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+        <rect x="30" y="8" width="11" height="11" rx="2.5" fill="url(#blockTeal)" opacity="0.8"/>
         <rect x="15" y="38" width="15" height="15" rx="3" fill="url(#blockCoral)"/>
         <rect x="32" y="38" width="15" height="15" rx="3" fill="url(#blockAmber)"/>
         <rect x="23.5" y="22" width="15" height="15" rx="3" fill="url(#blockTeal)"/>
-        <rect x="15" y="38" width="15" height="5" rx="2.5" fill="#ffffff" opacity="0.18"/>
-        <rect x="32" y="38" width="15" height="5" rx="2.5" fill="#ffffff" opacity="0.18"/>
-        <rect x="23.5" y="22" width="15" height="5" rx="2.5" fill="#ffffff" opacity="0.18"/>
+        <rect x="15" y="38" width="15" height="5" rx="2.5" fill="#ffffff" opacity="0.25"/>
+        <rect x="32" y="38" width="15" height="5" rx="2.5" fill="#ffffff" opacity="0.25"/>
+        <rect x="23.5" y="22" width="15" height="5" rx="2.5" fill="#ffffff" opacity="0.25"/>
       </svg>
       <h1>Cascade Arcade</h1>
     </div>
@@ -347,10 +367,10 @@
   <!-- GAME 1 -->
   <div class="game-card g1" onclick="openGame('game1.html')">
     <div class="badge">✦ Puzzle</div>
-    <h2>🧩 Block Cascade</h2>
+    <h2><span class="game-icon-badge">🧩</span>Block Cascade</h2>
     <p>Drag colorful blocks onto the grid. Clear full rows &amp; columns. Relaxing &amp; addictive.</p>
     <div class="card-row">
-      <span style="color:#6a6490;font-size:12px;">📱 Mobile friendly</span>
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
         <a class="download-btn" href="#" onclick="event.stopPropagation(); alert('Download feature coming soon!');">⬇ Download</a>
         <span class="play-btn small">▶ Play Now</span>
@@ -377,10 +397,10 @@
   <!-- GAME 2 -->
   <div class="game-card g2" onclick="openGame('game2.html')">
     <div class="badge">✦ Arcade</div>
-    <h2>⬇️ Gridora Drop</h2>
+    <h2><span class="game-icon-badge">⬇️</span>Gridora Drop</h2>
     <p>Classic falling block puzzle. Rotate, slide, and drop to clear lines. Speed increases!</p>
     <div class="card-row">
-      <span style="color:#6a6490;font-size:12px;">📱 Mobile friendly</span>
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
         <a class="download-btn" href="#" onclick="event.stopPropagation(); alert('Download feature coming soon!');">⬇ Download</a>
         <span class="play-btn small">▶ Play Now</span>

@@ -110,7 +110,7 @@
   .bb-best {
     font-size: 11px;
     color: var(--sub);
-    margin-bottom: 12px;
+    margin-bottom: 6px;
     letter-spacing: 0.3px;
   }
 
@@ -119,8 +119,8 @@
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(8, 1fr);
     gap: 4px;
-    width: min(88vw, 44vh, 360px);
-    height: min(88vw, 44vh, 360px);
+    width: min(84vw, 38vh, 340px);
+    height: min(84vw, 38vh, 340px);
     background: var(--panel);
     padding: 9px;
     border-radius: 18px;
@@ -152,12 +152,12 @@
     width: min(88vw, 360px);
     display: flex;
     justify-content: space-between;
-    margin-top: 14px;
+    margin-top: 8px;
     gap: 8px;
   }
   .bb-slot {
     flex: 1;
-    min-height: 80px;
+    min-height: 72px;
     background: var(--panel);
     border-radius: 14px;
     display: flex;
@@ -224,8 +224,8 @@
     box-shadow: 0 6px 16px rgba(255, 107, 91, 0.35);
   }
   .bb-hint {
-    margin-top: 10px;
-    font-size: 11px;
+    margin-top: 4px;
+    font-size: 10px;
     color: var(--sub);
     text-align: center;
     max-width: 340px;
@@ -349,6 +349,15 @@
     background: var(--accent);
     cursor: pointer;
   }
+  .bb-volume-row-combo {
+    gap: 12px;
+  }
+  .bb-volume-half {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+  }
   .bb-volume-label {
     font-size: 10px;
     color: var(--sub);
@@ -382,7 +391,7 @@
     width: 100%;
     max-width: 360px;
     min-height: 50px;
-    margin-bottom: 14px;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -411,25 +420,18 @@
       </button>
     </div>
 
-    <div class="bb-volume-row">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 9v6h4l5 5V4L7 9H3z" fill="currentColor"/>
-        <path d="M16 8.5a4.5 4.5 0 010 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
-      <span style="font-size:10px;color:var(--sub);min-width:38px;">Sound</span>
-      <input type="range" id="bb-sfx-volume-slider" min="0" max="100" value="100">
-      <span class="bb-volume-label" id="bb-sfx-volume-label">100%</span>
+    <div class="bb-volume-row bb-volume-row-combo">
+      <div class="bb-volume-half">
+        <span style="font-size:9px;color:var(--sub);">🔊</span>
+        <input type="range" id="bb-sfx-volume-slider" min="0" max="100" value="100">
+      </div>
+      <div class="bb-volume-half">
+        <span style="font-size:9px;color:var(--sub);">🎵</span>
+        <input type="range" id="bb-music-volume-slider" min="0" max="100" value="70">
+      </div>
     </div>
-    <div class="bb-volume-row">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9 18V5l12-2v13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="1.8"/>
-        <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="1.8"/>
-      </svg>
-      <span style="font-size:10px;color:var(--sub);min-width:38px;">Music</span>
-      <input type="range" id="bb-music-volume-slider" min="0" max="100" value="70">
-      <span class="bb-volume-label" id="bb-music-volume-label">70%</span>
-    </div>
+    <span id="bb-sfx-volume-label" style="display:none;">100%</span>
+    <span id="bb-music-volume-label" style="display:none;">70%</span>
   </div>
 
   <div class="bb-header">
@@ -475,7 +477,7 @@
 
   <div class="bb-hint">Drag blocks onto the grid. Fill a full row or column to clear it.</div>
 
-  <div style="margin-top:10px;display:flex;gap:16px;font-size:11px;">
+  <div style="margin-top:6px;display:flex;gap:16px;font-size:10px;">
     <a href="index.html" style="color:#b3a0d4;text-decoration:none;">🏠 Home</a>
     <a href="about_us.html" style="color:#b3a0d4;text-decoration:none;">About</a>
     <a href="privacy_policy.html" style="color:#b3a0d4;text-decoration:none;">Privacy</a>
