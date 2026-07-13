@@ -48,6 +48,23 @@
     body { animation: none; }
   }
   .container { max-width: 420px; margin: 0 auto; }
+
+  /* Desktop/tablet: widen container and show games in a multi-column grid */
+  .games-grid { display: block; }
+  @media (min-width: 700px) {
+    .container { max-width: 1100px; }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .games-grid .game-card { margin-bottom: 0; }
+    .games-grid .ad-banner { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1000px) {
+    .games-grid { grid-template-columns: repeat(3, 1fr); }
+  }
   
   .header {
     text-align: center;
@@ -419,12 +436,12 @@
 
   <div class="action-row">
     <button class="share-btn" onclick="openShare()">📤 Share</button>
-    <a href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" 
-       target="_blank" 
-       class="cta-smartlink">
-       📲 Download App
-    </a>
+    <button onclick="installApp(event)" class="cta-smartlink">
+       📲 Install App
+    </button>
   </div>
+
+  <div class="games-grid">
 
   <!-- GAME 1 -->
   <div class="game-card g1" onclick="openGame('game1.html')">
@@ -434,7 +451,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -464,7 +481,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -478,7 +495,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -492,7 +509,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -514,7 +531,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -528,7 +545,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -542,7 +559,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -558,7 +575,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -572,7 +589,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -586,7 +603,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -600,7 +617,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -614,7 +631,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -628,7 +645,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -642,7 +659,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -656,7 +673,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -670,7 +687,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -684,7 +701,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -705,7 +722,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -719,7 +736,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -733,7 +750,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -747,7 +764,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -761,7 +778,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -775,7 +792,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -789,7 +806,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -803,7 +820,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -817,7 +834,7 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
@@ -831,11 +848,13 @@
     <div class="card-row">
       <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
       <div>
-        <a class="download-btn" href="https://www.effectivecpmnetwork.com/d5shk8djez?key=19eff8f10186aadbe0996ec5c1fd2831" target="_blank" onclick="event.stopPropagation();">⬇ Download</a>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
         <span class="play-btn small">▶ Play Now</span>
       </div>
     </div>
   </div>
+
+  </div><!-- /.games-grid -->
 
   <!-- ============================================================
        🔹 ADSTERRA NATIVE AD (below the game cards)
@@ -914,6 +933,24 @@
       document.body.style.overflow = '';
     }
   });
+
+  // ---- Real "Install App" logic (replaces old misleading ad-link buttons) ----
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+  function installApp(e) {
+    if (e) e.stopPropagation();
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.finally(() => { deferredPrompt = null; });
+    } else if (window.matchMedia('(display-mode: standalone)').matches) {
+      alert('Play Vault already installed hai! 🎉');
+    } else {
+      alert('App install karne ke liye:\n\n📱 Android (Chrome): ⋮ menu > "Add to Home screen"\n🍎 iPhone (Safari): Share button > "Add to Home Screen"\n💻 Desktop (Chrome/Edge): address bar mein install icon ⊕ dabayen');
+    }
+  }
 
   const SHARE_TITLE = 'Play Vault';
   const SHARE_TEXT = 'Play 20+ free online games — no download needed, play instantly!';
