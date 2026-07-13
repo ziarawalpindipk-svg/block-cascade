@@ -403,11 +403,11 @@
 
   <div class="bb-utility-bar">
     <div class="bb-utility-row">
-      <a class="download-btn" id="bb-download-link" href="#" target="_blank">
+      <a class="download-btn" id="bb-download-link" href="javascript:void(0)" onclick="if(window.parent!==window&&window.parent.installApp){window.parent.installApp(event);}else{alert('App install ke liye home screen se try karein.');}">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Download
+        Install
       </a>
       <button class="share-btn-big" id="bb-share-btn" title="Share this game">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -490,10 +490,7 @@
 
     <div class="bb-history" id="bb-history"></div>
 
-    <!-- ============================================================
-         🔹 ADSTERRA NATIVE AD CODE (Game-Over)
-         ============================================================ -->
-    <div id="ad-gameover" style="width:100%;max-width:300px;min-height:100px;margin-bottom:16px;">
+    <div id="ad-gameover" style="width:100%;max-width:300px;min-height:60px;max-height:80px;margin:16px 0 0;overflow:hidden;">
       <script async="async" data-cfasync="false" src="https://pl30278109.effectivecpmnetwork.com/37bcd87f9b90a477e2b211daed1f289b/invoke.js"></script>
       <div id="container-37bcd87f9b90a477e2b211daed1f289b"></div>
     </div>

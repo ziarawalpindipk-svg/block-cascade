@@ -14,7 +14,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
         body { background: #0b0b1a; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
         #gameContainer { position: relative; width: 100%; height: 100%; max-width: 500px; max-height: 800px; background: #0b0b1a; touch-action: none; overflow: hidden; box-shadow: 0 0 60px rgba(0,0,0,0.6); }
-        canvas { display: block; width: 100%; height: 100%; }
+        canvas { display: block; width: 100%; height: calc(100% - 60px); }
 
         #ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
         #topBar { position: absolute; top: 14px; left: 0; width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; gap: 6px; }
@@ -41,7 +41,7 @@
         #levelUpBanner { position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%); font-size: 22px; font-weight: 800; color: #feca57; text-shadow: 0 0 20px #feca57; opacity: 0; pointer-events: none; z-index: 14; transition: opacity 0.2s; }
         #rewardBanner { position: absolute; top: 58%; left: 50%; transform: translate(-50%,-50%); font-size: 18px; font-weight: 800; color: #ff6b6b; text-shadow: 0 0 20px #ff6b6b; opacity: 0; pointer-events: none; z-index: 14; transition: opacity 0.2s; text-align: center; }
         #stageTag { font-size: 11px; color: #a29bfe; font-weight: 700; margin-top: 2px; }
-        #gameOverAd { width: 260px; height: 60px; margin: 14px auto 0; background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,0.25); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #777; font-size: 11px; }
+        #gameOverAd { width: 260px; height: 60px; margin: 16px auto 0; background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,0.25); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #777; font-size: 11px; overflow: hidden; }
         #finalScore { color: #00d2ff; font-weight: 800; }
         #restartBtn { background: linear-gradient(135deg, #00d2ff 0%, #a29bfe 100%); border: none; padding: 13px 34px; font-size: 16px; color: #0b0b1a; font-weight: 700; border-radius: 25px; cursor: pointer; margin-top: 16px; box-shadow: 0 4px 20px rgba(0,210,255,0.4); }
 
@@ -99,9 +99,9 @@
         <div id="gameOver">
             <h1>DESTROYED!</h1>
             <p>Score: <span id="finalScore">0</span></p>
+            <button id="restartBtn">▶ Retry</button>
             <div id="gameOverAd"><script async="async" data-cfasync="false" src="https://pl30278109.effectivecpmnetwork.com/37bcd87f9b90a477e2b211daed1f289b/invoke.js"></script>
 <div id="container-37bcd87f9b90a477e2b211daed1f289b"></div></div>
-            <button id="restartBtn">▶ Retry</button>
         </div>
     </div>
 </div>
