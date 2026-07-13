@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquid Sort - Color Puzzle | Cascade Arcade</title>
+    <meta name="description" content="Play Liquid Sort free online! Pour and sort colored water into matching bottles in this relaxing puzzle game. No download needed.">
+    <meta name="keywords" content="liquid sort, water sort puzzle, color sort game, free online puzzle game, bottle sort">
+    <meta property="og:title" content="Liquid Sort - Color Puzzle">
+    <meta property="og:description" content="Pour and sort colored water into matching bottles. Play free, no download.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#1a1a2e">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { background: #1a1a2e; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+        #gameContainer { position: relative; width: 100%; height: 100%; max-width: 500px; max-height: 800px; background: #2d3436; touch-action: none; overflow: hidden; box-shadow: 0 0 60px rgba(0,0,0,0.6); }
+        canvas { display: block; width: 100%; height: 100%; }
+
+        #ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        #topBar { position: absolute; top: 14px; left: 0; width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; gap: 8px; }
+        #backBtn { pointer-events: auto; display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.15); color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 20px; flex-shrink: 0; }
+        #moves { font-size: 16px; font-weight: 800; color: #fff; background: rgba(255,255,255,0.08); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.15); padding: 8px 18px; border-radius: 20px; }
+
+        #soundControls { pointer-events: auto; display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 6px 10px; flex-shrink: 0; }
+        #muteBtn { background: none; border: none; color: #fff; font-size: 16px; cursor: pointer; padding: 0; line-height: 1; }
+        #volumeSlider { width: 50px; accent-color: #2ed573; cursor: pointer; }
+
+        #introOverlay { position: absolute; inset: 0; background: rgba(10,10,20,0.93); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; pointer-events: auto; z-index: 20; }
+        #introOverlay h1 { font-size: 27px; font-weight: 800; color: #fff; margin-bottom: 6px; background: linear-gradient(135deg, #2ed573 0%, #4facfe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        #introOverlay p { color: #b8b8c8; font-size: 14px; margin-bottom: 22px; max-width: 300px; line-height: 1.5; }
+        .how-to-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; color: #ddd; font-size: 14px; max-width: 290px; text-align: left; }
+        .how-to-icon { font-size: 22px; width: 34px; text-align: center; flex-shrink: 0; }
+        #startBtn { margin-top: 20px; background: linear-gradient(135deg, #2ed573 0%, #4facfe 100%); border: none; color: #1a1a2e; font-weight: 700; font-size: 16px; padding: 14px 40px; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 20px rgba(46,213,115,0.4); }
+
+        #gameOver { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15,15,30,0.95); color: white; padding: 32px 40px; border-radius: 20px; text-align: center; display: none; pointer-events: auto; z-index: 15; border: 1px solid rgba(46,213,115,0.3); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        #gameOver h1 { font-size: 30px; margin-bottom: 10px; color: #2ed573; }
+        #gameOver p { color: #b8b8c8; font-size: 15px; }
+        #finalMoves { color: #2ed573; font-weight: 800; }
+        #gameOverAd { width: 260px; height: 60px; margin: 14px auto 0; background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,0.25); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #777; font-size: 11px; }
+        #restartBtn { background: linear-gradient(135deg, #2ed573 0%, #4facfe 100%); border: none; padding: 13px 34px; font-size: 16px; color: #1a1a2e; font-weight: 700; border-radius: 25px; cursor: pointer; margin-top: 16px; box-shadow: 0 4px 20px rgba(46,213,115,0.4); }
+
+        #ad-banner-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; background: rgba(255,255,255,0.05); display: flex; justify-content: center; align-items: center; color: #666; font-size: 12px; pointer-events: none; z-index: 10; }
+        #ad-social-top { position: absolute; top: 10px; right: 10px; width: 50px; height: 50px; background: transparent; pointer-events: none; z-index: 10; }
+    </style>
+    <script src="https://pl30278087.effectivecpmnetwork.com/4b/ea/3a/4bea3a1f3fa20c58d7897594c829d53d.js"></script>
+</head>
+<body>
+
+<div id="gameContainer">
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="ad-banner-bottom"><script>
+  atOptions = {
+    'key' : '63f9cc601bd826eb8fbdc16d61a1bf4b',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script></div>
+    <div id="ad-social-top"></div>
+
+    <div id="ui">
+        <div id="topBar">
+            <a href="index.html" onclick="if(window.parent!==window&&window.parent.closeGame){window.parent.closeGame();return false;}" id="backBtn">⬅ Games</a>
+            <div id="moves">Moves: <span id="movesVal">0</span></div>
+            <div id="soundControls">
+                <button id="muteBtn">🔊</button>
+                <input type="range" id="volumeSlider" min="0" max="100" value="80">
+            </div>
+        </div>
+
+        <div id="introOverlay">
+            <h1>Liquid Sort</h1>
+            <p>Sort each color into its own bottle to win.</p>
+            <div class="how-to-row"><div class="how-to-icon">👆</div><div>Tap a bottle to select it</div></div>
+            <div class="how-to-row"><div class="how-to-icon">🧪</div><div>Tap another bottle to pour matching colors into it</div></div>
+            <div class="how-to-row"><div class="how-to-icon">🎯</div><div>Get all 4 of one color into a single bottle to complete it</div></div>
+            <button id="startBtn">▶ Start Sorting</button>
+        </div>
+
+        <div id="gameOver">
+            <h1>SORTED!</h1>
+            <p>Moves: <span id="finalMoves">0</span></p>
+            <div id="gameOverAd"><script async="async" data-cfasync="false" src="https://pl30278109.effectivecpmnetwork.com/37bcd87f9b90a477e2b211daed1f289b/invoke.js"></script>
+<div id="container-37bcd87f9b90a477e2b211daed1f289b"></div></div>
+            <button id="restartBtn">▶ New Puzzle</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ---------- Sound Manager ---------- */
+    const SFX = (() => {
+        let ctx = null, masterGain = null, musicGain = null, musicNodes = null;
+        let lastVolume = 80, muted = false;
+        function init() {
+            if (ctx) return;
+            ctx = new (window.AudioContext || window.webkitAudioContext)();
+            masterGain = ctx.createGain();
+            masterGain.gain.value = lastVolume / 100;
+            masterGain.connect(ctx.destination);
+            musicGain = ctx.createGain();
+            musicGain.gain.value = 0.12;
+            musicGain.connect(masterGain);
+        }
+        function setVolume(v) {
+            lastVolume = v;
+            if (ctx && !muted) masterGain.gain.value = v / 100;
+        }
+        function toggleMute() {
+            if (!ctx) return muted;
+            muted = !muted;
+            masterGain.gain.value = muted ? 0 : lastVolume / 100;
+            return muted;
+        }
+        function tone(freq, dur, type, vol, glideTo) {
+            if (!ctx) return;
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.type = type || 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+            if (glideTo) osc.frequency.exponentialRampToValueAtTime(glideTo, ctx.currentTime + dur);
+            g.gain.setValueAtTime(vol || 0.3, ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+            osc.connect(g); g.connect(masterGain);
+            osc.start(); osc.stop(ctx.currentTime + dur);
+        }
+        function startMusic() {
+            if (!ctx || musicNodes) return;
+            const o1 = ctx.createOscillator(); o1.type = 'triangle'; o1.frequency.value = 110;
+            const o2 = ctx.createOscillator(); o2.type = 'triangle'; o2.frequency.value = 165;
+            const lfo = ctx.createOscillator(); lfo.frequency.value = 0.08;
+            const lfoGain = ctx.createGain(); lfoGain.gain.value = 0.05;
+            lfo.connect(lfoGain); lfoGain.connect(musicGain.gain);
+            o1.connect(musicGain); o2.connect(musicGain);
+            o1.start(); o2.start(); lfo.start();
+            musicNodes = [o1, o2, lfo];
+        }
+        return { init, setVolume, toggleMute, tone, startMusic };
+    })();
+
+    const muteBtn = document.getElementById('muteBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    muteBtn.addEventListener('click', () => {
+        const isMuted = SFX.toggleMute();
+        muteBtn.innerText = isMuted ? '🔇' : '🔊';
+    });
+    volumeSlider.addEventListener('input', (e) => {
+        SFX.setVolume(Number(e.target.value));
+        muteBtn.innerText = Number(e.target.value) === 0 ? '🔇' : '🔊';
+    });
+
+    /* ---------- Game ---------- */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const movesEl = document.getElementById('movesVal');
+    const finalMovesEl = document.getElementById('finalMoves');
+    const gameOverDiv = document.getElementById('gameOver');
+    const restartBtn = document.getElementById('restartBtn');
+    const introOverlay = document.getElementById('introOverlay');
+    const startBtn = document.getElementById('startBtn');
+
+    let W, H;
+    function resize() {
+        const c = document.getElementById('gameContainer');
+        W = canvas.width = c.clientWidth;
+        H = canvas.height = c.clientHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let bottles = [];
+    let moves = 0;
+    let gameRunning = false;
+    let selectedBottle = -1;
+
+    const COLORS = ['#ff6b6b', '#4facfe', '#feca57', '#2ed573', '#a29bfe', '#fd79a8'];
+    const BOTTLE_CAPACITY = 4;
+    const NUM_BOTTLES = 8;
+    const TUBE_WIDTH = 40;
+    const TUBE_HEIGHT = 140;
+
+    function initGame() {
+        bottles = [];
+        moves = 0;
+        gameRunning = true;
+        gameOverDiv.style.display = 'none';
+        movesEl.innerText = '0';
+        selectedBottle = -1;
+
+        let allColors = [];
+        for(let i=0; i<NUM_BOTTLES-2; i++) for(let j=0; j<BOTTLE_CAPACITY; j++) allColors.push(COLORS[i % COLORS.length]);
+        for(let i=allColors.length-1; i>0; i--) {
+            const j = Math.floor(Math.random() * (i+1));
+            [allColors[i], allColors[j]] = [allColors[j], allColors[i]];
+        }
+
+        let idx = 0;
+        for(let i=0; i<NUM_BOTTLES; i++) {
+            let bottle = [];
+            if(i < NUM_BOTTLES-2) for(let j=0; j<BOTTLE_CAPACITY; j++) bottle.push(allColors[idx++]);
+            bottles.push(bottle);
+        }
+    }
+
+    function isBottleComplete(index) {
+        let b = bottles[index];
+        if(b.length === 0 || b.length !== BOTTLE_CAPACITY) return false;
+        let first = b[0];
+        return b.every(color => color === first);
+    }
+
+    function checkWin() {
+        let complete = 0;
+        for(let i=0; i<bottles.length; i++) if(isBottleComplete(i) || bottles[i].length === 0) complete++;
+        return complete === bottles.length;
+    }
+
+    function handleClick(e) {
+        if(!gameRunning) return;
+        const rect = canvas.getBoundingClientRect();
+        let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        if(clientX === undefined) return;
+
+        const mx = clientX - rect.left;
+        const my = clientY - rect.top;
+
+        const totalWidth = NUM_BOTTLES * TUBE_WIDTH + (NUM_BOTTLES-1) * 20;
+        const startX = (W - totalWidth) / 2;
+        const startY = (H - TUBE_HEIGHT) / 2;
+
+        for(let i=0; i<bottles.length; i++) {
+            const x = startX + i * (TUBE_WIDTH + 20);
+            const y = startY;
+            if(mx >= x && mx <= x + TUBE_WIDTH && my >= y && my <= y + TUBE_HEIGHT) {
+                handleBottleClick(i);
+                break;
+            }
+        }
+    }
+
+    function handleBottleClick(index) {
+        if(selectedBottle === -1) {
+            if(bottles[index].length > 0 && !isBottleComplete(index)) {
+                selectedBottle = index;
+                SFX.tone(400, 0.06, 'sine', 0.2, 500);
+            }
+        } else if(selectedBottle === index) {
+            selectedBottle = -1;
+        } else {
+            if(tryPour(selectedBottle, index)) {
+                moves++;
+                movesEl.innerText = moves;
+                SFX.tone(350, 0.1, 'sine', 0.25, 250);
+                selectedBottle = -1;
+                if(checkWin()) {
+                    gameRunning = false;
+                    SFX.tone(500, 0.15, 'sine', 0.35, 900);
+                    SFX.tone(750, 0.2, 'sine', 0.35, 1200);
+                    finalMovesEl.innerText = moves;
+                    gameOverDiv.style.display = 'block';
+                }
+            } else {
+                selectedBottle = -1;
+            }
+        }
+    }
+
+    function tryPour(from, to) {
+        let fromBottle = bottles[from];
+        let toBottle = bottles[to];
+
+        if(fromBottle.length === 0) return false;
+        if(toBottle.length >= BOTTLE_CAPACITY) return false;
+        if(isBottleComplete(from) || isBottleComplete(to)) return false;
+
+        let topColor = fromBottle[fromBottle.length-1];
+
+        if(toBottle.length === 0) {
+            let count = 0;
+            for(let i=fromBottle.length-1; i>=0; i--) { if(fromBottle[i] === topColor) count++; else break; }
+            let pourCount = Math.min(count, BOTTLE_CAPACITY);
+            for(let i=0; i<pourCount; i++) toBottle.push(fromBottle.pop());
+            return true;
+        }
+
+        let targetTop = toBottle[toBottle.length-1];
+        if(targetTop !== topColor) return false;
+
+        let count = 0;
+        for(let i=fromBottle.length-1; i>=0; i--) { if(fromBottle[i] === topColor) count++; else break; }
+        let space = BOTTLE_CAPACITY - toBottle.length;
+        let pourCount = Math.min(count, space);
+        for(let i=0; i<pourCount; i++) toBottle.push(fromBottle.pop());
+        return pourCount > 0;
+    }
+
+    canvas.addEventListener('mousedown', handleClick);
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleClick(e); }, { passive: false });
+
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        let bg = ctx.createLinearGradient(0, 0, 0, H);
+        bg.addColorStop(0, '#242444');
+        bg.addColorStop(1, '#1a1a2e');
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, W, H);
+
+        const totalWidth = NUM_BOTTLES * TUBE_WIDTH + (NUM_BOTTLES-1) * 20;
+        const startX = (W - totalWidth) / 2;
+        const startY = (H - TUBE_HEIGHT) / 2;
+
+        for(let i=0; i<bottles.length; i++) {
+            const x = startX + i * (TUBE_WIDTH + 20);
+            const y = startY;
+            let bottle = bottles[i];
+            let complete = isBottleComplete(i);
+
+            ctx.fillStyle = 'rgba(255,255,255,0.08)';
+            ctx.strokeStyle = selectedBottle === i ? '#f1c40f' : (complete ? 'rgba(46,213,115,0.6)' : 'rgba(255,255,255,0.3)');
+            ctx.lineWidth = selectedBottle === i ? 3 : 2;
+            if(selectedBottle === i) { ctx.shadowColor = '#f1c40f'; ctx.shadowBlur = 12; }
+            ctx.beginPath();
+            ctx.moveTo(x, y + TUBE_HEIGHT);
+            ctx.lineTo(x, y + 15);
+            ctx.quadraticCurveTo(x, y, x + 15, y);
+            ctx.lineTo(x + TUBE_WIDTH - 15, y);
+            ctx.quadraticCurveTo(x + TUBE_WIDTH, y, x + TUBE_WIDTH, y + 15);
+            ctx.lineTo(x + TUBE_WIDTH, y + TUBE_HEIGHT);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+
+            let bottomY = y + TUBE_HEIGHT - 5;
+            for(let j=bottle.length-1; j>=0; j--) {
+                let color = bottle[j];
+                let layerHeight = (TUBE_HEIGHT - 20) / BOTTLE_CAPACITY;
+                let layerY = bottomY - layerHeight;
+                ctx.fillStyle = color;
+                ctx.fillRect(x + 4, layerY, TUBE_WIDTH - 8, layerHeight);
+                bottomY = layerY;
+            }
+
+            if(complete) {
+                ctx.fillStyle = 'rgba(255,255,255,0.9)';
+                ctx.font = 'bold 14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('✓', x + TUBE_WIDTH/2, y - 8);
+            }
+        }
+
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Tap to select, tap another bottle to pour', W/2, H - 20);
+    }
+
+    function loop() { draw(); requestAnimationFrame(loop); }
+
+    startBtn.onclick = () => {
+        SFX.init();
+        SFX.setVolume(Number(volumeSlider.value));
+        SFX.startMusic();
+        introOverlay.style.display = 'none';
+        initGame();
+    };
+    restartBtn.onclick = initGame;
+
+    draw();
+    loop();
+</script>
+</body>
+</html>

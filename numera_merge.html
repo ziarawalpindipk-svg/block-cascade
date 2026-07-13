@@ -100,7 +100,7 @@
 <body>
 <div id="app">
   <div class="top-row">
-    <a href="index.html" class="back-btn">← Back</a>
+    <a href="index.html" onclick="if(window.parent!==window&&window.parent.closeGame){window.parent.closeGame();return false;}" class="back-btn">← Back</a>
     <div class="title">Numera Merge</div>
     <div class="score-row">
       <div class="score-box"><div class="label">Score</div><div class="value" id="score">0</div></div>

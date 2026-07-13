@@ -100,7 +100,7 @@
 <div id="app">
   <div id="game-wrap">
     <canvas id="canvas"></canvas>
-    <a href="index.html" class="back-btn">← Back</a>
+    <a href="index.html" onclick="if(window.parent!==window&&window.parent.closeGame){window.parent.closeGame();return false;}" class="back-btn">← Back</a>
     <button id="pauseBtn">⏸</button>
     <div id="scoreDisplay">0</div>
     <div id="healthBarWrap"><div id="healthBarFill"></div></div>

@@ -230,7 +230,7 @@
     <div id="board-wrap"><div id="board"></div></div>
     <div id="sidebar">
       <div class="panel nav-panel">
-        <a href="index.html" id="home-btn" title="Home">🏠</a>
+        <a href="index.html" onclick="if(window.parent!==window&&window.parent.closeGame){window.parent.closeGame();return false;}" id="home-btn" title="Home">🏠</a>
         <button id="share-toggle" title="Share this game">📤<span>Share now<br>with friends</span></button>
       </div>
       <div class="panel">
@@ -280,7 +280,7 @@
     <p>Blocks fall automatically. Rotate and slide them to clear lines before the stack reaches the top. Speed increases every level!</p>
     <button class="primary" id="startBtn">▶ Start Game</button>
     <div style="margin-top:14px;display:flex;justify-content:center;gap:14px;font-size:11px;">
-      <a href="index.html" style="color:var(--muted);text-decoration:none;">🏠 Home</a>
+      <a href="index.html" onclick="if(window.parent!==window&&window.parent.closeGame){window.parent.closeGame();return false;}" style="color:var(--muted);text-decoration:none;">🏠 Home</a>
       <a href="about_us.html" style="color:var(--muted);text-decoration:none;">About</a>
       <a href="privacy_policy.html" style="color:var(--muted);text-decoration:none;">Privacy</a>
     </div>

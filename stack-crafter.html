@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack Crafter - Perfect Tower | Cascade Arcade</title>
+    <meta name="description" content="Play Stack Crafter free online! Tap at the perfect moment to stack blocks and build the tallest tower possible. No download needed.">
+    <meta name="keywords" content="stack crafter, tower stacking game, tap timing game, free online arcade game, block stacker">
+    <meta property="og:title" content="Stack Crafter - Perfect Tower">
+    <meta property="og:description" content="Tap perfectly to stack blocks and build the tallest tower. Play free, no download.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#16213e">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+        body { background: #16213e; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+        #gameContainer { position: relative; width: 100%; height: 100%; max-width: 500px; max-height: 800px; background: #16213e; touch-action: none; overflow: hidden; box-shadow: 0 0 60px rgba(0,0,0,0.6); }
+        canvas { display: block; width: 100%; height: 100%; }
+
+        #ui { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        #topBar { position: absolute; top: 14px; left: 0; width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; gap: 8px; }
+        #backBtn { pointer-events: auto; display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.15); color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 20px; flex-shrink: 0; }
+        #score { font-size: 30px; font-weight: 800; color: #fff; text-shadow: 0 0 20px #feca57; }
+
+        #soundControls { pointer-events: auto; display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 6px 10px; flex-shrink: 0; }
+        #muteBtn { background: none; border: none; color: #fff; font-size: 16px; cursor: pointer; padding: 0; line-height: 1; }
+        #volumeSlider { width: 50px; accent-color: #feca57; cursor: pointer; }
+
+        #introOverlay { position: absolute; inset: 0; background: rgba(10,14,30,0.93); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; pointer-events: auto; z-index: 20; }
+        #introOverlay h1 { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 6px; background: linear-gradient(135deg, #feca57 0%, #ff9f43 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        #introOverlay p { color: #b8b8c8; font-size: 14px; margin-bottom: 22px; max-width: 300px; line-height: 1.5; }
+        .how-to-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; color: #ddd; font-size: 14px; max-width: 290px; text-align: left; }
+        .how-to-icon { font-size: 22px; width: 34px; text-align: center; flex-shrink: 0; }
+        #startBtn { margin-top: 20px; background: linear-gradient(135deg, #feca57 0%, #ff9f43 100%); border: none; color: #16213e; font-weight: 700; font-size: 16px; padding: 14px 40px; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 20px rgba(254,202,87,0.4); }
+
+        #gameOver { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(15,20,40,0.95); color: white; padding: 32px 40px; border-radius: 20px; text-align: center; display: none; pointer-events: auto; z-index: 15; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+        #gameOver h1 { font-size: 30px; margin-bottom: 10px; color: #ff4757; }
+        #gameOver p { color: #b8b8c8; font-size: 15px; }
+        #finalScore { color: #feca57; font-weight: 800; }
+        #gameOverAd { width: 260px; height: 60px; margin: 14px auto 0; background: rgba(255,255,255,0.06); border: 1px dashed rgba(255,255,255,0.25); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #777; font-size: 11px; }
+        #restartBtn { background: linear-gradient(135deg, #feca57 0%, #ff9f43 100%); border: none; padding: 13px 34px; font-size: 16px; color: #16213e; font-weight: 700; border-radius: 25px; cursor: pointer; margin-top: 16px; box-shadow: 0 4px 20px rgba(254,202,87,0.4); }
+
+        #ad-banner-bottom { position: absolute; bottom: 0; left: 0; width: 100%; height: 60px; background: rgba(255,255,255,0.03); display: flex; justify-content: center; align-items: center; color: #444; font-size: 12px; pointer-events: none; z-index: 10; }
+        #ad-social-top { position: absolute; top: 10px; right: 10px; width: 50px; height: 50px; background: transparent; pointer-events: none; z-index: 10; }
+    </style>
+    <script src="https://pl30278087.effectivecpmnetwork.com/4b/ea/3a/4bea3a1f3fa20c58d7897594c829d53d.js"></script>
+</head>
+<body>
+
+<div id="gameContainer">
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="ad-banner-bottom"><script>
+  atOptions = {
+    'key' : '63f9cc601bd826eb8fbdc16d61a1bf4b',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script></div>
+    <div id="ad-social-top"></div>
+
+    <div id="ui">
+        <div id="topBar">
+            <a href="index.html" onclick="if(window.parent!==window&&window.parent.closeGame){window.parent.closeGame();return false;}" id="backBtn">⬅ Games</a>
+            <div id="score">0</div>
+            <div id="soundControls">
+                <button id="muteBtn">🔊</button>
+                <input type="range" id="volumeSlider" min="0" max="100" value="80">
+            </div>
+        </div>
+
+        <div id="introOverlay">
+            <h1>Stack Crafter</h1>
+            <p>Tap at the perfect moment to build the tallest tower.</p>
+            <div class="how-to-row"><div class="how-to-icon">👆</div><div>Tap or click to drop the moving block</div></div>
+            <div class="how-to-row"><div class="how-to-icon">🎯</div><div>Line it up exactly for a "Perfect" bonus</div></div>
+            <div class="how-to-row"><div class="how-to-icon">✂️</div><div>Miss the edge and the block gets cut smaller</div></div>
+            <div class="how-to-row"><div class="how-to-icon">⚠️</div><div>Miss completely and the tower falls</div></div>
+            <button id="startBtn">▶ Start Building</button>
+        </div>
+
+        <div id="gameOver">
+            <h1>CRUMBLED!</h1>
+            <p>Height: <span id="finalScore">0</span></p>
+            <div id="gameOverAd"><script async="async" data-cfasync="false" src="https://pl30278109.effectivecpmnetwork.com/37bcd87f9b90a477e2b211daed1f289b/invoke.js"></script>
+<div id="container-37bcd87f9b90a477e2b211daed1f289b"></div></div>
+            <button id="restartBtn">▶ Build Again</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* ---------- Sound Manager ---------- */
+    const SFX = (() => {
+        let ctx = null, masterGain = null, musicGain = null, musicNodes = null;
+        let lastVolume = 80, muted = false;
+        function init() {
+            if (ctx) return;
+            ctx = new (window.AudioContext || window.webkitAudioContext)();
+            masterGain = ctx.createGain();
+            masterGain.gain.value = lastVolume / 100;
+            masterGain.connect(ctx.destination);
+            musicGain = ctx.createGain();
+            musicGain.gain.value = 0.14;
+            musicGain.connect(masterGain);
+        }
+        function setVolume(v) {
+            lastVolume = v;
+            if (ctx && !muted) masterGain.gain.value = v / 100;
+        }
+        function toggleMute() {
+            if (!ctx) return muted;
+            muted = !muted;
+            masterGain.gain.value = muted ? 0 : lastVolume / 100;
+            return muted;
+        }
+        function tone(freq, dur, type, vol, glideTo) {
+            if (!ctx) return;
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.type = type || 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+            if (glideTo) osc.frequency.exponentialRampToValueAtTime(glideTo, ctx.currentTime + dur);
+            g.gain.setValueAtTime(vol || 0.3, ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+            osc.connect(g); g.connect(masterGain);
+            osc.start(); osc.stop(ctx.currentTime + dur);
+        }
+        function noiseThud(dur, vol) {
+            if (!ctx) return;
+            const bufferSize = ctx.sampleRate * dur;
+            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+            const src = ctx.createBufferSource();
+            src.buffer = buffer;
+            const g = ctx.createGain();
+            g.gain.setValueAtTime(vol || 0.3, ctx.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+            src.connect(g); g.connect(masterGain);
+            src.start();
+        }
+        function startMusic() {
+            if (!ctx || musicNodes) return;
+            const o1 = ctx.createOscillator(); o1.type = 'triangle'; o1.frequency.value = 130;
+            const o2 = ctx.createOscillator(); o2.type = 'triangle'; o2.frequency.value = 195;
+            const lfo = ctx.createOscillator(); lfo.frequency.value = 0.1;
+            const lfoGain = ctx.createGain(); lfoGain.gain.value = 0.05;
+            lfo.connect(lfoGain); lfoGain.connect(musicGain.gain);
+            o1.connect(musicGain); o2.connect(musicGain);
+            o1.start(); o2.start(); lfo.start();
+            musicNodes = [o1, o2, lfo];
+        }
+        return { init, setVolume, toggleMute, tone, noiseThud, startMusic };
+    })();
+
+    const muteBtn = document.getElementById('muteBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    muteBtn.addEventListener('click', () => {
+        const isMuted = SFX.toggleMute();
+        muteBtn.innerText = isMuted ? '🔇' : '🔊';
+    });
+    volumeSlider.addEventListener('input', (e) => {
+        SFX.setVolume(Number(e.target.value));
+        muteBtn.innerText = Number(e.target.value) === 0 ? '🔇' : '🔊';
+    });
+
+    /* ---------- Game ---------- */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreEl = document.getElementById('score');
+    const finalScoreEl = document.getElementById('finalScore');
+    const gameOverDiv = document.getElementById('gameOver');
+    const restartBtn = document.getElementById('restartBtn');
+    const introOverlay = document.getElementById('introOverlay');
+    const startBtn = document.getElementById('startBtn');
+
+    let W, H;
+    function resize() {
+        const c = document.getElementById('gameContainer');
+        W = canvas.width = c.clientWidth;
+        H = canvas.height = c.clientHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let blocks = [];
+    let currentBlock = null;
+    let direction = 1;
+    let speed = 6;
+    let score = 0;
+    let gameRunning = false;
+    let baseY = 0;
+    let blockWidth = 100;
+    let blockHeight = 20;
+    let colorIndex = 0;
+    let particles = [];
+    let cameraShiftTarget = 0, cameraShift = 0;
+
+    const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#1dd1a1', '#5f27cd', '#ff9ff3', '#54a0ff', '#f368e0'];
+
+    function initGame() {
+        baseY = H - 60;
+        blockWidth = Math.min(W * 0.6, 150);
+        blocks = [];
+        particles = [];
+        cameraShift = 0; cameraShiftTarget = 0;
+        blocks.push({ x: (W - blockWidth) / 2, y: baseY, w: blockWidth, h: blockHeight, color: '#576574' });
+        currentBlock = {
+            x: (W - blockWidth) / 2,
+            y: baseY - blockHeight,
+            w: blockWidth,
+            h: blockHeight,
+            color: colors[0]
+        };
+        direction = 1;
+        speed = 5;
+        score = 0;
+        colorIndex = 0;
+        gameRunning = true;
+        gameOverDiv.style.display = 'none';
+        scoreEl.innerText = '0';
+    }
+
+    function spawnParticles(x, y, color, count) {
+        for(let i=0; i<count; i++) {
+            particles.push({
+                x, y, color,
+                vx: (Math.random()-0.5) * 6,
+                vy: -Math.random()*5 - 2,
+                life: 30 + Math.random()*15
+            });
+        }
+    }
+
+    function handleTap() {
+        if(!gameRunning) return;
+        if(!currentBlock) return;
+
+        const below = blocks[blocks.length - 1];
+        let overlapStart = Math.max(currentBlock.x, below.x);
+        let overlapEnd = Math.min(currentBlock.x + currentBlock.w, below.x + below.w);
+
+        if (overlapEnd <= overlapStart) {
+            gameRunning = false;
+            SFX.noiseThud(0.35, 0.4);
+            finalScoreEl.innerText = score;
+            gameOverDiv.style.display = 'block';
+            return;
+        }
+
+        const newWidth = overlapEnd - overlapStart;
+        const newX = overlapStart;
+
+        if (newWidth >= blockWidth - 2) {
+            score += 2;
+            currentBlock.x = below.x;
+            blocks.push({ x: currentBlock.x, y: currentBlock.y, w: currentBlock.w, h: blockHeight, color: currentBlock.color });
+            spawnParticles(currentBlock.x + currentBlock.w/2, currentBlock.y, '#fff', 14);
+            SFX.tone(700, 0.12, 'sine', 0.35, 1100);
+        } else {
+            score += 1;
+            blocks.push({ x: newX, y: currentBlock.y, w: newWidth, h: blockHeight, color: currentBlock.color });
+            SFX.tone(450, 0.1, 'sine', 0.28, 650);
+            // Falling cut-off piece
+            let cutX = currentBlock.x < newX ? currentBlock.x : newX + newWidth;
+            let cutW = currentBlock.w - newWidth;
+            if(cutW > 0) spawnParticles(cutX + cutW/2, currentBlock.y + blockHeight/2, currentBlock.color, 6);
+            currentBlock.w = newWidth;
+            currentBlock.x = newX;
+        }
+
+        scoreEl.innerText = score;
+        colorIndex = (colorIndex + 1) % colors.length;
+        blockWidth = currentBlock.w;
+
+        if (blockWidth < 10) {
+            gameRunning = false;
+            SFX.noiseThud(0.3, 0.35);
+            finalScoreEl.innerText = score;
+            gameOverDiv.style.display = 'block';
+            return;
+        }
+
+        currentBlock = {
+            x: (Math.random() > 0.5) ? (W - blockWidth) : 0,
+            y: currentBlock.y - blockHeight,
+            w: blockWidth,
+            h: blockHeight,
+            color: colors[colorIndex]
+        };
+        speed += 0.15;
+
+        // Shift camera up once tower gets tall, keeping active area visible
+        if(currentBlock.y < H * 0.35) {
+            cameraShiftTarget += blockHeight;
+        }
+    }
+
+    canvas.addEventListener('mousedown', handleTap);
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleTap(); }, { passive: false });
+
+    function update() {
+        if(!gameRunning || !currentBlock) return;
+
+        currentBlock.x += direction * speed;
+
+        if (currentBlock.x + currentBlock.w > W) {
+            direction = -1;
+        } else if (currentBlock.x < 0) {
+            direction = 1;
+        }
+
+        cameraShift += (cameraShiftTarget - cameraShift) * 0.1;
+
+        for(let i=particles.length-1; i>=0; i--) {
+            let p = particles[i];
+            p.x += p.vx; p.y += p.vy; p.vy += 0.2; p.life--;
+            if(p.life <= 0) particles.splice(i, 1);
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        let grad = ctx.createLinearGradient(0, 0, 0, H);
+        grad.addColorStop(0, '#0f3460');
+        grad.addColorStop(1, '#1a1a2e');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+
+        ctx.save();
+        ctx.translate(0, cameraShift);
+
+        for (let b of blocks) {
+            ctx.fillStyle = b.color;
+            ctx.shadowColor = b.color;
+            ctx.shadowBlur = 15;
+            ctx.fillRect(b.x, b.y, b.w, b.h);
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(b.x, b.y, b.w, b.h);
+        }
+
+        if (currentBlock && gameRunning) {
+            ctx.fillStyle = currentBlock.color;
+            ctx.shadowColor = currentBlock.color;
+            ctx.shadowBlur = 25;
+            ctx.fillRect(currentBlock.x, currentBlock.y, currentBlock.w, currentBlock.h);
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(currentBlock.x, currentBlock.y, currentBlock.w, currentBlock.h);
+        }
+
+        for(let p of particles) {
+            ctx.globalAlpha = Math.max(p.life / 40, 0);
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+
+        ctx.restore();
+    }
+
+    function loop() { update(); draw(); requestAnimationFrame(loop); }
+
+    startBtn.onclick = () => {
+        SFX.init();
+        SFX.setVolume(Number(volumeSlider.value));
+        SFX.startMusic();
+        introOverlay.style.display = 'none';
+        initGame();
+    };
+    restartBtn.onclick = initGame;
+
+    draw();
+    loop();
+</script>
+</body>
+</html>

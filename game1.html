@@ -478,7 +478,7 @@
   <div class="bb-hint">Drag blocks onto the grid. Fill a full row or column to clear it.</div>
 
   <div style="margin-top:6px;display:flex;gap:16px;font-size:10px;">
-    <a href="index.html" style="color:#b3a0d4;text-decoration:none;">🏠 Home</a>
+    <a href="index.html" onclick="if(window.parent!==window&&window.parent.closeGame){window.parent.closeGame();return false;}" style="color:#b3a0d4;text-decoration:none;">🏠 Home</a>
     <a href="about_us.html" style="color:#b3a0d4;text-decoration:none;">About</a>
     <a href="privacy_policy.html" style="color:#b3a0d4;text-decoration:none;">Privacy</a>
   </div>
