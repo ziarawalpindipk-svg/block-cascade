@@ -121,13 +121,73 @@
     <script>
       atOptions = { 'key':'63f9cc601bd826eb8fbdc16d61a1bf4b', 'format':'iframe', 'height':50, 'width':320, 'params':{} };
     </script>
-    <script src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
+    <script async src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
   </div>
 </div>
 
 <script>
 (function(){
   "use strict";
+  /* ---------- Sound Manager (added: was completely missing) ---------- */
+  const SFX = (() => {
+    let ctx = null, masterGain = null, musicGain = null, musicNodes = null;
+    let started = false;
+    function init() {
+      if (ctx) return;
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = ctx.createGain();
+      masterGain.gain.value = 0.8;
+      masterGain.connect(ctx.destination);
+      musicGain = ctx.createGain();
+      musicGain.gain.value = 0.3;
+      musicGain.connect(masterGain);
+    }
+    function tone(freq, dur, type, vol, glideTo) {
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      if (glideTo) osc.frequency.exponentialRampToValueAtTime(glideTo, ctx.currentTime + dur);
+      g.gain.setValueAtTime(vol || 0.3, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+      osc.connect(g); g.connect(masterGain);
+      osc.start(); osc.stop(ctx.currentTime + dur);
+    }
+    function noiseThud(dur, vol) {
+      if (!ctx) return;
+      const bufferSize = ctx.sampleRate * dur;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(vol || 0.3, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+      src.connect(g); g.connect(masterGain);
+      src.start();
+    }
+    function startMusic() {
+      if (!ctx || musicNodes) return;
+      const o1 = ctx.createOscillator(); o1.type = 'triangle'; o1.frequency.value = 98;
+      const o2 = ctx.createOscillator(); o2.type = 'triangle'; o2.frequency.value = 147;
+      const lfo = ctx.createOscillator(); lfo.frequency.value = 0.1;
+      const lfoGain = ctx.createGain(); lfoGain.gain.value = 0.05;
+      lfo.connect(lfoGain); lfoGain.connect(musicGain.gain);
+      o1.connect(musicGain); o2.connect(musicGain);
+      o1.start(); o2.start(); lfo.start();
+      musicNodes = [o1, o2, lfo];
+    }
+    function ensureStarted() {
+      if (started) return;
+      started = true;
+      init();
+      startMusic();
+    }
+    return { ensureStarted, tone, noiseThud };
+  })();
+
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d');
   const wrap = document.getElementById('game-wrap');
@@ -187,6 +247,7 @@
     return clientX - rect.left;
   }
   function onPointerDown(e){
+    SFX.ensureStarted();
     const x = e.touches ? e.touches[0].clientX : e.clientX;
     const y = e.touches ? e.touches[0].clientY : e.clientY;
     const rect = canvas.getBoundingClientRect();
@@ -224,9 +285,11 @@
     if(p.type === 'bonus'){
       score += 30;
       spawnFloatText(p.x, p.y, '+30', '#f97316');
+      SFX.tone(700, 0.12, 'sine', 0.35, 1100);
     } else if(p.type === 'life'){
       lives = Math.min(5, lives + 1);
       spawnFloatText(p.x, p.y, '+1 Life', '#4ade80');
+      SFX.tone(500, 0.18, 'triangle', 0.35, 900);
     }
     powerups.splice(idx, 1);
     updateUI();
@@ -270,6 +333,7 @@
   }
   function fireBullet(){
     bullets.push({ x: player.x, y: player.y - 20, r: 3, speed: 6 });
+    SFX.tone(620, 0.06, 'square', 0.12, 300);
   }
 
   // ---------------- Update loop ----------------
@@ -312,6 +376,7 @@
       if(Math.sqrt(dx*dx+dy*dy) < e.r + player.w/2 - 6){
         enemies.splice(i,1);
         spawnExplosion(e.x, e.y);
+        SFX.noiseThud(0.3, 0.4);
         health -= 25;
         updateUI();
         if(health <= 0) handleHealthDepleted();
@@ -325,6 +390,7 @@
           enemies.splice(i,1);
           bullets.splice(j,1);
           spawnExplosion(e.x, e.y);
+          SFX.tone(200, 0.15, 'sawtooth', 0.25, 60);
           score += 1;
           updateUI();
           break;
@@ -435,6 +501,7 @@
     running = false;
     finalScoreEl.textContent = 'Score: ' + score;
     overlay.classList.add('show');
+    SFX.tone(300, 0.5, 'sawtooth', 0.3, 100);
   }
 
   function startGame(){

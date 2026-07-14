@@ -464,7 +464,7 @@
         'params' : {}
       };
     </script>
-    <script src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
+    <script async src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
   </div>
 
   <div id="bb-board"></div>
@@ -683,14 +683,14 @@
 
   function scheduleStep(step, t) {
     const n = musicNodes;
-    const bassPeak = 0.13 * musicVolume;
+    const bassPeak = 0.32 * musicVolume;
     n.bassOsc.frequency.setValueAtTime(step.bass, t);
     n.bassGain.gain.cancelScheduledValues(t);
     n.bassGain.gain.setValueAtTime(0.0001, t);
     n.bassGain.gain.linearRampToValueAtTime(bassPeak, t + 0.01);
     n.bassGain.gain.exponentialRampToValueAtTime(0.0001, t + STEP_DURATION * 0.9);
 
-    const melPeak = 0.075 * musicVolume;
+    const melPeak = 0.18 * musicVolume;
     n.melOsc.frequency.setValueAtTime(step.mel, t);
     n.melGain.gain.cancelScheduledValues(t);
     n.melGain.gain.setValueAtTime(0.0001, t);

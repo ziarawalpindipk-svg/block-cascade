@@ -223,7 +223,7 @@
         'params' : {}
       };
     </script>
-    <script src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
+    <script async src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
   </div>
 
   <div id="main-area">
@@ -385,7 +385,7 @@
   }
   function scheduleMusicStep(note, t){
     const n = musicNode;
-    const peak = 0.05;
+    const peak = 0.15;
     n.osc.frequency.setValueAtTime(note, t);
     n.gain.gain.cancelScheduledValues(t);
     n.gain.gain.setValueAtTime(0.0001, t);

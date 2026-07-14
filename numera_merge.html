@@ -110,7 +110,7 @@
     <script>
       atOptions = { 'key':'63f9cc601bd826eb8fbdc16d61a1bf4b', 'format':'iframe', 'height':50, 'width':320, 'params':{} };
     </script>
-    <script src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
+    <script async src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
   </div>
 
   <div id="board-wrap">
@@ -134,6 +134,52 @@
 <script>
 (function(){
   "use strict";
+
+  /* ---------- Sound Manager (added: was completely missing) ---------- */
+  const SFX = (() => {
+    let ctx = null, masterGain = null, musicGain = null, musicNodes = null;
+    let started = false;
+    function init() {
+      if (ctx) return;
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = ctx.createGain();
+      masterGain.gain.value = 0.8;
+      masterGain.connect(ctx.destination);
+      musicGain = ctx.createGain();
+      musicGain.gain.value = 0.3;
+      musicGain.connect(masterGain);
+    }
+    function tone(freq, dur, type, vol, glideTo) {
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      if (glideTo) osc.frequency.exponentialRampToValueAtTime(glideTo, ctx.currentTime + dur);
+      g.gain.setValueAtTime(vol || 0.3, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+      osc.connect(g); g.connect(masterGain);
+      osc.start(); osc.stop(ctx.currentTime + dur);
+    }
+    function startMusic() {
+      if (!ctx || musicNodes) return;
+      const o1 = ctx.createOscillator(); o1.type = 'triangle'; o1.frequency.value = 110;
+      const o2 = ctx.createOscillator(); o2.type = 'triangle'; o2.frequency.value = 165;
+      const lfo = ctx.createOscillator(); lfo.frequency.value = 0.08;
+      const lfoGain = ctx.createGain(); lfoGain.gain.value = 0.05;
+      lfo.connect(lfoGain); lfoGain.connect(musicGain.gain);
+      o1.connect(musicGain); o2.connect(musicGain);
+      o1.start(); o2.start(); lfo.start();
+      musicNodes = [o1, o2, lfo];
+    }
+    function ensureStarted() {
+      if (started) return;
+      started = true;
+      init();
+      startMusic();
+    }
+    return { ensureStarted, tone };
+  })();
   const SIZE = 4;
   const boardEl = document.getElementById('board');
   const boardWrap = document.getElementById('board-wrap');
@@ -222,6 +268,7 @@
   }
 
   function move(direction){
+    SFX.ensureStarted();
     // Normalize to "left" by rotating, then rotate back
     let rotations = 0;
     if(direction === 'up') rotations = 3;
@@ -248,6 +295,7 @@
       grid = result;
       score += totalGain;
       if(score > best){ best = score; localStorage.setItem('numera_best', best); bestEl.textContent = best; }
+      SFX.tone(totalGain > 0 ? 500 : 300, 0.1, 'sine', 0.25, totalGain > 0 ? 800 : 260);
       addRandomTile();
       render();
       if(isGameOver()) endGame();
@@ -269,6 +317,7 @@
   function endGame(){
     finalScoreEl.textContent = 'Score: ' + score;
     overlay.classList.add('show');
+    SFX.tone(300, 0.5, 'sawtooth', 0.3, 100);
   }
 
   function startGame(){
