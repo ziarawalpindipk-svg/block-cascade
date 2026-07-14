@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Block Cascade - Falling Block Puzzle | Play Vault</title>
+<link rel="canonical" href="https://ziarawalpindipk-svg.github.io/block-cascade/block-cascade.html">
+<meta name="description" content="Play Block Cascade free online! Stack and clear falling blocks in this addictive puzzle game. No download needed, play instantly in your browser.">
+<meta name="keywords" content="block cascade, block puzzle game, free online puzzle, stacking game, html5 puzzle game">
+<meta property="og:title" content="Block Cascade - Falling Block Puzzle">
+<meta property="og:description" content="Stack and clear falling blocks in this addictive puzzle game. Play free, no download.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #1a1030;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    height: auto;
+    min-height: 100%;
+  }
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Block Cascade",
+  "description": "Play Block Cascade free online! Stack and clear falling blocks in this addictive puzzle game. No download needed, play instantly in your browser.",
+  "url": "https://ziarawalpindipk-svg.github.io/block-cascade/block-cascade.html",
+  "applicationCategory": "Game",
+  "genre": "Arcade",
+  "operatingSystem": "Any",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Play Vault"
+  }
+}
+</script>
+</head>
+<body style="margin:0;background:#1a1030;">
+<div id="bb-root">
+<style>
+  /* ===== ORIGINAL GAME CSS ===== */
+  #bb-root {
+    --bg: #1a1030;
+    --bg2: #2b1a4a;
+    --panel: #24163f;
+    --panel-line: rgba(255,255,255,0.07);
+    --cell-empty: #33224f;
+    --text: #f4eefc;
+    --sub: #b3a0d4;
+    --accent: #ff6b5b;
+    --accent-dark: #c43f2e;
+    --good: #2dd4bf;
+    --danger: #ff4d6a;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at 25% -10%, var(--bg2) 0%, var(--bg) 55%);
+    color: var(--text);
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 14px 12px calc(20px + env(safe-area-inset-bottom, 0px));
+    border-radius: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+    box-sizing: border-box;
+    overflow-y: visible;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    position: relative;
+  }
+  #bb-root * { box-sizing: border-box; }
+
+  .bb-header {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .bb-title {
+    font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .bb-title .logo-mark {
+    width: 26px; height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bb-scorebox {
+    background: var(--panel);
+    border-radius: 14px;
+    padding: 6px 16px;
+    text-align: center;
+    min-width: 78px;
+    border: 1px solid var(--panel-line);
+  }
+  .bb-scorebox .label {
+    font-size: 10px;
+    color: var(--sub);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  .bb-scorebox .value {
+    font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .bb-best {
+    font-size: 11px;
+    color: var(--sub);
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+  }
+
+  #bb-board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 4px;
+    width: min(84vw, 38vh, 340px);
+    height: min(84vw, 38vh, 340px);
+    background: var(--panel);
+    padding: 9px;
+    border-radius: 18px;
+    box-shadow: 0 14px 34px rgba(0,0,0,0.4), inset 0 0 0 1px var(--panel-line);
+    touch-action: none;
+    position: relative;
+  }
+  .bb-cell {
+    background: var(--cell-empty);
+    border-radius: 6px;
+    transition: background 0.12s, transform 0.12s;
+  }
+  .bb-cell.filled {
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.25), inset 0 2px 0 rgba(255,255,255,0.3);
+  }
+  .bb-cell.hint-ok { background: rgba(45, 212, 191, 0.4) !important; }
+  .bb-cell.hint-bad { background: rgba(255, 77, 106, 0.4) !important; }
+  .bb-cell.clearing {
+    animation: bb-cascade 0.32s cubic-bezier(.3,1.4,.6,1) forwards;
+    z-index: 2;
+  }
+  @keyframes bb-cascade {
+    0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 rgba(255,255,255,0); }
+    30% { transform: scale(1.22); opacity: 1; box-shadow: 0 0 18px 4px rgba(255,255,255,0.55); }
+    100% { transform: scale(0.15); opacity: 0; box-shadow: 0 0 0 rgba(255,255,255,0); }
+  }
+
+  #bb-tray {
+    width: min(88vw, 360px);
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    gap: 8px;
+  }
+  .bb-slot {
+    flex: 1;
+    min-height: 72px;
+    background: var(--panel);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 1px solid var(--panel-line);
+    transition: border-color 0.15s;
+  }
+  .bb-slot.empty { opacity: 0.3; }
+  .bb-piece-grid {
+    display: grid;
+    touch-action: none;
+    cursor: grab;
+  }
+  .bb-piece-cell {
+    border-radius: 4px;
+    margin: 1px;
+  }
+  .bb-piece-grid.dragging-source { opacity: 0.25; }
+
+  #bb-ghost {
+    position: fixed;
+    display: grid;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.92;
+  }
+  .bb-ghost-cell {
+    border-radius: 6px;
+  }
+
+  #bb-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 8, 28, 0.92);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 22px;
+    z-index: 50;
+    text-align: center;
+    padding: 20px;
+  }
+  #bb-overlay.show { display: flex; }
+  #bb-overlay h2 {
+    font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+    margin: 0 0 6px;
+    font-size: 27px;
+    font-weight: 700;
+  }
+  #bb-overlay p { margin: 0 0 18px; color: var(--sub); font-size: 14px; }
+  #bb-restart {
+    position: relative; z-index: 5;
+    background: linear-gradient(135deg, var(--accent), #ff9a3d);
+    color: #2a0f0a;
+    border: none;
+    padding: 13px 30px;
+    border-radius: 30px;
+    font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(255, 107, 91, 0.35);
+  }
+  .bb-hint {
+    margin-top: 4px;
+    font-size: 10px;
+    color: var(--sub);
+    text-align: center;
+    max-width: 340px;
+  }
+
+  .bb-utility-bar {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .bb-utility-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+  .icon-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    color: var(--sub);
+    font-size: 11px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    padding: 6px 10px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  .icon-btn:hover { border-color: var(--accent); color: var(--text); }
+  .icon-btn svg { display: block; width: 13px; height: 13px; }
+  .icon-btn.active { border-color: var(--good); color: var(--text); }
+
+  .download-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, var(--accent), #ff9a3d);
+    color: #2a0f0a;
+    font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 11.5px;
+    padding: 7px 13px;
+    border-radius: 16px;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(255, 107, 91, 0.35);
+    cursor: pointer;
+    border: none;
+    white-space: nowrap;
+    animation: bb-btn-pulse 2.2s ease-in-out infinite;
+  }
+
+  .share-btn-big {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, var(--good), #22b8e0);
+    color: #06231f;
+    font-family: 'Baloo 2', 'Segoe UI', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 12.5px;
+    padding: 9px 18px;
+    border-radius: 18px;
+    text-decoration: none;
+    box-shadow: 0 5px 14px rgba(45, 212, 191, 0.4);
+    cursor: pointer;
+    border: none;
+    white-space: nowrap;
+    animation: bb-btn-pulse-teal 2.2s ease-in-out infinite;
+    animation-delay: 0.4s;
+  }
+
+  @keyframes bb-btn-pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 4px 10px rgba(255,107,91,0.35), 0 0 0 rgba(255,154,61,0); }
+    50% { transform: scale(1.08); box-shadow: 0 6px 16px rgba(255,107,91,0.55), 0 0 16px 4px rgba(255,154,61,0.5); }
+  }
+  @keyframes bb-btn-pulse-teal {
+    0%, 100% { transform: scale(1); box-shadow: 0 5px 14px rgba(45,212,191,0.4), 0 0 0 rgba(34,184,224,0); }
+    50% { transform: scale(1.08); box-shadow: 0 7px 18px rgba(45,212,191,0.6), 0 0 16px 4px rgba(34,184,224,0.5); }
+  }
+
+  .bb-volume-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 380px;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 12px;
+    padding: 5px 12px;
+  }
+  .bb-volume-row svg { flex-shrink: 0; color: var(--sub); width: 14px; height: 14px; }
+  .bb-volume-row input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--cell-empty);
+    outline: none;
+  }
+  .bb-volume-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+  .bb-volume-row input[type="range"]::-moz-range-thumb {
+    width: 14px; height: 14px;
+    border: none;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+  }
+  .bb-volume-row-combo {
+    gap: 12px;
+  }
+  .bb-volume-half {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+  }
+  .bb-volume-label {
+    font-size: 10px;
+    color: var(--sub);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  .bb-stats-line {
+    font-size: 11px;
+    color: var(--sub);
+    margin-top: 2px;
+  }
+  .bb-history {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 14px;
+    max-width: 300px;
+  }
+  .bb-history-chip {
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: var(--sub);
+  }
+
+  #ad-banner-top {
+    width: 100%;
+    max-width: 360px;
+    min-height: 50px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.04);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+</style>
+
+  <div class="bb-utility-bar">
+    <div class="bb-utility-row">
+      <a class="download-btn" id="bb-download-link" href="javascript:void(0)" onclick="if(window.parent!==window&&window.parent.installApp){window.parent.installApp(event);}else{alert('App install ke liye home screen se try karein.');}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Install
+      </a>
+      <button class="share-btn-big" id="bb-share-btn" title="Share this game">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M8.6 10.6l6.8-3.8M8.6 13.4l6.8 3.8" stroke="currentColor" stroke-width="1.8"/>
+        </svg>
+        Share
+      </button>
+    </div>
+
+    <div class="bb-volume-row bb-volume-row-combo">
+      <div class="bb-volume-half">
+        <span style="font-size:9px;color:var(--sub);">🔊</span>
+        <input type="range" id="bb-sfx-volume-slider" min="0" max="100" value="100">
+      </div>
+      <div class="bb-volume-half">
+        <span style="font-size:9px;color:var(--sub);">🎵</span>
+        <input type="range" id="bb-music-volume-slider" min="0" max="100" value="70">
+      </div>
+    </div>
+    <span id="bb-sfx-volume-label" style="display:none;">100%</span>
+    <span id="bb-music-volume-label" style="display:none;">70%</span>
+  </div>
+
+  <div class="bb-header">
+
+    <div class="bb-title">
+      <span class="logo-mark">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="13" width="10" height="10" rx="2.5" fill="#ff6b5b"/>
+          <rect x="13" y="13" width="10" height="10" rx="2.5" fill="#2dd4bf"/>
+          <rect x="7" y="1" width="10" height="10" rx="2.5" fill="#ffc145"/>
+        </svg>
+      </span>
+      Block Cascade
+    </div>
+    <div class="bb-scorebox">
+      <div class="label">Score</div>
+      <div class="value" id="bb-score">0</div>
+    </div>
+  </div>
+  <div class="bb-best" id="bb-best">Best: 0 &bull; Total: 0</div>
+
+  <!-- ===== AD BANNER ===== -->
+  <div id="ad-banner-top">
+    <script>
+      atOptions = {
+        'key' : '63f9cc601bd826eb8fbdc16d61a1bf4b',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+      };
+    </script>
+    <script async src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
+  </div>
+
+  <div id="bb-board"></div>
+
+  <div id="bb-tray">
+    <div class="bb-slot" data-slot="0"></div>
+    <div class="bb-slot" data-slot="1"></div>
+    <div class="bb-slot" data-slot="2"></div>
+  </div>
+
+  <div class="bb-hint">Drag blocks onto the grid. Fill a full row or column to clear it.</div>
+
+  <div style="margin-top:6px;display:flex;gap:16px;font-size:10px;">
+    <a href="index.html" onclick="if(window.parent!==window&&window.parent.closeGame){window.parent.closeGame();return false;}" style="color:#b3a0d4;text-decoration:none;">🏠 Home</a>
+    <a href="about_us.html" style="color:#b3a0d4;text-decoration:none;">About</a>
+    <a href="privacy_policy.html" style="color:#b3a0d4;text-decoration:none;">Privacy</a>
+  </div>
+
+  <div id="bb-overlay">
+    <h2>Game Over</h2>
+    <p id="bb-final-score">Score: 0</p>
+    <p id="bb-overlay-stats" style="margin-top:-10px;font-size:12.5px;color:var(--sub);">Best: 0 &bull; Total: 0</p>
+
+    <div class="bb-history" id="bb-history"></div>
+
+    <div id="ad-gameover" style="width:100%;max-width:300px;min-height:60px;max-height:80px;margin:16px 0 0;overflow:hidden;position:relative;isolation:isolate;z-index:1;">
+      <script async="async" data-cfasync="false" src="https://pl30278109.effectivecpmnetwork.com/37bcd87f9b90a477e2b211daed1f289b/invoke.js"></script>
+      <div id="container-37bcd87f9b90a477e2b211daed1f289b"></div>
+    </div>
+
+    <button id="bb-restart">Play Again</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const ROOT = document.getElementById('bb-root');
+
+  // ---------------- Sound Engine (synthesized, no audio files needed) ----------------
+  let audioCtx = null;
+  let soundOn = true;
+  let musicOn = true;
+  let sfxVolume = 1.0;   // controls block/game sound effects only (already maxed by default)
+  let musicVolume = 0.7; // controls background music only
+
+  const LS_KEYS = {
+    best: 'blockCascade_best',
+    total: 'blockCascade_total',
+    history: 'blockCascade_history',
+    sfxVolume: 'blockCascade_sfxVolume',
+    musicVolume: 'blockCascade_musicVolume',
+    soundOn: 'blockCascade_soundOn',
+    musicOn: 'blockCascade_musicOn'
+  };
+
+  function loadSettings() {
+    try {
+      const sv = localStorage.getItem(LS_KEYS.sfxVolume);
+      if (sv !== null) sfxVolume = parseFloat(sv);
+      const mv = localStorage.getItem(LS_KEYS.musicVolume);
+      if (mv !== null) musicVolume = parseFloat(mv);
+      const s = localStorage.getItem(LS_KEYS.soundOn);
+      if (s !== null) soundOn = s === 'true';
+      const m = localStorage.getItem(LS_KEYS.musicOn);
+      if (m !== null) musicOn = m === 'true';
+    } catch (e) { /* localStorage unavailable, use defaults */ }
+  }
+  function saveSetting(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) {}
+  }
+
+  let masterLimiter = null;
+  function getCtx() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      // Master limiter — automatically tames overall volume so multiple
+      // loud sounds playing together (music + effects) never overload
+      // the audio output and cause the crackling/dropout "dying radio" effect.
+      masterLimiter = audioCtx.createDynamicsCompressor();
+      masterLimiter.threshold.setValueAtTime(-8, audioCtx.currentTime);
+      masterLimiter.knee.setValueAtTime(6, audioCtx.currentTime);
+      masterLimiter.ratio.setValueAtTime(16, audioCtx.currentTime);
+      masterLimiter.attack.setValueAtTime(0.002, audioCtx.currentTime);
+      masterLimiter.release.setValueAtTime(0.12, audioCtx.currentTime);
+      masterLimiter.connect(audioCtx.destination);
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+  function tone(freq, startTime, duration, type = 'sine', gainPeak = 0.3) {
+    if (!soundOn || sfxVolume <= 0) return;
+    const ctx = getCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, startTime);
+    const peak = gainPeak * sfxVolume;
+    gain.gain.setValueAtTime(0, startTime);
+    gain.gain.linearRampToValueAtTime(peak, startTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+    osc.connect(gain);
+    gain.connect(masterLimiter);
+    osc.start(startTime);
+    osc.stop(startTime + duration + 0.02);
+    osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (e) {} };
+  }
+
+  // ---- Extra-loud tone generator (used only for pickup/place/gameOver) ----
+  // Uses a distortion curve (soft clipping) plus a held peak so the sound
+  // reads as noticeably louder/punchier than a plain short blip, even
+  // though the raw gain was already close to maximum.
+  function makeLoudCurve(amount) {
+    const n = 256;
+    const curve = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      const x = (i * 2) / n - 1;
+      curve[i] = ((Math.PI + amount) * x) / (Math.PI + amount * Math.abs(x));
+    }
+    return curve;
+  }
+  const loudCurve = makeLoudCurve(55);
+
+  function loudTone(freq, startTime, duration, type = 'square', gainPeak = 1.6) {
+    if (!soundOn || sfxVolume <= 0) return;
+    const ctx = getCtx();
+    const osc = ctx.createOscillator();
+    const shaper = ctx.createWaveShaper();
+    const gain = ctx.createGain();
+    shaper.curve = loudCurve;
+    shaper.oversample = '4x';
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, startTime);
+    const peak = gainPeak * sfxVolume;
+    const sustainUntil = startTime + duration * 0.55;
+    gain.gain.setValueAtTime(0, startTime);
+    gain.gain.linearRampToValueAtTime(peak, startTime + 0.008);
+    gain.gain.setValueAtTime(peak, sustainUntil); // hold near-peak instead of decaying immediately
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+    osc.connect(shaper);
+    shaper.connect(gain);
+    gain.connect(masterLimiter);
+    osc.start(startTime);
+    osc.stop(startTime + duration + 0.02);
+    osc.onended = () => { try { osc.disconnect(); shaper.disconnect(); gain.disconnect(); } catch (e) {} };
+  }
+  const sfx = {
+    pickup() {
+      if (!soundOn) return;
+      const t = getCtx().currentTime;
+      loudTone(520, t, 0.13, 'square', 1.8);
+    },
+    place() {
+      if (!soundOn) return;
+      const t = getCtx().currentTime;
+      loudTone(300, t, 0.18, 'square', 2.0);
+      loudTone(600, t, 0.13, 'triangle', 1.3);
+    },
+    invalid() {
+      if (!soundOn) return;
+      const t = getCtx().currentTime;
+      tone(140, t, 0.18, 'sawtooth', 0.32);
+    },
+    lineClear(lines) {
+      if (!soundOn) return;
+      const t = getCtx().currentTime;
+      const notes = [523, 659, 784, 1047]; // C-E-G-C cascade chime
+      const count = Math.min(notes.length, 2 + lines);
+      for (let i = 0; i < count; i++) {
+        tone(notes[i % notes.length], t + i * 0.07, 0.26, 'sine', 0.55);
+      }
+    },
+    gameOver() {
+      if (!soundOn) return;
+      const t = getCtx().currentTime;
+      [392, 330, 262].forEach((f, i) => loudTone(f, t + i * 0.22, 0.4, 'square', 1.8));
+    }
+  };
+
+  // ---------------- Upbeat background music (efficient persistent-oscillator scheduler) ----------------
+  // A cheerful, energetic 16-step melodic loop (bass note + melody note per step)
+  const musicSequence = [
+    { bass: 196.00, mel: 392.00 }, { bass: 196.00, mel: 493.88 },
+    { bass: 220.00, mel: 440.00 }, { bass: 220.00, mel: 523.25 },
+    { bass: 246.94, mel: 493.88 }, { bass: 246.94, mel: 587.33 },
+    { bass: 220.00, mel: 440.00 }, { bass: 220.00, mel: 523.25 },
+    { bass: 196.00, mel: 392.00 }, { bass: 196.00, mel: 493.88 },
+    { bass: 174.61, mel: 349.23 }, { bass: 174.61, mel: 440.00 },
+    { bass: 196.00, mel: 392.00 }, { bass: 220.00, mel: 440.00 },
+    { bass: 246.94, mel: 493.88 }, { bass: 261.63, mel: 523.25 }
+  ];
+  const STEP_DURATION = 0.19; // fast, upbeat tempo
+
+  let musicNodes = null;       // persistent oscillators/gains, created once
+  let musicSchedulerId = null; // setInterval id for the look-ahead scheduler
+  let musicStepIndex = 0;
+  let nextNoteTime = 0;
+
+  function createMusicNodes() {
+    const ctx = getCtx();
+    const bassOsc = ctx.createOscillator();
+    const bassGain = ctx.createGain();
+    bassOsc.type = 'triangle';
+    bassGain.gain.value = 0;
+    bassOsc.connect(bassGain).connect(masterLimiter);
+    bassOsc.start();
+
+    const melOsc = ctx.createOscillator();
+    const melGain = ctx.createGain();
+    melOsc.type = 'square';
+    melGain.gain.value = 0;
+    melOsc.connect(melGain).connect(masterLimiter);
+    melOsc.start();
+
+    return { bassOsc, bassGain, melOsc, melGain };
+  }
+
+  function scheduleStep(step, t) {
+    const n = musicNodes;
+    const bassPeak = 0.32 * musicVolume;
+    n.bassOsc.frequency.setValueAtTime(step.bass, t);
+    n.bassGain.gain.cancelScheduledValues(t);
+    n.bassGain.gain.setValueAtTime(0.0001, t);
+    n.bassGain.gain.linearRampToValueAtTime(bassPeak, t + 0.01);
+    n.bassGain.gain.exponentialRampToValueAtTime(0.0001, t + STEP_DURATION * 0.9);
+
+    const melPeak = 0.18 * musicVolume;
+    n.melOsc.frequency.setValueAtTime(step.mel, t);
+    n.melGain.gain.cancelScheduledValues(t);
+    n.melGain.gain.setValueAtTime(0.0001, t);
+    n.melGain.gain.linearRampToValueAtTime(melPeak, t + 0.01);
+    n.melGain.gain.exponentialRampToValueAtTime(0.0001, t + STEP_DURATION * 0.75);
+  }
+
+  function musicSchedulerTick() {
+    if (!musicOn || !musicNodes) return;
+    const ctx = getCtx();
+    const scheduleAheadTime = 0.15;
+    while (nextNoteTime < ctx.currentTime + scheduleAheadTime) {
+      scheduleStep(musicSequence[musicStepIndex % musicSequence.length], nextNoteTime);
+      musicStepIndex++;
+      nextNoteTime += STEP_DURATION;
+    }
+  }
+
+  function startMusic() {
+    if (musicSchedulerId) return; // already running
+    const ctx = getCtx();
+    if (!musicNodes) musicNodes = createMusicNodes();
+    nextNoteTime = ctx.currentTime + 0.05;
+    musicStepIndex = 0;
+    musicSchedulerTick();
+    musicSchedulerId = setInterval(musicSchedulerTick, 100);
+  }
+  function stopMusic() {
+    if (musicSchedulerId) {
+      clearInterval(musicSchedulerId);
+      musicSchedulerId = null;
+    }
+    if (musicNodes) {
+      // Silence immediately rather than destroying nodes (cheap to resume later)
+      const ctx = getCtx();
+      musicNodes.bassGain.gain.cancelScheduledValues(ctx.currentTime);
+      musicNodes.bassGain.gain.setValueAtTime(0, ctx.currentTime);
+      musicNodes.melGain.gain.cancelScheduledValues(ctx.currentTime);
+      musicNodes.melGain.gain.setValueAtTime(0, ctx.currentTime);
+    }
+  }
+
+  function initSoundControls() {
+    const sfxSlider = document.getElementById('bb-sfx-volume-slider');
+    const sfxLabel = document.getElementById('bb-sfx-volume-label');
+    const musicSlider = document.getElementById('bb-music-volume-slider');
+    const musicVolLabel = document.getElementById('bb-music-volume-label');
+
+    // Sound/Music are always enabled by default; volume sliders (below)
+    // let the player turn them down to 0% if they want silence.
+    sfxSlider.value = Math.round(sfxVolume * 100);
+    sfxLabel.textContent = Math.round(sfxVolume * 100) + '%';
+    musicSlider.value = Math.round(musicVolume * 100);
+    musicVolLabel.textContent = Math.round(musicVolume * 100) + '%';
+
+    sfxSlider.addEventListener('input', () => {
+      sfxVolume = sfxSlider.value / 100;
+      sfxLabel.textContent = sfxSlider.value + '%';
+      saveSetting(LS_KEYS.sfxVolume, sfxVolume);
+    });
+
+    musicSlider.addEventListener('input', () => {
+      musicVolume = musicSlider.value / 100;
+      musicVolLabel.textContent = musicSlider.value + '%';
+      saveSetting(LS_KEYS.musicVolume, musicVolume);
+    });
+
+    // Browsers require a user gesture before audio can play — try starting
+    // music on the very first interaction of any kind on the page.
+    const tryStartMusic = () => {
+      if (musicOn) startMusic();
+      window.removeEventListener('pointerdown', tryStartMusic);
+      window.removeEventListener('touchstart', tryStartMusic);
+      window.removeEventListener('click', tryStartMusic);
+      window.removeEventListener('keydown', tryStartMusic);
+    };
+    window.addEventListener('pointerdown', tryStartMusic);
+    window.addEventListener('touchstart', tryStartMusic);
+    window.addEventListener('click', tryStartMusic);
+    window.addEventListener('keydown', tryStartMusic);
+    // Some WebView wrappers (e.g. inside an APK) allow audio without a
+    // gesture — attempt immediately too, harmlessly ignored if blocked.
+    if (musicOn) { try { startMusic(); } catch (e) {} }
+  }
+  // ------------------------------------------------------------------------------
+  const boardEl = document.getElementById('bb-board');
+  const trayEls = [...document.querySelectorAll('.bb-slot')];
+  const scoreEl = document.getElementById('bb-score');
+  const bestEl = document.getElementById('bb-best');
+  const overlay = document.getElementById('bb-overlay');
+  const finalScoreEl = document.getElementById('bb-final-score');
+  const overlayStatsEl = document.getElementById('bb-overlay-stats');
+  const historyEl = document.getElementById('bb-history');
+  const restartBtn = document.getElementById('bb-restart');
+
+  const SIZE = 8;
+  const COLORS = [
+    ['#ff6b5b', '#c43f2e'],
+    ['#2dd4bf', '#0e7c6e'],
+    ['#ffc145', '#c98a00'],
+    ['#9b7bff', '#6247c4'],
+    ['#8de04d', '#57a626'],
+    ['#4da8ff', '#1e6fcb'],
+    ['#ff7fb0', '#d14a85']
+  ];
+
+  const SHAPES = [
+    [[0,0]],
+    [[0,0],[0,1]],
+    [[0,0],[1,0]],
+    [[0,0],[0,1],[0,2]],
+    [[0,0],[1,0],[2,0]],
+    [[0,0],[0,1],[0,2],[0,3]],
+    [[0,0],[1,0],[2,0],[3,0]],
+    [[0,0],[0,1],[1,0],[1,1]],
+    [[0,0],[1,0],[1,1]],
+    [[0,0],[0,1],[1,0]],
+    [[0,0],[0,1],[1,1]],
+    [[0,1],[1,0],[1,1]],
+    [[0,0],[0,1],[0,2],[1,1]],
+    [[0,1],[1,0],[1,1],[1,2]],
+    [[0,1],[0,2],[1,0],[1,1]],
+    [[0,0],[0,1],[1,1],[1,2]],
+    [[0,0],[1,0],[2,0],[2,1]],
+    [[0,0],[0,1],[1,0],[2,0]],
+    [[0,0],[0,1],[0,2],[1,0],[2,0]],
+    [[0,1],[1,1],[1,0],[1,2],[2,1]]
+  ];
+
+  let board = []; // SIZE x SIZE, null or colorIndex
+  let tray = [null, null, null]; // {shape, colorIdx}
+  let score = 0;
+  let best = 0;
+  let totalScore = 0;
+  let scoreHistory = []; // array of past game scores, most recent first
+  let dragging = null; // {slotIdx, shape, colorIdx, cellSize, pointerId}
+  let gameOver = false;
+
+  function loadStats() {
+    try {
+      best = parseInt(localStorage.getItem(LS_KEYS.best) || '0', 10) || 0;
+      totalScore = parseInt(localStorage.getItem(LS_KEYS.total) || '0', 10) || 0;
+      scoreHistory = JSON.parse(localStorage.getItem(LS_KEYS.history) || '[]');
+    } catch (e) {
+      best = 0; totalScore = 0; scoreHistory = [];
+    }
+  }
+  function saveStats() {
+    try {
+      localStorage.setItem(LS_KEYS.best, best);
+      localStorage.setItem(LS_KEYS.total, totalScore);
+      localStorage.setItem(LS_KEYS.history, JSON.stringify(scoreHistory.slice(0, 10)));
+    } catch (e) { /* localStorage unavailable, stats won't persist */ }
+  }
+
+  function newBoard() {
+    board = Array.from({length: SIZE}, () => Array(SIZE).fill(null));
+  }
+
+  function shapeBounds(shape) {
+    let maxR = 0, maxC = 0;
+    for (const [r,c] of shape) { if (r > maxR) maxR = r; if (c > maxC) maxC = c; }
+    return { rows: maxR + 1, cols: maxC + 1 };
+  }
+
+  function randomPiece() {
+    const shape = SHAPES[Math.floor(Math.random() * SHAPES.length)];
+    const colorIdx = Math.floor(Math.random() * COLORS.length);
+    return { shape, colorIdx };
+  }
+
+  function refillTrayIfEmpty() {
+    if (tray.every(p => p === null)) {
+      tray = [randomPiece(), randomPiece(), randomPiece()];
+    }
+  }
+
+  function canPlace(shape, row, col) {
+    for (const [dr, dc] of shape) {
+      const r = row + dr, c = col + dc;
+      if (r < 0 || r >= SIZE || c < 0 || c >= SIZE) return false;
+      if (board[r][c] !== null) return false;
+    }
+    return true;
+  }
+
+  function anyPlacementExists(shape) {
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        if (canPlace(shape, r, c)) return true;
+      }
+    }
+    return false;
+  }
+
+  function checkGameOver() {
+    for (const p of tray) {
+      if (p && anyPlacementExists(p.shape)) return false;
+    }
+    return true;
+  }
+
+  function placeShape(shape, row, col, colorIdx) {
+    for (const [dr, dc] of shape) {
+      board[row + dr][col + dc] = colorIdx;
+    }
+  }
+
+  function clearLines() {
+    const fullRows = [];
+    const fullCols = [];
+    for (let r = 0; r < SIZE; r++) {
+      if (board[r].every(v => v !== null)) fullRows.push(r);
+    }
+    for (let c = 0; c < SIZE; c++) {
+      let full = true;
+      for (let r = 0; r < SIZE; r++) if (board[r][c] === null) { full = false; break; }
+      if (full) fullCols.push(c);
+    }
+    const cellsToClear = new Set();
+    fullRows.forEach(r => { for (let c = 0; c < SIZE; c++) cellsToClear.add(r+'_'+c); });
+    fullCols.forEach(c => { for (let r = 0; r < SIZE; r++) cellsToClear.add(r+'_'+c); });
+
+    if (cellsToClear.size > 0) {
+      cellsToClear.forEach(key => {
+        const [r, c] = key.split('_').map(Number);
+        const idx = r * SIZE + c;
+        const cellEl = boardEl.children[idx];
+        if (cellEl) cellEl.classList.add('clearing');
+      });
+      setTimeout(() => {
+        cellsToClear.forEach(key => {
+          const [r, c] = key.split('_').map(Number);
+          board[r][c] = null;
+        });
+        renderBoard();
+      }, 220);
+    }
+    const linesCleared = fullRows.length + fullCols.length;
+    if (linesCleared > 0) {
+      score += linesCleared * 10 + Math.max(0, linesCleared - 1) * 10;
+    }
+    return linesCleared;
+  }
+
+  function renderBoard() {
+    boardEl.innerHTML = '';
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'bb-cell';
+        const val = board[r][c];
+        if (val !== null) {
+          cell.classList.add('filled');
+          cell.style.background = `linear-gradient(145deg, ${COLORS[val][0]}, ${COLORS[val][1]})`;
+        }
+        boardEl.appendChild(cell);
+      }
+    }
+  }
+
+  function renderScore() {
+    scoreEl.textContent = score;
+    bestEl.textContent = 'Best: ' + Math.max(best, score) + ' \u2022 Total: ' + (totalScore + score);
+  }
+
+  function renderHistory() {
+    historyEl.innerHTML = '';
+    if (scoreHistory.length === 0) {
+      historyEl.innerHTML = '<span class="bb-history-chip" style="opacity:0.5;">No previous games yet</span>';
+      return;
+    }
+    scoreHistory.slice(0, 6).forEach((s, i) => {
+      const chip = document.createElement('span');
+      chip.className = 'bb-history-chip';
+      chip.textContent = (i === 0 ? 'Last: ' : '') + s;
+      historyEl.appendChild(chip);
+    });
+  }
+
+  function renderTray() {
+    trayEls.forEach((slotEl, idx) => {
+      slotEl.innerHTML = '';
+      const piece = tray[idx];
+      if (!piece) {
+        slotEl.classList.add('empty');
+        return;
+      }
+      slotEl.classList.remove('empty');
+      const { rows, cols } = shapeBounds(piece.shape);
+      const previewCell = 20;
+      const grid = document.createElement('div');
+      grid.className = 'bb-piece-grid';
+      grid.style.gridTemplateColumns = `repeat(${cols}, ${previewCell}px)`;
+      grid.style.gridTemplateRows = `repeat(${rows}, ${previewCell}px)`;
+      grid.dataset.slot = idx;
+
+      const cellSet = new Set(piece.shape.map(([r,c]) => r+'_'+c));
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cellDiv = document.createElement('div');
+          if (cellSet.has(r+'_'+c)) {
+            cellDiv.className = 'bb-piece-cell';
+            cellDiv.style.width = (previewCell - 2) + 'px';
+            cellDiv.style.height = (previewCell - 2) + 'px';
+            cellDiv.style.background = `linear-gradient(145deg, ${COLORS[piece.colorIdx][0]}, ${COLORS[piece.colorIdx][1]})`;
+          } else {
+            cellDiv.style.width = (previewCell - 2) + 'px';
+            cellDiv.style.height = (previewCell - 2) + 'px';
+          }
+          grid.appendChild(cellDiv);
+        }
+      }
+      slotEl.appendChild(grid);
+      grid.addEventListener('pointerdown', (e) => startDrag(e, idx));
+    });
+  }
+
+  let hintedIndices = [];
+  function clearHints() {
+    for (const idx of hintedIndices) {
+      const cellEl = boardEl.children[idx];
+      if (cellEl) cellEl.classList.remove('hint-ok', 'hint-bad');
+    }
+    hintedIndices = [];
+  }
+
+  function showHint(shape, row, col) {
+    clearHints();
+    const valid = canPlace(shape, row, col);
+    for (const [dr, dc] of shape) {
+      const r = row + dr, c = col + dc;
+      if (r >= 0 && r < SIZE && c >= 0 && c < SIZE) {
+        const idx = r * SIZE + c;
+        const cellEl = boardEl.children[idx];
+        if (cellEl) {
+          cellEl.classList.add(valid ? 'hint-ok' : 'hint-bad');
+          hintedIndices.push(idx);
+        }
+      }
+    }
+    return valid;
+  }
+
+  function startDrag(e, slotIdx) {
+    if (gameOver) return;
+    const piece = tray[slotIdx];
+    if (!piece) return;
+    e.preventDefault();
+    sfx.pickup();
+
+    const boardRect = boardEl.getBoundingClientRect();
+    const cellSize = boardRect.width / SIZE;
+    const { rows, cols } = shapeBounds(piece.shape);
+
+    const ghost = document.createElement('div');
+    ghost.id = 'bb-ghost';
+    ghost.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+    ghost.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+    const cellSet = new Set(piece.shape.map(([r,c]) => r+'_'+c));
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const cellDiv = document.createElement('div');
+        cellDiv.className = 'bb-ghost-cell';
+        cellDiv.style.width = (cellSize - 4) + 'px';
+        cellDiv.style.height = (cellSize - 4) + 'px';
+        cellDiv.style.margin = '2px';
+        if (cellSet.has(r+'_'+c)) {
+          cellDiv.style.background = `linear-gradient(145deg, ${COLORS[piece.colorIdx][0]}, ${COLORS[piece.colorIdx][1]})`;
+        } else {
+          cellDiv.style.visibility = 'hidden';
+        }
+        ghost.appendChild(cellDiv);
+      }
+    }
+    document.body.appendChild(ghost);
+
+    const sourceGrid = e.currentTarget;
+    sourceGrid.classList.add('dragging-source');
+
+    dragging = {
+      slotIdx, piece, cellSize, rows, cols,
+      boardRect, ghost, pointerId: e.pointerId,
+      lift: cellSize * 1.4,
+      lastValid: false, lastRow: -1, lastCol: -1
+    };
+
+    positionGhost(e.clientX, e.clientY);
+    updateHintAndPosition(e.clientX, e.clientY);
+
+    window.addEventListener('pointermove', onDragMove);
+    window.addEventListener('pointerup', onDragEnd);
+    window.addEventListener('pointercancel', onDragEnd);
+  }
+
+  function positionGhost(clientX, clientY) {
+    const d = dragging;
+    const w = d.cols * d.cellSize;
+    const h = d.rows * d.cellSize;
+    d.ghost.style.left = (clientX - w/2) + 'px';
+    d.ghost.style.top = (clientY - h/2 - d.lift) + 'px';
+  }
+
+  function updateHintAndPosition(clientX, clientY) {
+    const d = dragging;
+    const boardRect = d.boardRect; // cached at drag start — avoids forced layout reflow every move
+    const relX = clientX - boardRect.left;
+    const relY = (clientY - d.lift) - boardRect.top;
+
+    const withinX = clientX > boardRect.left - d.cellSize && clientX < boardRect.right + d.cellSize;
+    const withinY = (clientY - d.lift) > boardRect.top - d.cellSize && (clientY - d.lift) < boardRect.bottom + d.cellSize;
+
+    clearHints();
+    if (!withinX || !withinY) {
+      d.lastValid = false;
+      d.lastRow = -1;
+      d.lastCol = -1;
+      return;
+    }
+
+    let row = Math.round(relY / d.cellSize - d.rows / 2);
+    let col = Math.round(relX / d.cellSize - d.cols / 2);
+    row = Math.max(0, Math.min(SIZE - d.rows, row));
+    col = Math.max(0, Math.min(SIZE - d.cols, col));
+
+    const valid = showHint(d.piece.shape, row, col);
+    d.lastValid = valid;
+    d.lastRow = row;
+    d.lastCol = col;
+  }
+
+  let rafPending = false;
+  let lastPointer = { x: 0, y: 0 };
+  function onDragMove(e) {
+    if (!dragging || e.pointerId !== dragging.pointerId) return;
+    lastPointer.x = e.clientX;
+    lastPointer.y = e.clientY;
+    if (rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(() => {
+      rafPending = false;
+      if (!dragging) return;
+      positionGhost(lastPointer.x, lastPointer.y);
+      updateHintAndPosition(lastPointer.x, lastPointer.y);
+    });
+  }
+
+  function onDragEnd(e) {
+    if (!dragging || e.pointerId !== dragging.pointerId) return;
+    const d = dragging;
+    clearHints();
+    d.ghost.remove();
+
+    const sourceGrids = document.querySelectorAll('.bb-piece-grid');
+    sourceGrids.forEach(g => g.classList.remove('dragging-source'));
+
+    window.removeEventListener('pointermove', onDragMove);
+    window.removeEventListener('pointerup', onDragEnd);
+    window.removeEventListener('pointercancel', onDragEnd);
+
+    if (d.lastValid) {
+      placeShape(d.piece.shape, d.lastRow, d.lastCol, d.piece.colorIdx);
+      sfx.place();
+      score += d.piece.shape.length;
+      tray[d.slotIdx] = null;
+      renderBoard();
+      const linesCleared = clearLines();
+      if (linesCleared > 0) sfx.lineClear(linesCleared);
+      renderScore();
+      refillTrayIfEmpty();
+      renderTray();
+
+      if (checkGameOver()) {
+        endGame();
+      }
+    } else {
+      sfx.invalid();
+      renderTray();
+    }
+    dragging = null;
+  }
+
+  function endGame() {
+    gameOver = true;
+    best = Math.max(best, score);
+    totalScore += score;
+    scoreHistory.unshift(score);
+    scoreHistory = scoreHistory.slice(0, 10);
+    saveStats();
+    sfx.gameOver();
+    finalScoreEl.textContent = 'Score: ' + score;
+    overlayStatsEl.textContent = 'Best: ' + best + ' \u2022 Total: ' + totalScore;
+    renderHistory();
+    overlay.classList.add('show');
+  }
+
+  function startGame() {
+    gameOver = false;
+    score = 0;
+    newBoard();
+    tray = [randomPiece(), randomPiece(), randomPiece()];
+    overlay.classList.remove('show');
+    renderBoard();
+    renderScore();
+    renderTray();
+  }
+
+  restartBtn.addEventListener('click', startGame);
+  loadSettings();
+  loadStats();
+  initSoundControls();
+
+  const shareBtn = document.getElementById('bb-share-btn');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', async () => {
+      const shareData = {
+        title: 'Block Cascade',
+        text: 'Play Block Cascade — a relaxing block puzzle game, free and no install needed!',
+        url: window.location.href
+      };
+      if (navigator.share) {
+        try { await navigator.share(shareData); } catch (e) {}
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareData.url);
+        alert('Link copied! Paste it anywhere to share.');
+      }
+    });
+  }
+
+  startGame();
+})();
+</script>
+</body>
+</html>
