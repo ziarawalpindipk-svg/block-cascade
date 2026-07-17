@@ -1,4 +1,4 @@
-const CACHE_NAME = "play-vault-cache-v1";
+const CACHE_NAME = "play-vault-cache-v3";
 const PRECACHE_URLS = [
   "about_us.html",
   "base-defender.html",
