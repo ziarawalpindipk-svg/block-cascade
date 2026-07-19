@@ -1349,7 +1349,9 @@
   }
 </script>
 
-<script src="ads-config.js"></script>
+<script>
+  document.write('<script src="ads-config.js?t=' + Date.now() + '"></' + 'script>');
+</script>
 <script>
   function renderAdCard(slotId, ad) {
     const slot = document.getElementById(slotId);
