@@ -1312,7 +1312,12 @@
     } else if (window.matchMedia('(display-mode: standalone)').matches) {
       alert('Play Vault already installed hai! 🎉');
     } else {
-      window.open('https://ziagaming-app.itch.io/play-vault-free-online-games', '_blank');
+      const a = document.createElement('a');
+      a.href = 'playvault.apk';
+      a.download = 'playvault.apk';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
   }
 
