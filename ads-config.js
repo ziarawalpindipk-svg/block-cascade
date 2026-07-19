@@ -17,7 +17,7 @@ const adsConfig = {
 
   // -------- AD CARD 1 --------
   ad1: {
-    image: "images/ad1.jpg",
+    image: "images/rawalpindi.jpeg",
     link: "https://smartincomestack.blogspot.com/",
     title: " ugal gulf jobs",
     description: "discrapthion  here test ad page for ads post .",
@@ -26,7 +26,7 @@ const adsConfig = {
 
   // -------- AD CARD 2 --------
   ad2: {
-    image: "images/ad2.jpg",
+    image: "images/rawalpindi.jpeg",
     link: "https://smartincomestack.blogspot.com/2026/06/online-earning-beginners-complete-hub.html",
     title: "test  ads pages post",
     description: "ziamohiuddinpkrawalpindi .",
