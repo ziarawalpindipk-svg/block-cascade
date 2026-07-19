@@ -383,6 +383,19 @@
     border-radius: 14px;
     background: #0a0620;
   }
+
+  .custom-ad-card {
+    border-left-color: #6a6490 !important;
+  }
+  .ad-card-img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 6px 0 10px;
+    display: block;
+    object-fit: cover;
+    max-height: 220px;
+  }
 </style>
 
 <script type="application/ld+json">
@@ -843,6 +856,9 @@
   <!-- ============================================================
        🔹 ADSTERRA NATIVE AD (mid-list, between game cards)
        ============================================================ -->
+  <!-- AD CARD 1 (edit content in ads-config.js, not here) -->
+  <div id="ad-slot-1"></div>
+
   <div class="ad-banner" id="ad-mid2" style="min-height:100px;">
     <script async="async" data-cfasync="false" src="https://pl30278109.effectivecpmnetwork.com/37bcd87f9b90a477e2b211daed1f289b/invoke.js"></script>
     <div id="container-37bcd87f9b90a477e2b211daed1f289b"></div>
@@ -989,6 +1005,9 @@
       </div>
     </div>
   </div>
+
+  <!-- AD CARD 2 (edit content in ads-config.js, not here) -->
+  <div id="ad-slot-2"></div>
 
   <!-- GAME 15 -->
   <div class="game-card g1" onclick="openGame('dash-runner.html')">
@@ -1308,6 +1327,30 @@
     }
     window.open(target, '_blank');
     closeShare();
+  }
+</script>
+
+<script src="ads-config.js"></script>
+<script>
+  function renderAdCard(slotId, ad) {
+    const slot = document.getElementById(slotId);
+    if (!slot || !ad) return;
+    slot.outerHTML = `
+      <div class="game-card custom-ad-card" onclick="window.open('${ad.link}', '_blank')">
+        <div class="badge" style="background:rgba(255,255,255,0.15); color:#f4eefc;">◆ Sponsored</div>
+        <img src="${ad.image}" alt="Ad" class="ad-card-img">
+        <h2 style="font-size:17px; margin-top:8px;">${ad.title}</h2>
+        <p>${ad.description}</p>
+        <div class="card-row">
+          <span></span>
+          <button class="download-btn" onclick="event.stopPropagation(); openShare();">🤝 Share</button>
+          <a href="${ad.link}" target="_blank" class="play-btn small" onclick="event.stopPropagation();">▶ ${ad.buttonText || 'Learn More'}</a>
+        </div>
+      </div>`;
+  }
+  if (typeof adsConfig !== 'undefined') {
+    renderAdCard('ad-slot-1', adsConfig.ad1);
+    renderAdCard('ad-slot-2', adsConfig.ad2);
   }
 </script>
 
