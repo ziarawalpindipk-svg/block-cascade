@@ -19,17 +19,17 @@ const adsConfig = {
   ad1: {
     image: "images/ad1.jpg",
     link: "https://smartincomestack.blogspot.com/",
-    title: "Your Ad Title Here mugal gulf jobs",
-    description: "Short one-line description of the offer goes here test ad page .",
-    buttonText: "Learn More for learning "
+    title: " ugal gulf jobs",
+    description: "discrapthion  here test ad page for ads post .",
+    buttonText: "Learn More for earning  "
   },
 
   // -------- AD CARD 2 --------
   ad2: {
     image: "images/ad2.jpg",
-    link: "https://example.com/your-link-2",
-    title: "Your Ad Title Here",
-    description: "Short one-line description of the offer goes here.",
+    link: "https://smartincomestack.blogspot.com/2026/06/online-earning-beginners-complete-hub.html",
+    title: "test  ads pages post",
+    description: "ziamohiuddinpkrawalpindi .",
     buttonText: "Learn More"
   }
 
