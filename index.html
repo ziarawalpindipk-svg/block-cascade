@@ -231,20 +231,39 @@
   }
   .download-btn:hover { background: rgba(255,255,255,0.2); }
 
+  .ad-share-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #25D366, #1fae9c);
+    border: none;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37,211,102,0.4);
+  }
+
   .share-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #f4eefc;
+    background: linear-gradient(135deg, #25D366, #1fae9c);
+    border: none;
+    color: #ffffff;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     padding: 10px 16px;
     border-radius: 20px;
     cursor: pointer;
+    box-shadow: 0 6px 16px rgba(37,211,102,0.4);
+    animation: shareBounce 2.6s ease-in-out infinite;
   }
-  .share-btn:hover { background: rgba(255,255,255,0.16); }
+  @keyframes shareBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+  .share-btn:hover { box-shadow: 0 8px 20px rgba(37,211,102,0.6); }
   .share-menu {
     position: fixed;
     inset: 0;
@@ -288,12 +307,13 @@
     padding: 10px 4px;
   }
   .share-opt .circle {
-    width: 40px; height: 40px;
+    width: 48px; height: 48px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 22px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
   }
   .share-close {
     width: 100%;
@@ -1227,7 +1247,7 @@
 
 <div class="share-menu" id="shareMenu">
   <div class="share-sheet">
-    <h3>Share Play Vault</h3>
+    <h3>🎉 Loved it? Share with friends!</h3>
     <div class="share-options">
       <a class="share-opt" href="#" onclick="shareVia('whatsapp'); return false;">
         <span class="circle" style="background:#25D366;">💬</span> WhatsApp
@@ -1337,7 +1357,7 @@
         <p>${ad.description}</p>
         <div class="card-row">
           <span></span>
-          <button class="download-btn" onclick="event.stopPropagation(); openShare();">🤝 Share</button>
+          <button class="ad-share-btn" onclick="event.stopPropagation(); openShare();">🤝 Share</button>
           <a href="${ad.link}" target="_blank" class="play-btn small" onclick="event.stopPropagation();">▶ ${ad.buttonText || 'Learn More'}</a>
         </div>
       </div>`;
