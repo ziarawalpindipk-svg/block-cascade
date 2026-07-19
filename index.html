@@ -1299,14 +1299,8 @@
   const SHARE_TITLE = 'Play Vault';
   const SHARE_TEXT = 'Play 20+ free online games — no download needed, play instantly!';
 
-  async function openShare() {
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: SHARE_TITLE, text: SHARE_TEXT, url: window.location.href });
-      } catch (e) { /* user cancelled, do nothing */ }
-    } else {
-      document.getElementById('shareMenu').classList.add('show');
-    }
+  function openShare() {
+    document.getElementById('shareMenu').classList.add('show');
   }
   function closeShare() {
     document.getElementById('shareMenu').classList.remove('show');
