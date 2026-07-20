@@ -385,16 +385,21 @@
     flex-direction: column;
   }
   #game-frame-wrap.active { display: flex; }
-  #game-frame-wrap .close-btn {
+  .game-controls-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  #game-frame-wrap .close-btn,
+  #game-frame-wrap .fullscreen-btn {
     background: rgba(255,255,255,0.1);
     border: none;
     color: #f4eefc;
-    font-size: 22px;
+    font-size: 18px;
     padding: 6px 14px;
     border-radius: 30px;
-    align-self: flex-end;
     cursor: pointer;
-    margin-bottom: 6px;
   }
   #game-frame {
     flex: 1;
@@ -1241,7 +1246,10 @@
 </div>
 
 <div id="game-frame-wrap">
-  <button class="close-btn" onclick="closeGame()">✕ Close</button>
+  <div class="game-controls-row">
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Full Screen</button>
+    <button class="close-btn" onclick="closeGame()">✕ Close</button>
+  </div>
   <iframe id="game-frame" src=""></iframe>
 </div>
 
@@ -1284,8 +1292,23 @@
     frame.src = '';
     wrap.classList.remove('active');
     document.body.style.overflow = '';
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
     if (window.location.hash === '#play') {
       history.back();
+    }
+  }
+  function toggleFullscreen() {
+    const wrap = document.getElementById('game-frame-wrap');
+    if (!document.fullscreenElement) {
+      if (wrap.requestFullscreen) {
+        wrap.requestFullscreen().catch(() => {
+          alert('Full screen is not supported on this browser.');
+        });
+      }
+    } else {
+      document.exitFullscreen().catch(() => {});
     }
   }
   window.addEventListener('popstate', function(e) {
