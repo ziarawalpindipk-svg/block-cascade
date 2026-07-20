@@ -1,4 +1,4 @@
-const CACHE_NAME = "play-vault-cache-v3";
+const CACHE_NAME = "play-vault-cache-v4";
 const PRECACHE_URLS = [
   "about_us.html",
   "base-defender.html",
@@ -54,20 +54,23 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+// ---- NETWORK-FIRST STRATEGY ----
+// Always try to fetch the freshest version from the internet first.
+// Only fall back to the cached copy if the network request fails
+// (e.g. user is offline). This means every user — new or returning —
+// always sees the latest content whenever they have internet access.
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200 && response.type === "basic") {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          }
-          return response;
-        })
-        .catch(() => cached);
-    })
+    fetch(event.request)
+      .then((response) => {
+        if (response && response.status === 200 && response.type === "basic") {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
