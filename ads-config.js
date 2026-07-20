@@ -29,8 +29,7 @@ const adsConfig = {
     image: "images/rawalpindi.jpeg",
     link: "https://smartincomestack.blogspot.com/2026/06/online-earning-beginners-complete-hub.html",
     title: "Test pages post",
-    description: "This slot for yours ad contact us 
-      Mughal Asaco trade test TTC Rawalpindi  .",
+    description: "This slot for yours ad contact us  .",
     buttonText: "Learn More"
   }
 
