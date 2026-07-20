@@ -17,7 +17,7 @@ const adsConfig = {
 
   // -------- AD CARD 1 --------
   ad1: {
-    image: "images/rawalpindi.jpeg",
+    image: "images/ad1.jpg",
     link: "https://smartincomestack.blogspot.com/",
     title: " ugal gulf jobs",
     description: "discrapthion  here test ad page for ads post .",
