@@ -19,7 +19,7 @@ const adsConfig = {
   ad1: {
     image: "images/ad1.png",
     link: "https://smartincomestack.blogspot.com/",
-    title: " ugal gulf jobs",
+    title: " Mughal Asaco trade test TTC Rawalpindi ",
     description: "discrapthion  here test ad page for ads post .",
     buttonText: "Learn More for earning  "
   },
@@ -29,7 +29,8 @@ const adsConfig = {
     image: "images/rawalpindi.jpeg",
     link: "https://smartincomestack.blogspot.com/2026/06/online-earning-beginners-complete-hub.html",
     title: "Test pages post",
-    description: "This slot for yours ad contact us .",
+    description: "This slot for yours ad contact us 
+      Mughal Asaco trade test TTC Rawalpindi  .",
     buttonText: "Learn More"
   }
 
