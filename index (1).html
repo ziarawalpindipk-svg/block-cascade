@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Play Vault - 20+ Free Online Games. No Download. Play Instantly.</title>
+<link rel="canonical" href="https://ziarawalpindipk-svg.github.io/block-cascade/index.html">
+<meta name="description" content="Play Vault is a free online game hub with 20+ addictive puzzle, arcade, and action games. No download, no signup — just tap and play instantly in your browser.">
+<meta name="keywords" content="free online games, play games online, no download games, browser games, puzzle games, arcade games, play instantly, html5 games">
+<meta property="og:title" content="Play Vault - Free Online Games">
+<meta property="og:description" content="20+ Free Online Games. No Download. Play Instantly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ziarawalpindipk-svg.github.io/block-cascade/">
+<meta property="og:image" content="https://ziarawalpindipk-svg.github.io/block-cascade/icon-512.png">
+<meta name="theme-color" content="#1a1030">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: radial-gradient(circle at 30% 0%, #1a1030, #0a0620);
+    background-size: 200% 200%;
+    animation: bgDrift 14s ease-in-out infinite;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    color: #f4eefc;
+    min-height: 100vh;
+    padding: 16px 14px 30px;
+  }
+  @keyframes bgDrift {
+    0%, 100% { background-position: 30% 0%; }
+    50% { background-position: 70% 40%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body { animation: none; }
+  }
+  .container { max-width: 420px; margin: 0 auto; }
+
+  /* Desktop/tablet: widen container and show games in a multi-column grid */
+  .games-grid { display: block; }
+  @media (min-width: 700px) {
+    .container { max-width: 1100px; }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .games-grid .game-card { margin-bottom: 0; }
+    .games-grid .ad-banner { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1000px) {
+    .games-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  
+  .header {
+    text-align: center;
+    padding: 8px 0 10px;
+  }
+  .brand-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    filter: drop-shadow(0 4px 16px rgba(255, 107, 91, 0.45));
+  }
+  .header h1 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #ff6b5b, #ffc145, #2dd4bf);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+    margin: 0;
+  }
+  .header p {
+    color: #9a94c2;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  .search-wrap {
+    margin: 4px 0 16px;
+    position: relative;
+  }
+  .search-input {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #f4eefc;
+    font-size: 14px;
+    padding: 12px 16px 12px 40px;
+    border-radius: 24px;
+    outline: none;
+  }
+  .search-input::placeholder { color: #9a94c2; }
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    pointer-events: none;
+  }
+  .no-results-msg {
+    display: none;
+    text-align: center;
+    color: #9a94c2;
+    font-size: 13px;
+    padding: 20px 0;
+  }
+  .no-results-msg.show { display: block; }
+
+  .recently-played-section {
+    margin: 4px 0 18px;
+    display: none;
+  }
+  .recently-played-section.show { display: block; }
+  .recently-played-heading {
+    font-size: 12px;
+    font-weight: 700;
+    color: #9a94c2;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .recently-played-row {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .recently-played-row::-webkit-scrollbar { height: 4px; }
+  .recent-pill {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #f4eefc;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .recent-pill:active { transform: scale(0.96); }
+
+  .action-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px 0 16px;
+  }
+
+  .ad-banner {
+    width: 100%;
+    max-width: 400px;
+    min-height: 50px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .game-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-left: 3px solid transparent;
+    border-radius: 18px;
+    padding: 18px 16px 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+    position: relative;
+    cursor: pointer;
+  }
+  .game-card.g1 { border-left-color: #4d96ff; }
+  .game-card.g2 { border-left-color: #4ade80; }
+  .game-card.g3 { border-left-color: #a855f7; }
+  .game-card.g4 { border-left-color: #f97316; }
+  .game-card.g5 { border-left-color: #ef4444; }
+  .game-card.g6 { border-left-color: #eab308; }
+  .game-card.g7 { border-left-color: #ec4899; }
+  .game-card:active {
+    transform: scale(0.97);
+    box-shadow: 0 0 30px rgba(92, 225, 255, 0.15);
+  }
+  .game-card .badge {
+    display: inline-block;
+    background: rgba(255,107,91,0.2);
+    color: #ff6b5b;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .game-card.g1 .badge { background: rgba(77,150,255,0.2); color: #4d96ff; }
+  .game-card.g2 .badge { background: rgba(74,222,128,0.2); color: #4ade80; }
+  .game-card.g3 .badge { background: rgba(168,85,247,0.2); color: #a855f7; }
+  .game-card.g4 .badge { background: rgba(249,115,22,0.2); color: #f97316; }
+  .game-card.g5 .badge { background: rgba(239,68,68,0.2); color: #ef4444; }
+  .game-card.g6 .badge { background: rgba(234,179,8,0.2); color: #eab308; }
+  .game-card.g7 .badge { background: rgba(236,72,153,0.2); color: #ec4899; }
+  .game-icon-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .game-card.g1 .game-icon-badge { background: rgba(77,150,255,0.18); }
+  .game-card.g2 .game-icon-badge { background: rgba(74,222,128,0.18); }
+  .game-card.g3 .game-icon-badge { background: rgba(168,85,247,0.18); }
+  .game-card.g4 .game-icon-badge { background: rgba(249,115,22,0.18); }
+  .game-card.g5 .game-icon-badge { background: rgba(239,68,68,0.18); }
+  .game-card.g6 .game-icon-badge { background: rgba(234,179,8,0.18); }
+  .game-card.g7 .game-icon-badge { background: rgba(236,72,153,0.18); }
+  .game-card h2 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+  }
+  .game-card p {
+    color: #9a94c2;
+    font-size: 13px;
+    margin: 0 0 10px;
+  }
+  .card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .play-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #5ce1ff, #ff5cb8);
+    color: #0a0620;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 8px 22px;
+    border-radius: 30px;
+    border: none;
+    text-decoration: none;
+    animation: zoomBlink 2s ease-in-out infinite;
+    cursor: pointer;
+  }
+  @keyframes zoomBlink {
+    0% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0); }
+    50% { transform: scale(1.08); box-shadow: 0 0 20px rgba(255,255,255,0.4); }
+    100% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0); }
+  }
+  .play-btn.small { font-size: 12px; padding: 6px 16px; }
+  .game-card.g1 .play-btn { background: linear-gradient(135deg, #4d96ff, #2dd4bf); }
+  .game-card.g2 .play-btn { background: linear-gradient(135deg, #4ade80, #22c55e); color: #06210f; }
+  .game-card.g3 .play-btn { background: linear-gradient(135deg, #a855f7, #ec4899); }
+  .game-card.g4 .play-btn { background: linear-gradient(135deg, #f97316, #facc15); color: #2a1602; }
+  .game-card.g5 .play-btn { background: linear-gradient(135deg, #ef4444, #fb923c); color: #2a0606; }
+  .game-card.g6 .play-btn { background: linear-gradient(135deg, #eab308, #fef08a); color: #241d02; }
+  .game-card.g7 .play-btn { background: linear-gradient(135deg, #ec4899, #38bdf8); }
+
+  .download-btn {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #f4eefc;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .download-btn:hover { background: rgba(255,255,255,0.2); }
+
+  .ad-share-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, #25D366, #1fae9c);
+    border: none;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(37,211,102,0.4);
+  }
+
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #25D366, #1fae9c);
+    border: none;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(37,211,102,0.4);
+    animation: shareBounce 2.6s ease-in-out infinite;
+  }
+  @keyframes shareBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+  }
+  .share-btn:hover { box-shadow: 0 8px 20px rgba(37,211,102,0.6); }
+  .share-menu {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,3,15,0.75);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 2000;
+  }
+  .share-menu.show { display: flex; }
+  .share-sheet {
+    background: #170f2c;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 420px;
+    padding: 20px 18px 26px;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .share-sheet h3 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 16px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .share-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .share-opt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: #f4eefc;
+    font-size: 11px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 10px 4px;
+  }
+  .share-opt .circle {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  .share-close {
+    width: 100%;
+    padding: 11px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: #f4eefc;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .cta-smartlink {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: auto;
+    margin: 0;
+    background: linear-gradient(135deg, #ffc145, #ff6b5b);
+    color: #2a0f0a;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 22px;
+    border-radius: 30px;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(255,107,91,0.4);
+    animation: glowPulse 2.4s ease-in-out infinite;
+    border: none;
+    cursor: pointer;
+  }
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 6px 18px rgba(255,107,91,0.35); transform: scale(1); }
+    50% { box-shadow: 0 8px 24px rgba(255,107,91,0.55); transform: scale(1.03); }
+  }
+
+  .footer-links {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: #6a6490;
+  }
+  .footer-links a {
+    color: #6a6490;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+  .footer-links a:hover { color: #f4eefc; }
+
+  .section-heading {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #9a94c2;
+    text-align: center;
+    margin: 22px 0 14px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  #game-frame-wrap {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #0a0620;
+    z-index: 1000;
+    padding: 0;
+  }
+  #game-frame-wrap.active { display: block; }
+  .game-controls-row {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1001;
+    display: flex;
+    gap: 8px;
+  }
+  #game-frame-wrap .close-btn,
+  #game-frame-wrap .fullscreen-btn {
+    background: rgba(10,6,32,0.55);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #f4eefc;
+    font-size: 16px;
+    padding: 6px 12px;
+    border-radius: 30px;
+    cursor: pointer;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+  }
+  #game-frame-wrap .close-btn:hover,
+  #game-frame-wrap .fullscreen-btn:hover,
+  #game-frame-wrap .close-btn:active,
+  #game-frame-wrap .fullscreen-btn:active {
+    opacity: 1;
+  }
+  #game-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #0a0620;
+  }
+
+  .custom-ad-card {
+    border-left-color: #6a6490 !important;
+  }
+  .ad-card-img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin: 6px 0 10px;
+    display: block;
+    object-fit: cover;
+    max-height: 220px;
+  }
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Play Vault - Free Online Games",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Block Cascade",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/block-cascade.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Gridora Drop",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/gridora-drop.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Numera Merge",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/numera_merge.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Gem Rush",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/gem_rush.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Pop Panic",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/pop_panic.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Memo Match",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/memo_match.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Nova Blaster",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/nova_blaster.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 8,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Orbit Eater",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/orbit-eater.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 9,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Skyline Flyer",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/skyline-flyer.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 10,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Nibble Runner",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/nibble-runner.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Galaxy Guardian",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/galaxy-guardian.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 12,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Stack Crafter",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/stack-crafter.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Merge 2048",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/merge-2048.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Slide & Free",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/slide-free.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 15,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Dash Runner",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/dash-runner.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 16,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Tiny Angler",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/tiny-angler.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 17,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Liquid Sort",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/liquid-sort.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 18,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Tic-Tac-Toe",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/tic-tac-toe.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 19,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Card Match",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/card-match.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 20,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Jewel Swap",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/jewel-swap.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 21,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Brick Blaster",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/brick-blaster.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 22,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Rope Swinger",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/rope-swinger.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 23,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Color Drop",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/color-drop.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 24,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Paint Trail",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/paint-trail.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 25,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Base Defender",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/base-defender.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 26,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Catapult Fury",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/catapult-fury.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 27,
+      "item": {
+        "@type": "VideoGame",
+        "name": "Dice Merge",
+        "url": "https://ziarawalpindipk-svg.github.io/block-cascade/dice-merge.html",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="brand-row">
+      <svg width="40" height="40" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="iconBg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#6a48b0"/>
+            <stop offset="100%" stop-color="#3a2461"/>
+          </linearGradient>
+          <linearGradient id="blockCoral" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ff8f7f"/>
+            <stop offset="100%" stop-color="#e0503f"/>
+          </linearGradient>
+          <linearGradient id="blockTeal" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#5eeee0"/>
+            <stop offset="100%" stop-color="#1fae9c"/>
+          </linearGradient>
+          <linearGradient id="blockAmber" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffe08a"/>
+            <stop offset="100%" stop-color="#e0a300"/>
+          </linearGradient>
+        </defs>
+        <rect x="1" y="1" width="70" height="70" rx="18" fill="url(#iconBg)"/>
+        <rect x="1" y="1" width="70" height="70" rx="18" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2"/>
+        <rect x="30" y="8" width="11" height="11" rx="2.5" fill="url(#blockTeal)" opacity="0.8"/>
+        <rect x="15" y="38" width="15" height="15" rx="3" fill="url(#blockCoral)"/>
+        <rect x="32" y="38" width="15" height="15" rx="3" fill="url(#blockAmber)"/>
+        <rect x="23.5" y="22" width="15" height="15" rx="3" fill="url(#blockTeal)"/>
+        <rect x="15" y="38" width="15" height="5" rx="2.5" fill="#ffffff" opacity="0.25"/>
+        <rect x="32" y="38" width="15" height="5" rx="2.5" fill="#ffffff" opacity="0.25"/>
+        <rect x="23.5" y="22" width="15" height="5" rx="2.5" fill="#ffffff" opacity="0.25"/>
+      </svg>
+      <h1>Play Vault</h1>
+    </div>
+    <p>20+ Free Online Games. No Download. Play Instantly.</p>
+  </div>
+
+  <div class="action-row">
+    <button class="share-btn" onclick="openShare()">📤 Share</button>
+    <button onclick="installApp(event)" class="cta-smartlink">
+       📲 Install App
+    </button>
+  </div>
+
+  <div class="recently-played-section" id="recentlyPlayedSection">
+    <div class="recently-played-heading">🕑 RECENTLY PLAYED</div>
+    <div class="recently-played-row" id="recentlyPlayedRow"></div>
+  </div>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="gameSearchInput" class="search-input" placeholder="Search games..." oninput="filterGames()">
+  </div>
+  <div class="no-results-msg" id="noResultsMsg">No games found. Try a different search.</div>
+
+  <div class="games-grid">
+
+  <!-- GAME 1 -->
+  <div class="game-card g1" onclick="openGame('block-cascade.html')">
+    <div class="badge">✦ Puzzle</div>
+    <h2><a href="block-cascade.html" onclick="event.preventDefault();event.stopPropagation();openGame('block-cascade.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🧩</span>Block Cascade</a></h2>
+    <p>Drag colorful blocks onto the grid. Clear full rows &amp; columns. Relaxing &amp; addictive.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       🔹 ADSTERRA BANNER 320x50 (between the two game cards)
+       ============================================================ -->
+  <div class="ad-banner" id="ad-mid-cards">
+    <script>
+      atOptions = {
+        'key' : '63f9cc601bd826eb8fbdc16d61a1bf4b',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+      };
+    </script>
+    <script async src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
+  </div>
+
+  <!-- GAME 2 -->
+  <div class="game-card g2" onclick="openGame('gridora-drop.html')">
+    <div class="badge">✦ Arcade</div>
+    <h2><a href="gridora-drop.html" onclick="event.preventDefault();event.stopPropagation();openGame('gridora-drop.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">⬇️</span>Gridora Drop</a></h2>
+    <p>Classic falling block puzzle. Rotate, slide, and drop to clear lines. Speed increases!</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 3 -->
+  <div class="game-card g3" onclick="openGame('numera_merge.html')">
+    <div class="badge">✦ Number Puzzle</div>
+    <h2><a href="numera_merge.html" onclick="event.preventDefault();event.stopPropagation();openGame('numera_merge.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🔢</span>Numera Merge</a></h2>
+    <p>Swipe to slide tiles and merge matching numbers. How high can you go?</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 4 -->
+  <div class="game-card g4" onclick="openGame('gem_rush.html')">
+    <div class="badge">✦ Match-3</div>
+    <h2><a href="gem_rush.html" onclick="event.preventDefault();event.stopPropagation();openGame('gem_rush.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">💎</span>Gem Rush</a></h2>
+    <p>Swap adjacent gems to match 3 or more. Simple, colorful, and addictive.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       🔹 ADSTERRA NATIVE AD (mid-list, between game cards)
+       ============================================================ -->
+  <!-- AD CARD 1 (edit content in ads-config.js, not here) -->
+  <div id="ad-slot-1"></div>
+
+  <div class="ad-banner" id="ad-mid2" style="min-height:100px;">
+    <script async="async" data-cfasync="false" src="https://pl30278109.effectivecpmnetwork.com/37bcd87f9b90a477e2b211daed1f289b/invoke.js"></script>
+    <div id="container-37bcd87f9b90a477e2b211daed1f289b"></div>
+  </div>
+
+  <!-- GAME 5 -->
+  <div class="game-card g5" onclick="openGame('pop_panic.html')">
+    <div class="badge">✦ Reaction</div>
+    <h2><a href="pop_panic.html" onclick="event.preventDefault();event.stopPropagation();openGame('pop_panic.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🐹</span>Pop Panic</a></h2>
+    <p>Tap the moles the instant they pop up. Fast fingers win this reaction challenge!</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 6 -->
+  <div class="game-card g6" onclick="openGame('memo_match.html')">
+    <div class="badge">✦ Memory</div>
+    <h2><a href="memo_match.html" onclick="event.preventDefault();event.stopPropagation();openGame('memo_match.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🍓</span>Memo Match</a></h2>
+    <p>Flip cards, find pairs, and train your memory with cute fruity icons.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 7 -->
+  <div class="game-card g7" onclick="openGame('nova_blaster.html')">
+    <div class="badge">✦ Action</div>
+    <h2><a href="nova_blaster.html" onclick="event.preventDefault();event.stopPropagation();openGame('nova_blaster.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🚀</span>Nova Blaster</a></h2>
+    <p>Blast enemy drones, dodge asteroids, and grab bonuses in this fast space shooter.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-heading">More Games</div>
+
+  <!-- GAME 8 -->
+  <div class="game-card g1" onclick="openGame('orbit-eater.html')">
+    <div class="badge">✦ Arcade</div>
+    <h2><a href="orbit-eater.html" onclick="event.preventDefault();event.stopPropagation();openGame('orbit-eater.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🟣</span>Orbit Eater</a></h2>
+    <p>Grow by eating smaller orbs. Survive as long as you can!</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 9 -->
+  <div class="game-card g2" onclick="openGame('skyline-flyer.html')">
+    <div class="badge">✦ Skill</div>
+    <h2><a href="skyline-flyer.html" onclick="event.preventDefault();event.stopPropagation();openGame('skyline-flyer.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🐦</span>Skyline Flyer</a></h2>
+    <p>Tap to fly through tight gaps between the city towers.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 10 -->
+  <div class="game-card g3" onclick="openGame('nibble-runner.html')">
+    <div class="badge">✦ Retro</div>
+    <h2><a href="nibble-runner.html" onclick="event.preventDefault();event.stopPropagation();openGame('nibble-runner.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🐍</span>Nibble Runner</a></h2>
+    <p>Classic snake — eat apples, grow, and don't hit the walls.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 11 -->
+  <div class="game-card g4" onclick="openGame('galaxy-guardian.html')">
+    <div class="badge">✦ Action</div>
+    <h2><a href="galaxy-guardian.html" onclick="event.preventDefault();event.stopPropagation();openGame('galaxy-guardian.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🚀</span>Galaxy Guardian</a></h2>
+    <p>Blast alien UFOs, dodge enemy fire, and power up your ship.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 12 -->
+  <div class="game-card g5" onclick="openGame('stack-crafter.html')">
+    <div class="badge">✦ Puzzle</div>
+    <h2><a href="stack-crafter.html" onclick="event.preventDefault();event.stopPropagation();openGame('stack-crafter.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🧱</span>Stack Crafter</a></h2>
+    <p>Tap at the perfect moment to build the tallest tower.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 13 -->
+  <div class="game-card g6" onclick="openGame('merge-2048.html')">
+    <div class="badge">✦ Number</div>
+    <h2><a href="merge-2048.html" onclick="event.preventDefault();event.stopPropagation();openGame('merge-2048.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🔢</span>Merge 2048</a></h2>
+    <p>Swipe to merge tiles and reach the legendary 2048.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 14 -->
+  <div class="game-card g7" onclick="openGame('slide-free.html')">
+    <div class="badge">✦ Logic</div>
+    <h2><a href="slide-free.html" onclick="event.preventDefault();event.stopPropagation();openGame('slide-free.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🪵</span>Slide & Free</a></h2>
+    <p>Slide the blocks to free the red block through the exit.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AD CARD 2 (edit content in ads-config.js, not here) -->
+  <div id="ad-slot-2"></div>
+
+  <!-- GAME 15 -->
+  <div class="game-card g1" onclick="openGame('dash-runner.html')">
+    <div class="badge">✦ Speed</div>
+    <h2><a href="dash-runner.html" onclick="event.preventDefault();event.stopPropagation();openGame('dash-runner.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🏃</span>Dash Runner</a></h2>
+    <p>Switch lanes to dodge everything in your path.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 16 -->
+  <div class="game-card g2" onclick="openGame('tiny-angler.html')">
+    <div class="badge">✦ Casual</div>
+    <h2><a href="tiny-angler.html" onclick="event.preventDefault();event.stopPropagation();openGame('tiny-angler.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🎣</span>Tiny Angler</a></h2>
+    <p>Cast your hook and catch fish to earn coins.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 17 -->
+  <div class="game-card g3" onclick="openGame('liquid-sort.html')">
+    <div class="badge">✦ Puzzle</div>
+    <h2><a href="liquid-sort.html" onclick="event.preventDefault();event.stopPropagation();openGame('liquid-sort.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🧪</span>Liquid Sort</a></h2>
+    <p>Pour and sort colored water into matching bottles.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-banner" id="ad-mid3" style="min-height:50px;">
+    <script>
+      atOptions = { 'key':'63f9cc601bd826eb8fbdc16d61a1bf4b', 'format':'iframe', 'height':50, 'width':320, 'params':{} };
+    </script>
+    <script async src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
+  </div>
+
+  <!-- GAME 18 -->
+  <div class="game-card g4" onclick="openGame('tic-tac-toe.html')">
+    <div class="badge">✦ Classic</div>
+    <h2><a href="tic-tac-toe.html" onclick="event.preventDefault();event.stopPropagation();openGame('tic-tac-toe.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">❌</span>Tic-Tac-Toe</a></h2>
+    <p>The timeless 2-player X and O battle.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 19 -->
+  <div class="game-card g5" onclick="openGame('card-match.html')">
+    <div class="badge">✦ Memory</div>
+    <h2><a href="card-match.html" onclick="event.preventDefault();event.stopPropagation();openGame('card-match.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🃏</span>Card Match</a></h2>
+    <p>Flip cards and find all 8 matching pairs.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 20 -->
+  <div class="game-card g6" onclick="openGame('jewel-swap.html')">
+    <div class="badge">✦ Match-3</div>
+    <h2><a href="jewel-swap.html" onclick="event.preventDefault();event.stopPropagation();openGame('jewel-swap.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">💎</span>Jewel Swap</a></h2>
+    <p>Swap adjacent jewels to match 3 or more in a row.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 21 -->
+  <div class="game-card g7" onclick="openGame('brick-blaster.html')">
+    <div class="badge">✦ Arcade</div>
+    <h2><a href="brick-blaster.html" onclick="event.preventDefault();event.stopPropagation();openGame('brick-blaster.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🏏</span>Brick Blaster</a></h2>
+    <p>Bounce the ball and break every brick on the board.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 22 -->
+  <div class="game-card g1" onclick="openGame('rope-swinger.html')">
+    <div class="badge">✦ Physics</div>
+    <h2><a href="rope-swinger.html" onclick="event.preventDefault();event.stopPropagation();openGame('rope-swinger.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🦸</span>Rope Swinger</a></h2>
+    <p>Swing from rope to rope like a hero.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 23 -->
+  <div class="game-card g2" onclick="openGame('color-drop.html')">
+    <div class="badge">✦ Reflex</div>
+    <h2><a href="color-drop.html" onclick="event.preventDefault();event.stopPropagation();openGame('color-drop.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🔴</span>Color Drop</a></h2>
+    <p>Tap to change color and match the falling platform.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 24 -->
+  <div class="game-card g3" onclick="openGame('paint-trail.html')">
+    <div class="badge">✦ IO Game</div>
+    <h2><a href="paint-trail.html" onclick="event.preventDefault();event.stopPropagation();openGame('paint-trail.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🎨</span>Paint Trail</a></h2>
+    <p>Paint the ground and cover as much area as you can.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 25 -->
+  <div class="game-card g4" onclick="openGame('base-defender.html')">
+    <div class="badge">✦ Defense</div>
+    <h2><a href="base-defender.html" onclick="event.preventDefault();event.stopPropagation();openGame('base-defender.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🧟</span>Base Defender</a></h2>
+    <p>Place towers to stop the invasion before it's too late.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 26 -->
+  <div class="game-card g5" onclick="openGame('catapult-fury.html')">
+    <div class="badge">✦ Physics</div>
+    <h2><a href="catapult-fury.html" onclick="event.preventDefault();event.stopPropagation();openGame('catapult-fury.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">💥</span>Catapult Fury</a></h2>
+    <p>Drag and launch to destroy every enemy target.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME 27 -->
+  <div class="game-card g6" onclick="openGame('dice-merge.html')">
+    <div class="badge">✦ Math</div>
+    <h2><a href="dice-merge.html" onclick="event.preventDefault();event.stopPropagation();openGame('dice-merge.html');" style="color:inherit;text-decoration:none;"><span class="game-icon-badge">🎲</span>Dice Merge</a></h2>
+    <p>Merge matching dice numbers on the board.</p>
+    <div class="card-row">
+      <span style="color:#ffffff;font-size:12px;">📱 Mobile friendly</span>
+      <div>
+        <button class="download-btn" onclick="installApp(event)">📲 Install</button>
+        <span class="play-btn small">▶ Play Now</span>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /.games-grid -->
+
+  <!-- ============================================================
+       🔹 ADSTERRA NATIVE AD (below the game cards)
+       ============================================================ -->
+  <div class="ad-banner" id="ad-bottom" style="min-height:50px;">
+    <script>
+      atOptions = { 'key':'63f9cc601bd826eb8fbdc16d61a1bf4b', 'format':'iframe', 'height':50, 'width':320, 'params':{} };
+    </script>
+    <script async src="https://www.highperformanceformat.com/63f9cc601bd826eb8fbdc16d61a1bf4b/invoke.js"></script>
+  </div>
+
+  <div class="footer-links">
+    <a href="about_us.html">About</a>
+    <a href="faq.html">FAQ</a>
+    <a href="contact_us.html">Contact Us</a>
+    <a href="terms_of_service.html">Terms of Service</a>
+    <a href="privacy_policy.html">Privacy Policy</a>
+  </div>
+
+</div>
+
+<div id="game-frame-wrap">
+  <div class="game-controls-row">
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Full Screen</button>
+    <button class="close-btn" onclick="closeGame()">✕ Close</button>
+  </div>
+  <iframe id="game-frame" src=""></iframe>
+</div>
+
+<div class="share-menu" id="shareMenu">
+  <div class="share-sheet">
+    <h3>🎉 Loved it? Share with friends!</h3>
+    <div class="share-options">
+      <a class="share-opt" href="#" onclick="shareVia('whatsapp'); return false;">
+        <span class="circle" style="background:#25D366;">💬</span> WhatsApp
+      </a>
+      <a class="share-opt" href="#" onclick="shareVia('facebook'); return false;">
+        <span class="circle" style="background:#1877F2;">📘</span> Facebook
+      </a>
+      <a class="share-opt" href="#" onclick="shareVia('twitter'); return false;">
+        <span class="circle" style="background:#000;">✕</span> Twitter/X
+      </a>
+      <a class="share-opt" href="#" onclick="shareVia('copy'); return false;">
+        <span class="circle" style="background:rgba(255,255,255,0.15);">🔗</span> Copy Link
+      </a>
+    </div>
+    <button class="share-close" onclick="closeShare()">Close</button>
+  </div>
+</div>
+
+<script>
+  // ---- Recently Played logic ----
+  const GAMES_META = {
+    'block-cascade.html': { title: 'Block Cascade', icon: '🧩' },
+    'gridora-drop.html': { title: 'Gridora Drop', icon: '⬇️' },
+    'numera_merge.html': { title: 'Numera Merge', icon: '🔢' },
+    'gem_rush.html': { title: 'Gem Rush', icon: '💎' },
+    'pop_panic.html': { title: 'Pop Panic', icon: '🐹' },
+    'memo_match.html': { title: 'Memo Match', icon: '🍓' },
+    'nova_blaster.html': { title: 'Nova Blaster', icon: '🚀' },
+    'orbit-eater.html': { title: 'Orbit Eater', icon: '🟣' },
+    'skyline-flyer.html': { title: 'Skyline Flyer', icon: '🐦' },
+    'nibble-runner.html': { title: 'Nibble Runner', icon: '🐍' },
+    'galaxy-guardian.html': { title: 'Galaxy Guardian', icon: '🚀' },
+    'stack-crafter.html': { title: 'Stack Crafter', icon: '🧱' },
+    'merge-2048.html': { title: 'Merge 2048', icon: '🔢' },
+    'slide-free.html': { title: 'Slide & Free', icon: '🪵' },
+    'dash-runner.html': { title: 'Dash Runner', icon: '🏃' },
+    'tiny-angler.html': { title: 'Tiny Angler', icon: '🎣' },
+    'liquid-sort.html': { title: 'Liquid Sort', icon: '🧪' },
+    'tic-tac-toe.html': { title: 'Tic-Tac-Toe', icon: '❌' },
+    'card-match.html': { title: 'Card Match', icon: '🃏' },
+    'jewel-swap.html': { title: 'Jewel Swap', icon: '💎' },
+    'brick-blaster.html': { title: 'Brick Blaster', icon: '🏏' },
+    'rope-swinger.html': { title: 'Rope Swinger', icon: '🦸' },
+    'color-drop.html': { title: 'Color Drop', icon: '🔴' },
+    'paint-trail.html': { title: 'Paint Trail', icon: '🎨' },
+    'base-defender.html': { title: 'Base Defender', icon: '🧟' },
+    'catapult-fury.html': { title: 'Catapult Fury', icon: '💥' },
+    'dice-merge.html': { title: 'Dice Merge', icon: '🎲' }
+  };
+
+  function trackRecentlyPlayed(url) {
+    const meta = GAMES_META[url];
+    if (!meta) return;
+    let recent = [];
+    try {
+      recent = JSON.parse(localStorage.getItem('recentlyPlayed') || '[]');
+    } catch (e) { recent = []; }
+    recent = recent.filter(g => g.url !== url);
+    recent.unshift({ url: url, title: meta.title, icon: meta.icon });
+    recent = recent.slice(0, 6);
+    try {
+      localStorage.setItem('recentlyPlayed', JSON.stringify(recent));
+    } catch (e) { /* storage full or blocked, ignore */ }
+  }
+
+  function renderRecentlyPlayed() {
+    let recent = [];
+    try {
+      recent = JSON.parse(localStorage.getItem('recentlyPlayed') || '[]');
+    } catch (e) { recent = []; }
+    const section = document.getElementById('recentlyPlayedSection');
+    const row = document.getElementById('recentlyPlayedRow');
+    if (!section || !row) return;
+    if (!recent.length) {
+      section.classList.remove('show');
+      return;
+    }
+    row.innerHTML = recent.map(g =>
+      `<div class="recent-pill" onclick="openGame('${g.url}')">${g.icon} ${g.title}</div>`
+    ).join('');
+    section.classList.add('show');
+  }
+
+  function openGame(url) {
+    const wrap = document.getElementById('game-frame-wrap');
+    const frame = document.getElementById('game-frame');
+    const alreadyOpen = wrap.classList.contains('active');
+    frame.src = url;
+    wrap.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    if (!alreadyOpen) {
+      history.pushState({ gameOpen: true }, '', '#play');
+    }
+    trackRecentlyPlayed(url);
+    renderRecentlyPlayed();
+  }
+  function closeGame() {
+    const wrap = document.getElementById('game-frame-wrap');
+    const frame = document.getElementById('game-frame');
+    frame.src = '';
+    wrap.classList.remove('active');
+    document.body.style.overflow = '';
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
+    if (window.location.hash === '#play') {
+      history.back();
+    }
+  }
+  function toggleFullscreen() {
+    const wrap = document.getElementById('game-frame-wrap');
+    if (!document.fullscreenElement) {
+      if (wrap.requestFullscreen) {
+        wrap.requestFullscreen().catch(() => {
+          alert('Full screen is not supported on this browser.');
+        });
+      }
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  }
+  window.addEventListener('popstate', function(e) {
+    if (document.getElementById('game-frame-wrap').classList.contains('active')) {
+      const wrap = document.getElementById('game-frame-wrap');
+      const frame = document.getElementById('game-frame');
+      frame.src = '';
+      wrap.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // ---- Real "Install App" logic (replaces old misleading ad-link buttons) ----
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+  function installApp(e) {
+    if (e) e.stopPropagation();
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.finally(() => { deferredPrompt = null; });
+    } else if (window.matchMedia('(display-mode: standalone)').matches) {
+      alert('Play Vault already installed hai! 🎉');
+    } else {
+      const a = document.createElement('a');
+      a.href = 'playvault.apk';
+      a.download = 'playvault.apk';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+  }
+
+  const SHARE_TITLE = 'Play Vault';
+  const SHARE_TEXT = 'Play 20+ free online games — no download needed, play instantly!';
+
+  function openShare() {
+    document.getElementById('shareMenu').classList.add('show');
+  }
+  function closeShare() {
+    document.getElementById('shareMenu').classList.remove('show');
+  }
+  function shareVia(platform) {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(SHARE_TEXT);
+    let target = '';
+    if (platform === 'whatsapp') target = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+    else if (platform === 'facebook') target = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+    else if (platform === 'twitter') target = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+    else if (platform === 'copy') {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('Link copied! Paste it anywhere to share.');
+      });
+      closeShare();
+      return;
+    }
+    window.open(target, '_blank');
+    closeShare();
+  }
+
+  function filterGames() {
+    const query = document.getElementById('gameSearchInput').value.trim().toLowerCase();
+    const cards = document.querySelectorAll('.game-card:not(.custom-ad-card)');
+    const headings = document.querySelectorAll('.section-heading');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const titleEl = card.querySelector('h2');
+      const title = titleEl ? titleEl.textContent.toLowerCase() : '';
+      const match = title.includes(query);
+      card.style.display = match ? '' : 'none';
+      if (match) visibleCount++;
+    });
+
+    headings.forEach(h => {
+      h.style.display = query ? 'none' : '';
+    });
+
+    const noResults = document.getElementById('noResultsMsg');
+    if (noResults) {
+      if (query && visibleCount === 0) {
+        noResults.classList.add('show');
+      } else {
+        noResults.classList.remove('show');
+      }
+    }
+  }
+
+  renderRecentlyPlayed();
+</script>
+
+<script>
+  document.write('<script src="ads-config.js?t=' + Date.now() + '"></' + 'script>');
+</script>
+<script>
+  function renderAdCard(slotId, ad) {
+    const slot = document.getElementById(slotId);
+    if (!slot || !ad) return;
+    slot.outerHTML = `
+      <div class="game-card custom-ad-card" onclick="window.open('${ad.link}', '_blank')">
+        <div class="badge" style="background:rgba(255,255,255,0.15); color:#f4eefc;">◆ Sponsored</div>
+        <img src="${ad.image}" alt="Ad" class="ad-card-img">
+        <h2 style="font-size:17px; margin-top:8px;">${ad.title}</h2>
+        <p>${ad.description}</p>
+        <div class="card-row">
+          <span></span>
+          <button class="ad-share-btn" onclick="event.stopPropagation(); openShare();">🤝 Share</button>
+          <a href="${ad.link}" target="_blank" class="play-btn small" onclick="event.stopPropagation();">▶ ${ad.buttonText || 'Learn More'}</a>
+        </div>
+      </div>`;
+  }
+  if (typeof adsConfig !== 'undefined') {
+    renderAdCard('ad-slot-1', adsConfig.ad1);
+    renderAdCard('ad-slot-2', adsConfig.ad2);
+  }
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    });
+  }
+</script>
+
+</body>
+</html>
