@@ -86,6 +86,43 @@
     margin-top: 4px;
   }
 
+  .recently-played-section {
+    margin: 4px 0 18px;
+    display: none;
+  }
+  .recently-played-section.show { display: block; }
+  .recently-played-heading {
+    font-size: 12px;
+    font-weight: 700;
+    color: #9a94c2;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .recently-played-row {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .recently-played-row::-webkit-scrollbar { height: 4px; }
+  .recent-pill {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #f4eefc;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .recent-pill:active { transform: scale(0.96); }
+
   .action-row {
     display: flex;
     align-items: center;
@@ -381,31 +418,42 @@
     inset: 0;
     background: #0a0620;
     z-index: 1000;
-    padding: 10px;
-    flex-direction: column;
+    padding: 0;
   }
-  #game-frame-wrap.active { display: flex; }
+  #game-frame-wrap.active { display: block; }
   .game-controls-row {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1001;
     display: flex;
-    justify-content: flex-end;
     gap: 8px;
-    margin-bottom: 6px;
   }
   #game-frame-wrap .close-btn,
   #game-frame-wrap .fullscreen-btn {
-    background: rgba(255,255,255,0.1);
-    border: none;
+    background: rgba(10,6,32,0.55);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.15);
     color: #f4eefc;
-    font-size: 18px;
-    padding: 6px 14px;
+    font-size: 16px;
+    padding: 6px 12px;
     border-radius: 30px;
     cursor: pointer;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+  }
+  #game-frame-wrap .close-btn:hover,
+  #game-frame-wrap .fullscreen-btn:hover,
+  #game-frame-wrap .close-btn:active,
+  #game-frame-wrap .fullscreen-btn:active {
+    opacity: 1;
   }
   #game-frame {
-    flex: 1;
+    position: absolute;
+    inset: 0;
     width: 100%;
+    height: 100%;
     border: none;
-    border-radius: 14px;
     background: #0a0620;
   }
 
@@ -802,6 +850,11 @@
     <button onclick="installApp(event)" class="cta-smartlink">
        📲 Install App
     </button>
+  </div>
+
+  <div class="recently-played-section" id="recentlyPlayedSection">
+    <div class="recently-played-heading">🕑 RECENTLY PLAYED</div>
+    <div class="recently-played-row" id="recentlyPlayedRow"></div>
   </div>
 
   <div class="games-grid">
@@ -1275,6 +1328,70 @@
 </div>
 
 <script>
+  // ---- Recently Played logic ----
+  const GAMES_META = {
+    'block-cascade.html': { title: 'Block Cascade', icon: '🧩' },
+    'gridora-drop.html': { title: 'Gridora Drop', icon: '⬇️' },
+    'numera_merge.html': { title: 'Numera Merge', icon: '🔢' },
+    'gem_rush.html': { title: 'Gem Rush', icon: '💎' },
+    'pop_panic.html': { title: 'Pop Panic', icon: '🐹' },
+    'memo_match.html': { title: 'Memo Match', icon: '🍓' },
+    'nova_blaster.html': { title: 'Nova Blaster', icon: '🚀' },
+    'orbit-eater.html': { title: 'Orbit Eater', icon: '🟣' },
+    'skyline-flyer.html': { title: 'Skyline Flyer', icon: '🐦' },
+    'nibble-runner.html': { title: 'Nibble Runner', icon: '🐍' },
+    'galaxy-guardian.html': { title: 'Galaxy Guardian', icon: '🚀' },
+    'stack-crafter.html': { title: 'Stack Crafter', icon: '🧱' },
+    'merge-2048.html': { title: 'Merge 2048', icon: '🔢' },
+    'slide-free.html': { title: 'Slide & Free', icon: '🪵' },
+    'dash-runner.html': { title: 'Dash Runner', icon: '🏃' },
+    'tiny-angler.html': { title: 'Tiny Angler', icon: '🎣' },
+    'liquid-sort.html': { title: 'Liquid Sort', icon: '🧪' },
+    'tic-tac-toe.html': { title: 'Tic-Tac-Toe', icon: '❌' },
+    'card-match.html': { title: 'Card Match', icon: '🃏' },
+    'jewel-swap.html': { title: 'Jewel Swap', icon: '💎' },
+    'brick-blaster.html': { title: 'Brick Blaster', icon: '🏏' },
+    'rope-swinger.html': { title: 'Rope Swinger', icon: '🦸' },
+    'color-drop.html': { title: 'Color Drop', icon: '🔴' },
+    'paint-trail.html': { title: 'Paint Trail', icon: '🎨' },
+    'base-defender.html': { title: 'Base Defender', icon: '🧟' },
+    'catapult-fury.html': { title: 'Catapult Fury', icon: '💥' },
+    'dice-merge.html': { title: 'Dice Merge', icon: '🎲' }
+  };
+
+  function trackRecentlyPlayed(url) {
+    const meta = GAMES_META[url];
+    if (!meta) return;
+    let recent = [];
+    try {
+      recent = JSON.parse(localStorage.getItem('recentlyPlayed') || '[]');
+    } catch (e) { recent = []; }
+    recent = recent.filter(g => g.url !== url);
+    recent.unshift({ url: url, title: meta.title, icon: meta.icon });
+    recent = recent.slice(0, 6);
+    try {
+      localStorage.setItem('recentlyPlayed', JSON.stringify(recent));
+    } catch (e) { /* storage full or blocked, ignore */ }
+  }
+
+  function renderRecentlyPlayed() {
+    let recent = [];
+    try {
+      recent = JSON.parse(localStorage.getItem('recentlyPlayed') || '[]');
+    } catch (e) { recent = []; }
+    const section = document.getElementById('recentlyPlayedSection');
+    const row = document.getElementById('recentlyPlayedRow');
+    if (!section || !row) return;
+    if (!recent.length) {
+      section.classList.remove('show');
+      return;
+    }
+    row.innerHTML = recent.map(g =>
+      `<div class="recent-pill" onclick="openGame('${g.url}')">${g.icon} ${g.title}</div>`
+    ).join('');
+    section.classList.add('show');
+  }
+
   function openGame(url) {
     const wrap = document.getElementById('game-frame-wrap');
     const frame = document.getElementById('game-frame');
@@ -1285,6 +1402,8 @@
     if (!alreadyOpen) {
       history.pushState({ gameOpen: true }, '', '#play');
     }
+    trackRecentlyPlayed(url);
+    renderRecentlyPlayed();
   }
   function closeGame() {
     const wrap = document.getElementById('game-frame-wrap');
@@ -1370,6 +1489,8 @@
     window.open(target, '_blank');
     closeShare();
   }
+
+  renderRecentlyPlayed();
 </script>
 
 <script>
