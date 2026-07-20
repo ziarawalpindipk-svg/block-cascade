@@ -28,8 +28,8 @@ const adsConfig = {
   ad2: {
     image: "images/rawalpindi.jpeg",
     link: "https://smartincomestack.blogspot.com/2026/06/online-earning-beginners-complete-hub.html",
-    title: "test  ads pages post",
-    description: "ziamohiuddinpkrawalpindi .",
+    title: "Test pages post",
+    description: "This slot for yours ad contact us .",
     buttonText: "Learn More"
   }
 
