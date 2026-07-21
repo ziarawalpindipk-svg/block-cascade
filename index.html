@@ -183,7 +183,7 @@
     text-align: center;
     color: #9a94c2;
     font-size: 13px;
-    padding: 20px 0;
+    padding: 4px 0 16px;
   }
   .no-results-msg.show { display: block; }
 
@@ -962,7 +962,7 @@
 
   <div class="search-wrap">
     <span class="search-icon">🔍</span>
-    <input type="text" id="gameSearchInput" class="search-input" placeholder="Search games..." oninput="filterGames()">
+    <input type="text" id="gameSearchInput" class="search-input" placeholder="Search games..." oninput="filterGames()" onkeydown="handleSearchEnter(event)">
   </div>
   <div class="no-results-msg" id="noResultsMsg">
     <div style="margin-bottom:10px;">This game isn't available yet — but try one of these:</div>
@@ -1662,7 +1662,7 @@
   function renderSuggestedGames() {
     const row = document.getElementById('suggestedGamesRow');
     if (!row) return;
-    row.style.justifyContent = 'center';
+    row.style.justifyContent = 'flex-start';
     row.innerHTML = SUGGESTED_GAMES.map(url => {
       const meta = GAMES_META[url];
       if (!meta) return '';
@@ -1674,6 +1674,21 @@
     document.getElementById('gameSearchInput').value = '';
     filterByCategory('All');
     openGame(url);
+  }
+
+  function handleSearchEnter(event) {
+    if (event.key !== 'Enter') return;
+    const cards = document.querySelectorAll('.game-card:not(.custom-ad-card)');
+    for (const card of cards) {
+      if (card.style.display !== 'none') {
+        const onclickAttr = card.getAttribute('onclick') || '';
+        const match = onclickAttr.match(/openGame\('([^']+)'\)/);
+        if (match) {
+          openGame(match[1]);
+          break;
+        }
+      }
+    }
   }
 
   function filterGames() {
