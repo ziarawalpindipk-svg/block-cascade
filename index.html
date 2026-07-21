@@ -1702,7 +1702,7 @@
       const title = titleEl ? titleEl.textContent.toLowerCase() : '';
       const badgeEl = card.querySelector('.badge');
       const badgeText = badgeEl ? badgeEl.textContent.replace('✦', '').trim() : '';
-      const matchesSearch = title.includes(query);
+      const matchesSearch = title.includes(query) || badgeText.toLowerCase().includes(query);
       const matchesCategory = currentCategory === 'All' || badgeText === currentCategory;
       const match = matchesSearch && matchesCategory;
       card.style.display = match ? '' : 'none';
