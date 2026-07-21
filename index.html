@@ -86,6 +86,48 @@
     margin-top: 4px;
   }
 
+  .how-to-play-overlay {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: rgba(10,6,32,0.88);
+    z-index: 1002;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .how-to-play-overlay.show { display: flex; }
+  .how-to-play-card {
+    background: #170f2c;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 28px 24px;
+    max-width: 320px;
+    text-align: center;
+  }
+  .how-to-play-icon { font-size: 40px; margin-bottom: 10px; }
+  .how-to-play-card h3 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .how-to-play-card p {
+    color: #9a94c2;
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .how-to-play-btn {
+    background: linear-gradient(135deg, #5ce1ff, #ff5cb8);
+    color: #0a0620;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+  }
+
   .category-filter-row {
     display: flex;
     gap: 8px;
@@ -922,7 +964,10 @@
     <span class="search-icon">🔍</span>
     <input type="text" id="gameSearchInput" class="search-input" placeholder="Search games..." oninput="filterGames()">
   </div>
-  <div class="no-results-msg" id="noResultsMsg">No games found. Try a different search.</div>
+  <div class="no-results-msg" id="noResultsMsg">
+    <div style="margin-bottom:10px;">This game isn't available yet — but try one of these:</div>
+    <div class="recently-played-row" id="suggestedGamesRow"></div>
+  </div>
 
   <div class="games-grid">
 
@@ -1371,6 +1416,14 @@
     <button class="close-btn" onclick="closeGame()">✕ Close</button>
   </div>
   <iframe id="game-frame" src=""></iframe>
+  <div class="how-to-play-overlay" id="howToPlayOverlay">
+    <div class="how-to-play-card">
+      <div class="how-to-play-icon" id="howToPlayIcon"></div>
+      <h3 id="howToPlayTitle"></h3>
+      <p id="howToPlayText"></p>
+      <button class="how-to-play-btn" onclick="closeHowToPlay()">Got it, Play! ▶</button>
+    </div>
+  </div>
 </div>
 
 <div class="share-menu" id="shareMenu">
@@ -1397,33 +1450,33 @@
 <script>
   // ---- Recently Played logic ----
   const GAMES_META = {
-    'block-cascade.html': { title: 'Block Cascade', icon: '🧩' },
-    'gridora-drop.html': { title: 'Gridora Drop', icon: '⬇️' },
-    'numera_merge.html': { title: 'Numera Merge', icon: '🔢' },
-    'gem_rush.html': { title: 'Gem Rush', icon: '💎' },
-    'pop_panic.html': { title: 'Pop Panic', icon: '🐹' },
-    'memo_match.html': { title: 'Memo Match', icon: '🍓' },
-    'nova_blaster.html': { title: 'Nova Blaster', icon: '🚀' },
-    'orbit-eater.html': { title: 'Orbit Eater', icon: '🟣' },
-    'skyline-flyer.html': { title: 'Skyline Flyer', icon: '🐦' },
-    'nibble-runner.html': { title: 'Nibble Runner', icon: '🐍' },
-    'galaxy-guardian.html': { title: 'Galaxy Guardian', icon: '🚀' },
-    'stack-crafter.html': { title: 'Stack Crafter', icon: '🧱' },
-    'merge-2048.html': { title: 'Merge 2048', icon: '🔢' },
-    'slide-free.html': { title: 'Slide & Free', icon: '🪵' },
-    'dash-runner.html': { title: 'Dash Runner', icon: '🏃' },
-    'tiny-angler.html': { title: 'Tiny Angler', icon: '🎣' },
-    'liquid-sort.html': { title: 'Liquid Sort', icon: '🧪' },
-    'tic-tac-toe.html': { title: 'Tic-Tac-Toe', icon: '❌' },
-    'card-match.html': { title: 'Card Match', icon: '🃏' },
-    'jewel-swap.html': { title: 'Jewel Swap', icon: '💎' },
-    'brick-blaster.html': { title: 'Brick Blaster', icon: '🏏' },
-    'rope-swinger.html': { title: 'Rope Swinger', icon: '🦸' },
-    'color-drop.html': { title: 'Color Drop', icon: '🔴' },
-    'paint-trail.html': { title: 'Paint Trail', icon: '🎨' },
-    'base-defender.html': { title: 'Base Defender', icon: '🧟' },
-    'catapult-fury.html': { title: 'Catapult Fury', icon: '💥' },
-    'dice-merge.html': { title: 'Dice Merge', icon: '🎲' }
+    'block-cascade.html': { title: 'Block Cascade', icon: '🧩', how: 'Drag colorful blocks onto the grid. Clear full rows & columns. Relaxing & addictive.' },
+    'gridora-drop.html': { title: 'Gridora Drop', icon: '⬇️', how: 'Classic falling block puzzle. Rotate, slide, and drop to clear lines. Speed increases!' },
+    'numera_merge.html': { title: 'Numera Merge', icon: '🔢', how: 'Swipe to slide tiles and merge matching numbers. How high can you go?' },
+    'gem_rush.html': { title: 'Gem Rush', icon: '💎', how: 'Swap adjacent gems to match 3 or more. Simple, colorful, and addictive.' },
+    'pop_panic.html': { title: 'Pop Panic', icon: '🐹', how: 'Tap the moles the instant they pop up. Fast fingers win this reaction challenge!' },
+    'memo_match.html': { title: 'Memo Match', icon: '🍓', how: 'Flip cards, find pairs, and train your memory with cute fruity icons.' },
+    'nova_blaster.html': { title: 'Nova Blaster', icon: '🚀', how: 'Blast enemy drones, dodge asteroids, and grab bonuses in this fast space shooter.' },
+    'orbit-eater.html': { title: 'Orbit Eater', icon: '🟣', how: 'Grow by eating smaller orbs. Survive as long as you can!' },
+    'skyline-flyer.html': { title: 'Skyline Flyer', icon: '🐦', how: 'Tap to fly through tight gaps between the city towers.' },
+    'nibble-runner.html': { title: 'Nibble Runner', icon: '🐍', how: "Classic snake — eat apples, grow, and don't hit the walls." },
+    'galaxy-guardian.html': { title: 'Galaxy Guardian', icon: '🚀', how: 'Blast alien UFOs, dodge enemy fire, and power up your ship.' },
+    'stack-crafter.html': { title: 'Stack Crafter', icon: '🧱', how: 'Tap at the perfect moment to build the tallest tower.' },
+    'merge-2048.html': { title: 'Merge 2048', icon: '🔢', how: 'Swipe to merge tiles and reach the legendary 2048.' },
+    'slide-free.html': { title: 'Slide & Free', icon: '🪵', how: 'Slide the blocks to free the red block through the exit.' },
+    'dash-runner.html': { title: 'Dash Runner', icon: '🏃', how: 'Switch lanes to dodge everything in your path.' },
+    'tiny-angler.html': { title: 'Tiny Angler', icon: '🎣', how: 'Cast your hook and catch fish to earn coins.' },
+    'liquid-sort.html': { title: 'Liquid Sort', icon: '🧪', how: 'Pour and sort colored water into matching bottles.' },
+    'tic-tac-toe.html': { title: 'Tic-Tac-Toe', icon: '❌', how: 'The timeless 2-player X and O battle.' },
+    'card-match.html': { title: 'Card Match', icon: '🃏', how: 'Flip cards and find all 8 matching pairs.' },
+    'jewel-swap.html': { title: 'Jewel Swap', icon: '💎', how: 'Swap adjacent jewels to match 3 or more in a row.' },
+    'brick-blaster.html': { title: 'Brick Blaster', icon: '🏏', how: 'Bounce the ball and break every brick on the board.' },
+    'rope-swinger.html': { title: 'Rope Swinger', icon: '🦸', how: 'Swing from rope to rope like a hero.' },
+    'color-drop.html': { title: 'Color Drop', icon: '🔴', how: 'Tap to change color and match the falling platform.' },
+    'paint-trail.html': { title: 'Paint Trail', icon: '🎨', how: 'Paint the ground and cover as much area as you can.' },
+    'base-defender.html': { title: 'Base Defender', icon: '🧟', how: "Place towers to stop the invasion before it's too late." },
+    'catapult-fury.html': { title: 'Catapult Fury', icon: '💥', how: 'Drag and launch to destroy every enemy target.' },
+    'dice-merge.html': { title: 'Dice Merge', icon: '🎲', how: 'Merge matching dice numbers on the board.' }
   };
 
   function trackRecentlyPlayed(url) {
@@ -1471,6 +1524,27 @@
     }
     trackRecentlyPlayed(url);
     renderRecentlyPlayed();
+    maybeShowHowToPlay(url);
+  }
+  function maybeShowHowToPlay(url) {
+    const meta = GAMES_META[url];
+    if (!meta) return;
+    let seen = [];
+    try {
+      seen = JSON.parse(localStorage.getItem('seenHowToPlay') || '[]');
+    } catch (e) { seen = []; }
+    if (seen.includes(url)) return;
+    document.getElementById('howToPlayIcon').textContent = meta.icon;
+    document.getElementById('howToPlayTitle').textContent = meta.title;
+    document.getElementById('howToPlayText').textContent = meta.how;
+    document.getElementById('howToPlayOverlay').classList.add('show');
+    seen.push(url);
+    try {
+      localStorage.setItem('seenHowToPlay', JSON.stringify(seen));
+    } catch (e) { /* ignore */ }
+  }
+  function closeHowToPlay() {
+    document.getElementById('howToPlayOverlay').classList.remove('show');
   }
   function closeGame() {
     const wrap = document.getElementById('game-frame-wrap');
@@ -1478,6 +1552,7 @@
     frame.src = '';
     wrap.classList.remove('active');
     document.body.style.overflow = '';
+    document.getElementById('howToPlayOverlay').classList.remove('show');
     if (document.fullscreenElement) {
       document.exitFullscreen().catch(() => {});
     }
@@ -1582,6 +1657,25 @@
     filterGames();
   }
 
+  const SUGGESTED_GAMES = ['numera_merge.html', 'memo_match.html', 'block-cascade.html', 'nova_blaster.html'];
+
+  function renderSuggestedGames() {
+    const row = document.getElementById('suggestedGamesRow');
+    if (!row) return;
+    row.style.justifyContent = 'center';
+    row.innerHTML = SUGGESTED_GAMES.map(url => {
+      const meta = GAMES_META[url];
+      if (!meta) return '';
+      return `<div class="recent-pill" onclick="clearSearchAndOpen('${url}')">${meta.icon} ${meta.title}</div>`;
+    }).join('');
+  }
+
+  function clearSearchAndOpen(url) {
+    document.getElementById('gameSearchInput').value = '';
+    filterByCategory('All');
+    openGame(url);
+  }
+
   function filterGames() {
     const query = document.getElementById('gameSearchInput').value.trim().toLowerCase();
     const cards = document.querySelectorAll('.game-card:not(.custom-ad-card)');
@@ -1608,6 +1702,7 @@
     if (noResults) {
       if (visibleCount === 0) {
         noResults.classList.add('show');
+        renderSuggestedGames();
       } else {
         noResults.classList.remove('show');
       }
