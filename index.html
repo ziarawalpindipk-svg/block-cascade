@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YSWJQD9V1Z"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-YSWJQD9V1Z');
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Play Vault - 20+ Free Online Games. No Download. Play Instantly.</title>
@@ -1441,11 +1433,26 @@
       <a class="share-opt" href="#" onclick="shareVia('whatsapp'); return false;">
         <span class="circle" style="background:#25D366;">💬</span> WhatsApp
       </a>
+      <a class="share-opt" href="#" onclick="shareVia('telegram'); return false;">
+        <span class="circle" style="background:#26A5E4;">✈️</span> Telegram
+      </a>
       <a class="share-opt" href="#" onclick="shareVia('facebook'); return false;">
         <span class="circle" style="background:#1877F2;">📘</span> Facebook
       </a>
       <a class="share-opt" href="#" onclick="shareVia('twitter'); return false;">
         <span class="circle" style="background:#000;">✕</span> Twitter/X
+      </a>
+      <a class="share-opt" href="#" onclick="shareVia('sms'); return false;">
+        <span class="circle" style="background:#34C759;">💬</span> SMS
+      </a>
+      <a class="share-opt" href="#" onclick="shareVia('email'); return false;">
+        <span class="circle" style="background:#6a6490;">✉️</span> Email
+      </a>
+      <a class="share-opt" href="#" onclick="shareVia('reddit'); return false;">
+        <span class="circle" style="background:#FF4500;">👽</span> Reddit
+      </a>
+      <a class="share-opt" href="#" onclick="shareVia('pinterest'); return false;">
+        <span class="circle" style="background:#E60023;">📌</span> Pinterest
       </a>
       <a class="share-opt" href="#" onclick="shareVia('copy'); return false;">
         <span class="circle" style="background:rgba(255,255,255,0.15);">🔗</span> Copy Link
@@ -1627,8 +1634,13 @@
     const text = encodeURIComponent(SHARE_TEXT);
     let target = '';
     if (platform === 'whatsapp') target = `https://api.whatsapp.com/send?text=${text}%20${url}`;
+    else if (platform === 'telegram') target = `https://t.me/share/url?url=${url}&text=${text}`;
     else if (platform === 'facebook') target = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
     else if (platform === 'twitter') target = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+    else if (platform === 'sms') target = `sms:?body=${text}%20${url}`;
+    else if (platform === 'email') target = `mailto:?subject=${encodeURIComponent('Check out Play Vault!')}&body=${text}%20${url}`;
+    else if (platform === 'reddit') target = `https://reddit.com/submit?url=${url}&title=${encodeURIComponent('Play Vault - Free Online Games')}`;
+    else if (platform === 'pinterest') target = `https://pinterest.com/pin/create/button/?url=${url}&media=${encodeURIComponent('https://ziarawalpindipk-svg.github.io/block-cascade/icon-512.png')}&description=${text}`;
     else if (platform === 'copy') {
       navigator.clipboard.writeText(window.location.href).then(() => {
         alert('Link copied! Paste it anywhere to share.');
