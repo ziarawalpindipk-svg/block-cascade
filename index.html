@@ -86,6 +86,65 @@
     margin-top: 4px;
   }
 
+  .category-filter-row {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 14px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .category-filter-row::-webkit-scrollbar { height: 4px; }
+  .category-chip {
+    flex: 0 0 auto;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #f4eefc;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .category-chip.active {
+    background: linear-gradient(135deg, #ff6b5b, #ffc145);
+    color: #2a0f0a;
+    border-color: transparent;
+  }
+
+  .search-wrap {
+    margin: 4px 0 16px;
+    position: relative;
+  }
+  .search-input {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #f4eefc;
+    font-size: 14px;
+    padding: 12px 16px 12px 40px;
+    border-radius: 24px;
+    outline: none;
+  }
+  .search-input::placeholder { color: #9a94c2; }
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    pointer-events: none;
+  }
+  .no-results-msg {
+    display: none;
+    text-align: center;
+    color: #9a94c2;
+    font-size: 13px;
+    padding: 20px 0;
+  }
+  .no-results-msg.show { display: block; }
+
   .recently-played-section {
     margin: 4px 0 18px;
     display: none;
@@ -857,6 +916,14 @@
     <div class="recently-played-row" id="recentlyPlayedRow"></div>
   </div>
 
+  <div class="category-filter-row" id="categoryFilterRow"></div>
+
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="gameSearchInput" class="search-input" placeholder="Search games..." oninput="filterGames()">
+  </div>
+  <div class="no-results-msg" id="noResultsMsg">No games found. Try a different search.</div>
+
   <div class="games-grid">
 
   <!-- GAME 1 -->
@@ -1490,7 +1557,65 @@
     closeShare();
   }
 
+  let currentCategory = 'All';
+
+  function renderCategoryChips() {
+    const container = document.getElementById('categoryFilterRow');
+    if (!container) return;
+    const badges = document.querySelectorAll('.game-card:not(.custom-ad-card) .badge');
+    const seen = new Set();
+    badges.forEach(b => {
+      const text = b.textContent.replace('✦', '').trim();
+      if (text) seen.add(text);
+    });
+    const categories = ['All', ...Array.from(seen)];
+    container.innerHTML = categories.map(cat =>
+      `<div class="category-chip${cat === 'All' ? ' active' : ''}" data-cat="${cat}" onclick="filterByCategory('${cat}')">${cat}</div>`
+    ).join('');
+  }
+
+  function filterByCategory(cat) {
+    currentCategory = cat;
+    document.querySelectorAll('.category-chip').forEach(chip => {
+      chip.classList.toggle('active', chip.getAttribute('data-cat') === cat);
+    });
+    filterGames();
+  }
+
+  function filterGames() {
+    const query = document.getElementById('gameSearchInput').value.trim().toLowerCase();
+    const cards = document.querySelectorAll('.game-card:not(.custom-ad-card)');
+    const headings = document.querySelectorAll('.section-heading');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+      const titleEl = card.querySelector('h2');
+      const title = titleEl ? titleEl.textContent.toLowerCase() : '';
+      const badgeEl = card.querySelector('.badge');
+      const badgeText = badgeEl ? badgeEl.textContent.replace('✦', '').trim() : '';
+      const matchesSearch = title.includes(query);
+      const matchesCategory = currentCategory === 'All' || badgeText === currentCategory;
+      const match = matchesSearch && matchesCategory;
+      card.style.display = match ? '' : 'none';
+      if (match) visibleCount++;
+    });
+
+    headings.forEach(h => {
+      h.style.display = (query || currentCategory !== 'All') ? 'none' : '';
+    });
+
+    const noResults = document.getElementById('noResultsMsg');
+    if (noResults) {
+      if (visibleCount === 0) {
+        noResults.classList.add('show');
+      } else {
+        noResults.classList.remove('show');
+      }
+    }
+  }
+
   renderRecentlyPlayed();
+  renderCategoryChips();
 </script>
 
 <script>
