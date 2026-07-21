@@ -86,6 +86,33 @@
     margin-top: 4px;
   }
 
+  .category-filter-row {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 14px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .category-filter-row::-webkit-scrollbar { height: 4px; }
+  .category-chip {
+    flex: 0 0 auto;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #f4eefc;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .category-chip.active {
+    background: linear-gradient(135deg, #ff6b5b, #ffc145);
+    color: #2a0f0a;
+    border-color: transparent;
+  }
+
   .search-wrap {
     margin: 4px 0 16px;
     position: relative;
@@ -889,6 +916,8 @@
     <div class="recently-played-row" id="recentlyPlayedRow"></div>
   </div>
 
+  <div class="category-filter-row" id="categoryFilterRow"></div>
+
   <div class="search-wrap">
     <span class="search-icon">🔍</span>
     <input type="text" id="gameSearchInput" class="search-input" placeholder="Search games..." oninput="filterGames()">
@@ -1528,6 +1557,31 @@
     closeShare();
   }
 
+  let currentCategory = 'All';
+
+  function renderCategoryChips() {
+    const container = document.getElementById('categoryFilterRow');
+    if (!container) return;
+    const badges = document.querySelectorAll('.game-card:not(.custom-ad-card) .badge');
+    const seen = new Set();
+    badges.forEach(b => {
+      const text = b.textContent.replace('✦', '').trim();
+      if (text) seen.add(text);
+    });
+    const categories = ['All', ...Array.from(seen)];
+    container.innerHTML = categories.map(cat =>
+      `<div class="category-chip${cat === 'All' ? ' active' : ''}" data-cat="${cat}" onclick="filterByCategory('${cat}')">${cat}</div>`
+    ).join('');
+  }
+
+  function filterByCategory(cat) {
+    currentCategory = cat;
+    document.querySelectorAll('.category-chip').forEach(chip => {
+      chip.classList.toggle('active', chip.getAttribute('data-cat') === cat);
+    });
+    filterGames();
+  }
+
   function filterGames() {
     const query = document.getElementById('gameSearchInput').value.trim().toLowerCase();
     const cards = document.querySelectorAll('.game-card:not(.custom-ad-card)');
@@ -1537,18 +1591,22 @@
     cards.forEach(card => {
       const titleEl = card.querySelector('h2');
       const title = titleEl ? titleEl.textContent.toLowerCase() : '';
-      const match = title.includes(query);
+      const badgeEl = card.querySelector('.badge');
+      const badgeText = badgeEl ? badgeEl.textContent.replace('✦', '').trim() : '';
+      const matchesSearch = title.includes(query);
+      const matchesCategory = currentCategory === 'All' || badgeText === currentCategory;
+      const match = matchesSearch && matchesCategory;
       card.style.display = match ? '' : 'none';
       if (match) visibleCount++;
     });
 
     headings.forEach(h => {
-      h.style.display = query ? 'none' : '';
+      h.style.display = (query || currentCategory !== 'All') ? 'none' : '';
     });
 
     const noResults = document.getElementById('noResultsMsg');
     if (noResults) {
-      if (query && visibleCount === 0) {
+      if (visibleCount === 0) {
         noResults.classList.add('show');
       } else {
         noResults.classList.remove('show');
@@ -1557,6 +1615,7 @@
   }
 
   renderRecentlyPlayed();
+  renderCategoryChips();
 </script>
 
 <script>
